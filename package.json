@@ -10,8 +10,10 @@
     "lint": "eslint src"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "esm": "^3.2.25",
     "graphql-yoga": "1.2.0",
+    "jsonwebtoken": "latest",
     "prisma-client-lib": "^1.34.10"
   },
   "keywords": [],

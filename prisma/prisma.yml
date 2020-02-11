@@ -1,8 +1,10 @@
 #endpoint: ''
-endpoint: https://us1.prisma.sh/aaron-berdy/fractal/dev
+endpoint: https://us1.prisma.sh/aaron-berdy/fuse/dev
 
 datamodel: datamodel.prisma
 
+secret: prisma-4uz3-secret
+
 generate:
   - generator: javascript-client
-    output: ../src/generated/prisma-client/
+    output: ./generated/prisma-client/

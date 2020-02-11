@@ -1,3 +1,10 @@
+type User {
+  id: ID! @id
+  email: String! @unique
+  hash: String!
+  name: String!
+}
+
 type Person {
     id: ID! @id
     name: String!
