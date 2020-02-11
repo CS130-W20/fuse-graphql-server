@@ -6,8 +6,9 @@ Recommended, use nvm to manage node versions.
 
 * clone the repo
 * cd to the top directory
-* run npm install
-* run npm start
+* run `npm install`
+* run `npm run setup`
+* run `npm start`
 * verify that it worked by going to the logged url
 
 ## Workflow
