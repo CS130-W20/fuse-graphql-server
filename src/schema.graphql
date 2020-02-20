@@ -1,6 +1,6 @@
 type Query {
     ping: String!
-    people: [Person]
+    user: User
 }
 
 type Person {
