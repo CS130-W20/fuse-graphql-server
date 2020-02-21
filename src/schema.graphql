@@ -1,11 +1,7 @@
 type Query {
     ping: String!
     user: User
-}
-
-type Person {
-    name: String!
-    age: Int!
+    events: [Event!]!
 }
 
 type Mutation {

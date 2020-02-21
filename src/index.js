@@ -2,6 +2,8 @@ import { GraphQLServer } from 'graphql-yoga';
 import { prisma } from '../prisma/generated/prisma-client';
 import Query from './resolvers/Query';
 import Mutation from './resolvers/Mutation';
+import Event from './resolvers/Event';
+import User from './resolvers/User';
 
 const ENV = process.env.NODE_ENV;
 const URL = ENV === 'production' ? 'https://light-the-fuse.herokuapp.com/' : 'http://localhost:4000';
@@ -9,6 +11,8 @@ const URL = ENV === 'production' ? 'https://light-the-fuse.herokuapp.com/' : 'ht
 const resolvers = {
   Query,
   Mutation,
+  Event,
+  User,
 };
 
 const server = new GraphQLServer({

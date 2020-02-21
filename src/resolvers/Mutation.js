@@ -37,28 +37,16 @@ async function login(parent, args, context) {
 
 async function createEvent(parent, { title }, context) {
   const ownerId = getUserId({ context });
-  const ownerInput = {
+  const owner = {
     connect: {
       id: ownerId,
     },
   };
 
-  const owner = await context.prisma.createEvent({
-    title,
-    owner: ownerInput,
-  }).owner();
-
-  return {
+  return context.prisma.createEvent({
     title,
     owner,
-  };
-
-  // console.log(owner);
-  // console.log(createdEvent.owner());
-  // console.log(createdEvent.title());
-  // // console.log(createdEvent.owner.name);
-
-  // return createdEvent;
+  });
 }
 
 export default {
