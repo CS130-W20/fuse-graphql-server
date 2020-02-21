@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { AuthenticationError } from 'apollo-server';
-import { APP_SECRET } from '../utils';
+import { APP_SECRET, getUserId } from '../utils';
 
 async function signup(parent, { email, name, password }, context) {
   const hash = await bcrypt.hash(password, 10);
@@ -34,7 +34,35 @@ async function login(parent, args, context) {
   };
 }
 
+
+async function createEvent(parent, { title }, context) {
+  const ownerId = getUserId({ context });
+  const ownerInput = {
+    connect: {
+      id: ownerId,
+    },
+  };
+
+  const owner = await context.prisma.createEvent({
+    title,
+    owner: ownerInput,
+  }).owner();
+
+  return {
+    title,
+    owner,
+  };
+
+  // console.log(owner);
+  // console.log(createdEvent.owner());
+  // console.log(createdEvent.title());
+  // // console.log(createdEvent.owner.name);
+
+  // return createdEvent;
+}
+
 export default {
   signup,
   login,
+  createEvent,
 };

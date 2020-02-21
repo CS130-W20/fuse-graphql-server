@@ -3,4 +3,11 @@ type User {
   email: String! @unique
   hash: String!
   name: String!
+  ownedEvents: [Event!]!
+}
+
+type Event {
+  id: ID! @id
+  title: String!
+  owner: User!
 }

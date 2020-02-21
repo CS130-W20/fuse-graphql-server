@@ -3,7 +3,11 @@ module.exports = {
   // Please don't change this file manually but run `prisma generate` to update it.
   // For more information, please read the docs: https://www.prisma.io/docs/prisma-client/
 
-/* GraphQL */ `type AggregateUser {
+/* GraphQL */ `type AggregateEvent {
+  count: Int!
+}
+
+type AggregateUser {
   count: Int!
 }
 
@@ -11,9 +15,196 @@ type BatchPayload {
   count: Long!
 }
 
+type Event {
+  id: ID!
+  title: String!
+  owner: User!
+}
+
+type EventConnection {
+  pageInfo: PageInfo!
+  edges: [EventEdge]!
+  aggregate: AggregateEvent!
+}
+
+input EventCreateInput {
+  id: ID
+  title: String!
+  owner: UserCreateOneWithoutOwnedEventsInput!
+}
+
+input EventCreateManyWithoutOwnerInput {
+  create: [EventCreateWithoutOwnerInput!]
+  connect: [EventWhereUniqueInput!]
+}
+
+input EventCreateWithoutOwnerInput {
+  id: ID
+  title: String!
+}
+
+type EventEdge {
+  node: Event!
+  cursor: String!
+}
+
+enum EventOrderByInput {
+  id_ASC
+  id_DESC
+  title_ASC
+  title_DESC
+}
+
+type EventPreviousValues {
+  id: ID!
+  title: String!
+}
+
+input EventScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_lt: String
+  title_lte: String
+  title_gt: String
+  title_gte: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  AND: [EventScalarWhereInput!]
+  OR: [EventScalarWhereInput!]
+  NOT: [EventScalarWhereInput!]
+}
+
+type EventSubscriptionPayload {
+  mutation: MutationType!
+  node: Event
+  updatedFields: [String!]
+  previousValues: EventPreviousValues
+}
+
+input EventSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: EventWhereInput
+  AND: [EventSubscriptionWhereInput!]
+  OR: [EventSubscriptionWhereInput!]
+  NOT: [EventSubscriptionWhereInput!]
+}
+
+input EventUpdateInput {
+  title: String
+  owner: UserUpdateOneRequiredWithoutOwnedEventsInput
+}
+
+input EventUpdateManyDataInput {
+  title: String
+}
+
+input EventUpdateManyMutationInput {
+  title: String
+}
+
+input EventUpdateManyWithoutOwnerInput {
+  create: [EventCreateWithoutOwnerInput!]
+  delete: [EventWhereUniqueInput!]
+  connect: [EventWhereUniqueInput!]
+  set: [EventWhereUniqueInput!]
+  disconnect: [EventWhereUniqueInput!]
+  update: [EventUpdateWithWhereUniqueWithoutOwnerInput!]
+  upsert: [EventUpsertWithWhereUniqueWithoutOwnerInput!]
+  deleteMany: [EventScalarWhereInput!]
+  updateMany: [EventUpdateManyWithWhereNestedInput!]
+}
+
+input EventUpdateManyWithWhereNestedInput {
+  where: EventScalarWhereInput!
+  data: EventUpdateManyDataInput!
+}
+
+input EventUpdateWithoutOwnerDataInput {
+  title: String
+}
+
+input EventUpdateWithWhereUniqueWithoutOwnerInput {
+  where: EventWhereUniqueInput!
+  data: EventUpdateWithoutOwnerDataInput!
+}
+
+input EventUpsertWithWhereUniqueWithoutOwnerInput {
+  where: EventWhereUniqueInput!
+  update: EventUpdateWithoutOwnerDataInput!
+  create: EventCreateWithoutOwnerInput!
+}
+
+input EventWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_lt: String
+  title_lte: String
+  title_gt: String
+  title_gte: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  owner: UserWhereInput
+  AND: [EventWhereInput!]
+  OR: [EventWhereInput!]
+  NOT: [EventWhereInput!]
+}
+
+input EventWhereUniqueInput {
+  id: ID
+}
+
 scalar Long
 
 type Mutation {
+  createEvent(data: EventCreateInput!): Event!
+  updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event
+  updateManyEvents(data: EventUpdateManyMutationInput!, where: EventWhereInput): BatchPayload!
+  upsertEvent(where: EventWhereUniqueInput!, create: EventCreateInput!, update: EventUpdateInput!): Event!
+  deleteEvent(where: EventWhereUniqueInput!): Event
+  deleteManyEvents(where: EventWhereInput): BatchPayload!
   createUser(data: UserCreateInput!): User!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
@@ -40,6 +231,9 @@ type PageInfo {
 }
 
 type Query {
+  event(where: EventWhereUniqueInput!): Event
+  events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event]!
+  eventsConnection(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EventConnection!
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
@@ -47,6 +241,7 @@ type Query {
 }
 
 type Subscription {
+  event(where: EventSubscriptionWhereInput): EventSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
@@ -55,6 +250,7 @@ type User {
   email: String!
   hash: String!
   name: String!
+  ownedEvents(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
 }
 
 type UserConnection {
@@ -64,6 +260,19 @@ type UserConnection {
 }
 
 input UserCreateInput {
+  id: ID
+  email: String!
+  hash: String!
+  name: String!
+  ownedEvents: EventCreateManyWithoutOwnerInput
+}
+
+input UserCreateOneWithoutOwnedEventsInput {
+  create: UserCreateWithoutOwnedEventsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutOwnedEventsInput {
   id: ID
   email: String!
   hash: String!
@@ -115,12 +324,31 @@ input UserUpdateInput {
   email: String
   hash: String
   name: String
+  ownedEvents: EventUpdateManyWithoutOwnerInput
 }
 
 input UserUpdateManyMutationInput {
   email: String
   hash: String
   name: String
+}
+
+input UserUpdateOneRequiredWithoutOwnedEventsInput {
+  create: UserCreateWithoutOwnedEventsInput
+  update: UserUpdateWithoutOwnedEventsDataInput
+  upsert: UserUpsertWithoutOwnedEventsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserUpdateWithoutOwnedEventsDataInput {
+  email: String
+  hash: String
+  name: String
+}
+
+input UserUpsertWithoutOwnedEventsInput {
+  update: UserUpdateWithoutOwnedEventsDataInput!
+  create: UserCreateWithoutOwnedEventsInput!
 }
 
 input UserWhereInput {
@@ -180,6 +408,9 @@ input UserWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
+  ownedEvents_every: EventWhereInput
+  ownedEvents_some: EventWhereInput
+  ownedEvents_none: EventWhereInput
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]

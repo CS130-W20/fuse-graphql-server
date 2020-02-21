@@ -11,6 +11,7 @@ type Person {
 type Mutation {
     signup(email: String!, password: String!, name: String!): AuthPayload
     login(email: String!, password: String!): AuthPayload
+    createEvent(title: String!): Event!
 }
 
 type AuthPayload {
@@ -22,4 +23,11 @@ type User {
     id: ID!
     name: String!
     email: String!
+    ownedEvents: [Event!]!
+}
+
+type Event {
+    id: ID!
+    title: String!
+    owner: User!
 }
