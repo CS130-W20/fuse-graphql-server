@@ -5,6 +5,7 @@ function ping() {
 }
 
 async function user(parent, args, context) {
+  console.log(context);
   const userId = getUserId({ context });
   return context.prisma.user({
     id: userId,

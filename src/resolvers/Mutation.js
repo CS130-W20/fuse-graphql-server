@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import { AuthenticationError } from 'apollo-server';
 import { APP_SECRET } from '../utils';
 
 async function signup(parent, { email, name, password }, context) {
@@ -17,12 +18,12 @@ async function signup(parent, { email, name, password }, context) {
 async function login(parent, args, context) {
   const user = await context.prisma.user({ email: args.email });
   if (!user) {
-    throw new Error('No such user found');
+    throw new AuthenticationError('Email is not associated with a user');
   }
 
   const valid = await bcrypt.compare(args.password, user.hash);
   if (!valid) {
-    throw new Error('Invalid password');
+    throw new AuthenticationError('Invalid password');
   }
 
   const token = jwt.sign({ userId: user.id }, APP_SECRET);

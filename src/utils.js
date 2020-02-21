@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { AuthenticationError } from 'apollo-server';
 
 const APP_SECRET = 'l1ght-Th3-4uz3';
 
@@ -9,7 +10,7 @@ function getUserId({ context }) {
     const { userId } = jwt.verify(token, APP_SECRET);
     return userId;
   }
-  throw new Error('Not authenticated');
+  throw new AuthenticationError('Not authenticated');
 }
 
 
