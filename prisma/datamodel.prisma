@@ -4,9 +4,3 @@ type User {
   hash: String!
   name: String!
 }
-
-type Person {
-    id: ID! @id
-    name: String!
-    age: Int!
-}

@@ -3,11 +3,7 @@ module.exports = {
   // Please don't change this file manually but run `prisma generate` to update it.
   // For more information, please read the docs: https://www.prisma.io/docs/prisma-client/
 
-/* GraphQL */ `type AggregatePerson {
-  count: Int!
-}
-
-type AggregateUser {
+/* GraphQL */ `type AggregateUser {
   count: Int!
 }
 
@@ -18,12 +14,6 @@ type BatchPayload {
 scalar Long
 
 type Mutation {
-  createPerson(data: PersonCreateInput!): Person!
-  updatePerson(data: PersonUpdateInput!, where: PersonWhereUniqueInput!): Person
-  updateManyPersons(data: PersonUpdateManyMutationInput!, where: PersonWhereInput): BatchPayload!
-  upsertPerson(where: PersonWhereUniqueInput!, create: PersonCreateInput!, update: PersonUpdateInput!): Person!
-  deletePerson(where: PersonWhereUniqueInput!): Person
-  deleteManyPersons(where: PersonWhereInput): BatchPayload!
   createUser(data: UserCreateInput!): User!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
@@ -49,122 +39,7 @@ type PageInfo {
   endCursor: String
 }
 
-type Person {
-  id: ID!
-  name: String!
-  age: Int!
-}
-
-type PersonConnection {
-  pageInfo: PageInfo!
-  edges: [PersonEdge]!
-  aggregate: AggregatePerson!
-}
-
-input PersonCreateInput {
-  id: ID
-  name: String!
-  age: Int!
-}
-
-type PersonEdge {
-  node: Person!
-  cursor: String!
-}
-
-enum PersonOrderByInput {
-  id_ASC
-  id_DESC
-  name_ASC
-  name_DESC
-  age_ASC
-  age_DESC
-}
-
-type PersonPreviousValues {
-  id: ID!
-  name: String!
-  age: Int!
-}
-
-type PersonSubscriptionPayload {
-  mutation: MutationType!
-  node: Person
-  updatedFields: [String!]
-  previousValues: PersonPreviousValues
-}
-
-input PersonSubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: PersonWhereInput
-  AND: [PersonSubscriptionWhereInput!]
-  OR: [PersonSubscriptionWhereInput!]
-  NOT: [PersonSubscriptionWhereInput!]
-}
-
-input PersonUpdateInput {
-  name: String
-  age: Int
-}
-
-input PersonUpdateManyMutationInput {
-  name: String
-  age: Int
-}
-
-input PersonWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  name: String
-  name_not: String
-  name_in: [String!]
-  name_not_in: [String!]
-  name_lt: String
-  name_lte: String
-  name_gt: String
-  name_gte: String
-  name_contains: String
-  name_not_contains: String
-  name_starts_with: String
-  name_not_starts_with: String
-  name_ends_with: String
-  name_not_ends_with: String
-  age: Int
-  age_not: Int
-  age_in: [Int!]
-  age_not_in: [Int!]
-  age_lt: Int
-  age_lte: Int
-  age_gt: Int
-  age_gte: Int
-  AND: [PersonWhereInput!]
-  OR: [PersonWhereInput!]
-  NOT: [PersonWhereInput!]
-}
-
-input PersonWhereUniqueInput {
-  id: ID
-}
-
 type Query {
-  person(where: PersonWhereUniqueInput!): Person
-  persons(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Person]!
-  personsConnection(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PersonConnection!
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
@@ -172,7 +47,6 @@ type Query {
 }
 
 type Subscription {
-  person(where: PersonSubscriptionWhereInput): PersonSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
