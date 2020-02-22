@@ -1,7 +1,7 @@
 type Query {
     ping: String!
     user: User
-    events: [Event!]!
+    completedEvents (userId: ID!): [Event!]!
 }
 
 type Mutation {
@@ -26,4 +26,11 @@ type Event {
     id: ID!
     title: String!
     owner: User!
+    eventStatus: EventStatus!
+}
+
+enum EventStatus {
+    SET
+    LIT
+    COMPLETED
 }

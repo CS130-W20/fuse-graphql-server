@@ -10,4 +10,11 @@ type Event {
   id: ID! @id
   title: String!
   owner: User!
+  status: EventStatus!
+}
+
+enum EventStatus {
+  SET
+  LIT
+  COMPLETED
 }

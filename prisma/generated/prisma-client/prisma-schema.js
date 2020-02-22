@@ -19,6 +19,7 @@ type Event {
   id: ID!
   title: String!
   owner: User!
+  status: EventStatus!
 }
 
 type EventConnection {
@@ -31,6 +32,7 @@ input EventCreateInput {
   id: ID
   title: String!
   owner: UserCreateOneWithoutOwnedEventsInput!
+  status: EventStatus!
 }
 
 input EventCreateManyWithoutOwnerInput {
@@ -41,6 +43,7 @@ input EventCreateManyWithoutOwnerInput {
 input EventCreateWithoutOwnerInput {
   id: ID
   title: String!
+  status: EventStatus!
 }
 
 type EventEdge {
@@ -53,11 +56,14 @@ enum EventOrderByInput {
   id_DESC
   title_ASC
   title_DESC
+  status_ASC
+  status_DESC
 }
 
 type EventPreviousValues {
   id: ID!
   title: String!
+  status: EventStatus!
 }
 
 input EventScalarWhereInput {
@@ -89,9 +95,19 @@ input EventScalarWhereInput {
   title_not_starts_with: String
   title_ends_with: String
   title_not_ends_with: String
+  status: EventStatus
+  status_not: EventStatus
+  status_in: [EventStatus!]
+  status_not_in: [EventStatus!]
   AND: [EventScalarWhereInput!]
   OR: [EventScalarWhereInput!]
   NOT: [EventScalarWhereInput!]
+}
+
+enum EventStatus {
+  SET
+  LIT
+  COMPLETED
 }
 
 type EventSubscriptionPayload {
@@ -115,14 +131,17 @@ input EventSubscriptionWhereInput {
 input EventUpdateInput {
   title: String
   owner: UserUpdateOneRequiredWithoutOwnedEventsInput
+  status: EventStatus
 }
 
 input EventUpdateManyDataInput {
   title: String
+  status: EventStatus
 }
 
 input EventUpdateManyMutationInput {
   title: String
+  status: EventStatus
 }
 
 input EventUpdateManyWithoutOwnerInput {
@@ -144,6 +163,7 @@ input EventUpdateManyWithWhereNestedInput {
 
 input EventUpdateWithoutOwnerDataInput {
   title: String
+  status: EventStatus
 }
 
 input EventUpdateWithWhereUniqueWithoutOwnerInput {
@@ -187,6 +207,10 @@ input EventWhereInput {
   title_ends_with: String
   title_not_ends_with: String
   owner: UserWhereInput
+  status: EventStatus
+  status_not: EventStatus
+  status_in: [EventStatus!]
+  status_not_in: [EventStatus!]
   AND: [EventWhereInput!]
   OR: [EventWhereInput!]
   NOT: [EventWhereInput!]

@@ -140,11 +140,15 @@ export interface ClientConstructor<T> {
  * Types
  */
 
+export type EventStatus = "SET" | "LIT" | "COMPLETED";
+
 export type EventOrderByInput =
   | "id_ASC"
   | "id_DESC"
   | "title_ASC"
-  | "title_DESC";
+  | "title_DESC"
+  | "status_ASC"
+  | "status_DESC";
 
 export type UserOrderByInput =
   | "id_ASC"
@@ -192,6 +196,10 @@ export interface EventWhereInput {
   title_ends_with?: Maybe<String>;
   title_not_ends_with?: Maybe<String>;
   owner?: Maybe<UserWhereInput>;
+  status?: Maybe<EventStatus>;
+  status_not?: Maybe<EventStatus>;
+  status_in?: Maybe<EventStatus[] | EventStatus>;
+  status_not_in?: Maybe<EventStatus[] | EventStatus>;
   AND?: Maybe<EventWhereInput[] | EventWhereInput>;
   OR?: Maybe<EventWhereInput[] | EventWhereInput>;
   NOT?: Maybe<EventWhereInput[] | EventWhereInput>;
@@ -271,6 +279,7 @@ export interface EventCreateInput {
   id?: Maybe<ID_Input>;
   title: String;
   owner: UserCreateOneWithoutOwnedEventsInput;
+  status: EventStatus;
 }
 
 export interface UserCreateOneWithoutOwnedEventsInput {
@@ -288,6 +297,7 @@ export interface UserCreateWithoutOwnedEventsInput {
 export interface EventUpdateInput {
   title?: Maybe<String>;
   owner?: Maybe<UserUpdateOneRequiredWithoutOwnedEventsInput>;
+  status?: Maybe<EventStatus>;
 }
 
 export interface UserUpdateOneRequiredWithoutOwnedEventsInput {
@@ -310,6 +320,7 @@ export interface UserUpsertWithoutOwnedEventsInput {
 
 export interface EventUpdateManyMutationInput {
   title?: Maybe<String>;
+  status?: Maybe<EventStatus>;
 }
 
 export interface UserCreateInput {
@@ -328,6 +339,7 @@ export interface EventCreateManyWithoutOwnerInput {
 export interface EventCreateWithoutOwnerInput {
   id?: Maybe<ID_Input>;
   title: String;
+  status: EventStatus;
 }
 
 export interface UserUpdateInput {
@@ -364,6 +376,7 @@ export interface EventUpdateWithWhereUniqueWithoutOwnerInput {
 
 export interface EventUpdateWithoutOwnerDataInput {
   title?: Maybe<String>;
+  status?: Maybe<EventStatus>;
 }
 
 export interface EventUpsertWithWhereUniqueWithoutOwnerInput {
@@ -401,6 +414,10 @@ export interface EventScalarWhereInput {
   title_not_starts_with?: Maybe<String>;
   title_ends_with?: Maybe<String>;
   title_not_ends_with?: Maybe<String>;
+  status?: Maybe<EventStatus>;
+  status_not?: Maybe<EventStatus>;
+  status_in?: Maybe<EventStatus[] | EventStatus>;
+  status_not_in?: Maybe<EventStatus[] | EventStatus>;
   AND?: Maybe<EventScalarWhereInput[] | EventScalarWhereInput>;
   OR?: Maybe<EventScalarWhereInput[] | EventScalarWhereInput>;
   NOT?: Maybe<EventScalarWhereInput[] | EventScalarWhereInput>;
@@ -413,6 +430,7 @@ export interface EventUpdateManyWithWhereNestedInput {
 
 export interface EventUpdateManyDataInput {
   title?: Maybe<String>;
+  status?: Maybe<EventStatus>;
 }
 
 export interface UserUpdateManyMutationInput {
@@ -450,12 +468,14 @@ export interface NodeNode {
 export interface Event {
   id: ID_Output;
   title: String;
+  status: EventStatus;
 }
 
 export interface EventPromise extends Promise<Event>, Fragmentable {
   id: () => Promise<ID_Output>;
   title: () => Promise<String>;
   owner: <T = UserPromise>() => T;
+  status: () => Promise<EventStatus>;
 }
 
 export interface EventSubscription
@@ -464,6 +484,7 @@ export interface EventSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   title: () => Promise<AsyncIterator<String>>;
   owner: <T = UserSubscription>() => T;
+  status: () => Promise<AsyncIterator<EventStatus>>;
 }
 
 export interface EventNullablePromise
@@ -472,6 +493,7 @@ export interface EventNullablePromise
   id: () => Promise<ID_Output>;
   title: () => Promise<String>;
   owner: <T = UserPromise>() => T;
+  status: () => Promise<EventStatus>;
 }
 
 export interface User {
@@ -708,6 +730,7 @@ export interface EventSubscriptionPayloadSubscription
 export interface EventPreviousValues {
   id: ID_Output;
   title: String;
+  status: EventStatus;
 }
 
 export interface EventPreviousValuesPromise
@@ -715,6 +738,7 @@ export interface EventPreviousValuesPromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   title: () => Promise<String>;
+  status: () => Promise<EventStatus>;
 }
 
 export interface EventPreviousValuesSubscription
@@ -722,6 +746,7 @@ export interface EventPreviousValuesSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   title: () => Promise<AsyncIterator<String>>;
+  status: () => Promise<AsyncIterator<EventStatus>>;
 }
 
 export interface UserSubscriptionPayload {
@@ -808,6 +833,10 @@ export const models: Model[] = [
   },
   {
     name: "Event",
+    embedded: false
+  },
+  {
+    name: "EventStatus",
     embedded: false
   }
 ];

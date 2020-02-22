@@ -11,13 +11,13 @@ async function user(parent, args, context) {
   });
 }
 
-async function events(parent, args, context) {
-  const userId = getUserId({ context });
+async function completedEvents(parent, { userId }, context) {
   return context.prisma.events({
     where: {
       owner: {
         id: userId,
       },
+      status: 'COMPLETED',
     },
   });
 }
@@ -25,5 +25,5 @@ async function events(parent, args, context) {
 export default {
   ping,
   user,
-  events,
+  completedEvents,
 };
