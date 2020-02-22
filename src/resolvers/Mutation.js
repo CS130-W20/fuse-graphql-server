@@ -46,6 +46,7 @@ async function createEvent(parent, { title }, context) {
   return context.prisma.createEvent({
     title,
     owner,
+    status: 'SET',
   });
 }
 
