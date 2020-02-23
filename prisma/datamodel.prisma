@@ -3,18 +3,45 @@ type User {
   email: String! @unique
   hash: String!
   name: String!
-  ownedEvents: [Event!]!
+  ownedEvents: [Event!]! @relation(name: "UserOwnedEvents")
+  friends: [Friend!]!
+  notifications: [Notification!]!
 }
 
 type Event {
   id: ID! @id
   title: String!
-  owner: User!
+  owner: User! @relation(name: "UserOwnedEvents")
   status: EventStatus!
+  invited: [User!]! @relation(name: "UserInvitedEvents")
+  joined: [User!]! @relation(name: "UserJoinedEvents")
 }
 
 enum EventStatus {
   SET
   LIT
   COMPLETED
+}
+
+type Friend {
+  id: ID! @id
+  user: User!
+  status: FriendStatus!
+}
+
+enum FriendStatus {
+  SENT_REQUEST
+  RECEIVED_REQUEST
+  CONFIRMED
+}
+
+type Notification {
+  id: ID! @id
+  status: NotificationStatus!
+  text: String!
+}
+
+enum NotificationStatus {
+  UNREAD
+  READ
 }

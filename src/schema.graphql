@@ -1,13 +1,17 @@
 type Query {
     ping: String!
     user: User
-    completedEvents(userId: ID): [Event!]!
+    completedEvents(userId: ID): [Event!]!  # TODO
 }
 
 type Mutation {
     signup(email: String!, password: String!, name: String!): AuthPayload
     login(email: String!, password: String!): AuthPayload
     createEvent(title: String!): Event!
+    requestFriend(userId: ID!): String  # TODO
+    confirmFriend(userId: ID!): String  # TODO
+    updateEventDetails(eventId: ID!, title: String!): Event!  # TODO
+    updateEventStatus(eventId: ID!, currentEventStatus: EventStatus!): Event!   # TODO
 }
 
 type AuthPayload {
@@ -20,6 +24,7 @@ type User {
     name: String!
     email: String!
     ownedEvents: [Event!]!
+    events(userId: ID, association: [Association!], status: [EventStatus!]): [Event!]!  # TODO
 }
 
 type Event {
@@ -27,10 +32,18 @@ type Event {
     title: String!
     owner: User!
     status: EventStatus!
+    invited: [User!]!   # TODO
+    joined: [User!]!    # TODO
 }
 
 enum EventStatus {
     SET
     LIT
     COMPLETED
+}
+
+enum Association {
+    INVITED
+    JOINED
+    OWNER
 }

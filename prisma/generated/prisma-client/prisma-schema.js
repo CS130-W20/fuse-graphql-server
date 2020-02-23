@@ -7,6 +7,14 @@ module.exports = {
   count: Int!
 }
 
+type AggregateFriend {
+  count: Int!
+}
+
+type AggregateNotification {
+  count: Int!
+}
+
 type AggregateUser {
   count: Int!
 }
@@ -20,6 +28,8 @@ type Event {
   title: String!
   owner: User!
   status: EventStatus!
+  invited(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  joined(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
 }
 
 type EventConnection {
@@ -33,6 +43,8 @@ input EventCreateInput {
   title: String!
   owner: UserCreateOneWithoutOwnedEventsInput!
   status: EventStatus!
+  invited: UserCreateManyInput
+  joined: UserCreateManyInput
 }
 
 input EventCreateManyWithoutOwnerInput {
@@ -44,6 +56,8 @@ input EventCreateWithoutOwnerInput {
   id: ID
   title: String!
   status: EventStatus!
+  invited: UserCreateManyInput
+  joined: UserCreateManyInput
 }
 
 type EventEdge {
@@ -132,6 +146,8 @@ input EventUpdateInput {
   title: String
   owner: UserUpdateOneRequiredWithoutOwnedEventsInput
   status: EventStatus
+  invited: UserUpdateManyInput
+  joined: UserUpdateManyInput
 }
 
 input EventUpdateManyDataInput {
@@ -164,6 +180,8 @@ input EventUpdateManyWithWhereNestedInput {
 input EventUpdateWithoutOwnerDataInput {
   title: String
   status: EventStatus
+  invited: UserUpdateManyInput
+  joined: UserUpdateManyInput
 }
 
 input EventUpdateWithWhereUniqueWithoutOwnerInput {
@@ -211,12 +229,185 @@ input EventWhereInput {
   status_not: EventStatus
   status_in: [EventStatus!]
   status_not_in: [EventStatus!]
+  invited_every: UserWhereInput
+  invited_some: UserWhereInput
+  invited_none: UserWhereInput
+  joined_every: UserWhereInput
+  joined_some: UserWhereInput
+  joined_none: UserWhereInput
   AND: [EventWhereInput!]
   OR: [EventWhereInput!]
   NOT: [EventWhereInput!]
 }
 
 input EventWhereUniqueInput {
+  id: ID
+}
+
+type Friend {
+  id: ID!
+  user: User!
+  status: FriendStatus!
+}
+
+type FriendConnection {
+  pageInfo: PageInfo!
+  edges: [FriendEdge]!
+  aggregate: AggregateFriend!
+}
+
+input FriendCreateInput {
+  id: ID
+  user: UserCreateOneWithoutFriendsInput!
+  status: FriendStatus!
+}
+
+input FriendCreateManyWithoutUserInput {
+  create: [FriendCreateWithoutUserInput!]
+  connect: [FriendWhereUniqueInput!]
+}
+
+input FriendCreateWithoutUserInput {
+  id: ID
+  status: FriendStatus!
+}
+
+type FriendEdge {
+  node: Friend!
+  cursor: String!
+}
+
+enum FriendOrderByInput {
+  id_ASC
+  id_DESC
+  status_ASC
+  status_DESC
+}
+
+type FriendPreviousValues {
+  id: ID!
+  status: FriendStatus!
+}
+
+input FriendScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  status: FriendStatus
+  status_not: FriendStatus
+  status_in: [FriendStatus!]
+  status_not_in: [FriendStatus!]
+  AND: [FriendScalarWhereInput!]
+  OR: [FriendScalarWhereInput!]
+  NOT: [FriendScalarWhereInput!]
+}
+
+enum FriendStatus {
+  SENT_REQUEST
+  RECEIVED_REQUEST
+  CONFIRMED
+}
+
+type FriendSubscriptionPayload {
+  mutation: MutationType!
+  node: Friend
+  updatedFields: [String!]
+  previousValues: FriendPreviousValues
+}
+
+input FriendSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: FriendWhereInput
+  AND: [FriendSubscriptionWhereInput!]
+  OR: [FriendSubscriptionWhereInput!]
+  NOT: [FriendSubscriptionWhereInput!]
+}
+
+input FriendUpdateInput {
+  user: UserUpdateOneRequiredWithoutFriendsInput
+  status: FriendStatus
+}
+
+input FriendUpdateManyDataInput {
+  status: FriendStatus
+}
+
+input FriendUpdateManyMutationInput {
+  status: FriendStatus
+}
+
+input FriendUpdateManyWithoutUserInput {
+  create: [FriendCreateWithoutUserInput!]
+  delete: [FriendWhereUniqueInput!]
+  connect: [FriendWhereUniqueInput!]
+  set: [FriendWhereUniqueInput!]
+  disconnect: [FriendWhereUniqueInput!]
+  update: [FriendUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [FriendUpsertWithWhereUniqueWithoutUserInput!]
+  deleteMany: [FriendScalarWhereInput!]
+  updateMany: [FriendUpdateManyWithWhereNestedInput!]
+}
+
+input FriendUpdateManyWithWhereNestedInput {
+  where: FriendScalarWhereInput!
+  data: FriendUpdateManyDataInput!
+}
+
+input FriendUpdateWithoutUserDataInput {
+  status: FriendStatus
+}
+
+input FriendUpdateWithWhereUniqueWithoutUserInput {
+  where: FriendWhereUniqueInput!
+  data: FriendUpdateWithoutUserDataInput!
+}
+
+input FriendUpsertWithWhereUniqueWithoutUserInput {
+  where: FriendWhereUniqueInput!
+  update: FriendUpdateWithoutUserDataInput!
+  create: FriendCreateWithoutUserInput!
+}
+
+input FriendWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  user: UserWhereInput
+  status: FriendStatus
+  status_not: FriendStatus
+  status_in: [FriendStatus!]
+  status_not_in: [FriendStatus!]
+  AND: [FriendWhereInput!]
+  OR: [FriendWhereInput!]
+  NOT: [FriendWhereInput!]
+}
+
+input FriendWhereUniqueInput {
   id: ID
 }
 
@@ -229,6 +420,18 @@ type Mutation {
   upsertEvent(where: EventWhereUniqueInput!, create: EventCreateInput!, update: EventUpdateInput!): Event!
   deleteEvent(where: EventWhereUniqueInput!): Event
   deleteManyEvents(where: EventWhereInput): BatchPayload!
+  createFriend(data: FriendCreateInput!): Friend!
+  updateFriend(data: FriendUpdateInput!, where: FriendWhereUniqueInput!): Friend
+  updateManyFriends(data: FriendUpdateManyMutationInput!, where: FriendWhereInput): BatchPayload!
+  upsertFriend(where: FriendWhereUniqueInput!, create: FriendCreateInput!, update: FriendUpdateInput!): Friend!
+  deleteFriend(where: FriendWhereUniqueInput!): Friend
+  deleteManyFriends(where: FriendWhereInput): BatchPayload!
+  createNotification(data: NotificationCreateInput!): Notification!
+  updateNotification(data: NotificationUpdateInput!, where: NotificationWhereUniqueInput!): Notification
+  updateManyNotifications(data: NotificationUpdateManyMutationInput!, where: NotificationWhereInput): BatchPayload!
+  upsertNotification(where: NotificationWhereUniqueInput!, create: NotificationCreateInput!, update: NotificationUpdateInput!): Notification!
+  deleteNotification(where: NotificationWhereUniqueInput!): Notification
+  deleteManyNotifications(where: NotificationWhereInput): BatchPayload!
   createUser(data: UserCreateInput!): User!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
@@ -247,6 +450,200 @@ interface Node {
   id: ID!
 }
 
+type Notification {
+  id: ID!
+  status: NotificationStatus!
+  text: String!
+}
+
+type NotificationConnection {
+  pageInfo: PageInfo!
+  edges: [NotificationEdge]!
+  aggregate: AggregateNotification!
+}
+
+input NotificationCreateInput {
+  id: ID
+  status: NotificationStatus!
+  text: String!
+}
+
+input NotificationCreateManyInput {
+  create: [NotificationCreateInput!]
+  connect: [NotificationWhereUniqueInput!]
+}
+
+type NotificationEdge {
+  node: Notification!
+  cursor: String!
+}
+
+enum NotificationOrderByInput {
+  id_ASC
+  id_DESC
+  status_ASC
+  status_DESC
+  text_ASC
+  text_DESC
+}
+
+type NotificationPreviousValues {
+  id: ID!
+  status: NotificationStatus!
+  text: String!
+}
+
+input NotificationScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  status: NotificationStatus
+  status_not: NotificationStatus
+  status_in: [NotificationStatus!]
+  status_not_in: [NotificationStatus!]
+  text: String
+  text_not: String
+  text_in: [String!]
+  text_not_in: [String!]
+  text_lt: String
+  text_lte: String
+  text_gt: String
+  text_gte: String
+  text_contains: String
+  text_not_contains: String
+  text_starts_with: String
+  text_not_starts_with: String
+  text_ends_with: String
+  text_not_ends_with: String
+  AND: [NotificationScalarWhereInput!]
+  OR: [NotificationScalarWhereInput!]
+  NOT: [NotificationScalarWhereInput!]
+}
+
+enum NotificationStatus {
+  UNREAD
+  READ
+}
+
+type NotificationSubscriptionPayload {
+  mutation: MutationType!
+  node: Notification
+  updatedFields: [String!]
+  previousValues: NotificationPreviousValues
+}
+
+input NotificationSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: NotificationWhereInput
+  AND: [NotificationSubscriptionWhereInput!]
+  OR: [NotificationSubscriptionWhereInput!]
+  NOT: [NotificationSubscriptionWhereInput!]
+}
+
+input NotificationUpdateDataInput {
+  status: NotificationStatus
+  text: String
+}
+
+input NotificationUpdateInput {
+  status: NotificationStatus
+  text: String
+}
+
+input NotificationUpdateManyDataInput {
+  status: NotificationStatus
+  text: String
+}
+
+input NotificationUpdateManyInput {
+  create: [NotificationCreateInput!]
+  update: [NotificationUpdateWithWhereUniqueNestedInput!]
+  upsert: [NotificationUpsertWithWhereUniqueNestedInput!]
+  delete: [NotificationWhereUniqueInput!]
+  connect: [NotificationWhereUniqueInput!]
+  set: [NotificationWhereUniqueInput!]
+  disconnect: [NotificationWhereUniqueInput!]
+  deleteMany: [NotificationScalarWhereInput!]
+  updateMany: [NotificationUpdateManyWithWhereNestedInput!]
+}
+
+input NotificationUpdateManyMutationInput {
+  status: NotificationStatus
+  text: String
+}
+
+input NotificationUpdateManyWithWhereNestedInput {
+  where: NotificationScalarWhereInput!
+  data: NotificationUpdateManyDataInput!
+}
+
+input NotificationUpdateWithWhereUniqueNestedInput {
+  where: NotificationWhereUniqueInput!
+  data: NotificationUpdateDataInput!
+}
+
+input NotificationUpsertWithWhereUniqueNestedInput {
+  where: NotificationWhereUniqueInput!
+  update: NotificationUpdateDataInput!
+  create: NotificationCreateInput!
+}
+
+input NotificationWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  status: NotificationStatus
+  status_not: NotificationStatus
+  status_in: [NotificationStatus!]
+  status_not_in: [NotificationStatus!]
+  text: String
+  text_not: String
+  text_in: [String!]
+  text_not_in: [String!]
+  text_lt: String
+  text_lte: String
+  text_gt: String
+  text_gte: String
+  text_contains: String
+  text_not_contains: String
+  text_starts_with: String
+  text_not_starts_with: String
+  text_ends_with: String
+  text_not_ends_with: String
+  AND: [NotificationWhereInput!]
+  OR: [NotificationWhereInput!]
+  NOT: [NotificationWhereInput!]
+}
+
+input NotificationWhereUniqueInput {
+  id: ID
+}
+
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -258,6 +655,12 @@ type Query {
   event(where: EventWhereUniqueInput!): Event
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event]!
   eventsConnection(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EventConnection!
+  friend(where: FriendWhereUniqueInput!): Friend
+  friends(where: FriendWhereInput, orderBy: FriendOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Friend]!
+  friendsConnection(where: FriendWhereInput, orderBy: FriendOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FriendConnection!
+  notification(where: NotificationWhereUniqueInput!): Notification
+  notifications(where: NotificationWhereInput, orderBy: NotificationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Notification]!
+  notificationsConnection(where: NotificationWhereInput, orderBy: NotificationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): NotificationConnection!
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
@@ -266,6 +669,8 @@ type Query {
 
 type Subscription {
   event(where: EventSubscriptionWhereInput): EventSubscriptionPayload
+  friend(where: FriendSubscriptionWhereInput): FriendSubscriptionPayload
+  notification(where: NotificationSubscriptionWhereInput): NotificationSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
@@ -275,6 +680,8 @@ type User {
   hash: String!
   name: String!
   ownedEvents(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
+  friends(where: FriendWhereInput, orderBy: FriendOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Friend!]
+  notifications(where: NotificationWhereInput, orderBy: NotificationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Notification!]
 }
 
 type UserConnection {
@@ -289,6 +696,18 @@ input UserCreateInput {
   hash: String!
   name: String!
   ownedEvents: EventCreateManyWithoutOwnerInput
+  friends: FriendCreateManyWithoutUserInput
+  notifications: NotificationCreateManyInput
+}
+
+input UserCreateManyInput {
+  create: [UserCreateInput!]
+  connect: [UserWhereUniqueInput!]
+}
+
+input UserCreateOneWithoutFriendsInput {
+  create: UserCreateWithoutFriendsInput
+  connect: UserWhereUniqueInput
 }
 
 input UserCreateOneWithoutOwnedEventsInput {
@@ -296,11 +715,22 @@ input UserCreateOneWithoutOwnedEventsInput {
   connect: UserWhereUniqueInput
 }
 
+input UserCreateWithoutFriendsInput {
+  id: ID
+  email: String!
+  hash: String!
+  name: String!
+  ownedEvents: EventCreateManyWithoutOwnerInput
+  notifications: NotificationCreateManyInput
+}
+
 input UserCreateWithoutOwnedEventsInput {
   id: ID
   email: String!
   hash: String!
   name: String!
+  friends: FriendCreateManyWithoutUserInput
+  notifications: NotificationCreateManyInput
 }
 
 type UserEdge {
@@ -326,6 +756,68 @@ type UserPreviousValues {
   name: String!
 }
 
+input UserScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  email: String
+  email_not: String
+  email_in: [String!]
+  email_not_in: [String!]
+  email_lt: String
+  email_lte: String
+  email_gt: String
+  email_gte: String
+  email_contains: String
+  email_not_contains: String
+  email_starts_with: String
+  email_not_starts_with: String
+  email_ends_with: String
+  email_not_ends_with: String
+  hash: String
+  hash_not: String
+  hash_in: [String!]
+  hash_not_in: [String!]
+  hash_lt: String
+  hash_lte: String
+  hash_gt: String
+  hash_gte: String
+  hash_contains: String
+  hash_not_contains: String
+  hash_starts_with: String
+  hash_not_starts_with: String
+  hash_ends_with: String
+  hash_not_ends_with: String
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  AND: [UserScalarWhereInput!]
+  OR: [UserScalarWhereInput!]
+  NOT: [UserScalarWhereInput!]
+}
+
 type UserSubscriptionPayload {
   mutation: MutationType!
   node: User
@@ -344,17 +836,58 @@ input UserSubscriptionWhereInput {
   NOT: [UserSubscriptionWhereInput!]
 }
 
+input UserUpdateDataInput {
+  email: String
+  hash: String
+  name: String
+  ownedEvents: EventUpdateManyWithoutOwnerInput
+  friends: FriendUpdateManyWithoutUserInput
+  notifications: NotificationUpdateManyInput
+}
+
 input UserUpdateInput {
   email: String
   hash: String
   name: String
   ownedEvents: EventUpdateManyWithoutOwnerInput
+  friends: FriendUpdateManyWithoutUserInput
+  notifications: NotificationUpdateManyInput
+}
+
+input UserUpdateManyDataInput {
+  email: String
+  hash: String
+  name: String
+}
+
+input UserUpdateManyInput {
+  create: [UserCreateInput!]
+  update: [UserUpdateWithWhereUniqueNestedInput!]
+  upsert: [UserUpsertWithWhereUniqueNestedInput!]
+  delete: [UserWhereUniqueInput!]
+  connect: [UserWhereUniqueInput!]
+  set: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  deleteMany: [UserScalarWhereInput!]
+  updateMany: [UserUpdateManyWithWhereNestedInput!]
 }
 
 input UserUpdateManyMutationInput {
   email: String
   hash: String
   name: String
+}
+
+input UserUpdateManyWithWhereNestedInput {
+  where: UserScalarWhereInput!
+  data: UserUpdateManyDataInput!
+}
+
+input UserUpdateOneRequiredWithoutFriendsInput {
+  create: UserCreateWithoutFriendsInput
+  update: UserUpdateWithoutFriendsDataInput
+  upsert: UserUpsertWithoutFriendsInput
+  connect: UserWhereUniqueInput
 }
 
 input UserUpdateOneRequiredWithoutOwnedEventsInput {
@@ -364,15 +897,41 @@ input UserUpdateOneRequiredWithoutOwnedEventsInput {
   connect: UserWhereUniqueInput
 }
 
+input UserUpdateWithoutFriendsDataInput {
+  email: String
+  hash: String
+  name: String
+  ownedEvents: EventUpdateManyWithoutOwnerInput
+  notifications: NotificationUpdateManyInput
+}
+
 input UserUpdateWithoutOwnedEventsDataInput {
   email: String
   hash: String
   name: String
+  friends: FriendUpdateManyWithoutUserInput
+  notifications: NotificationUpdateManyInput
+}
+
+input UserUpdateWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput!
+  data: UserUpdateDataInput!
+}
+
+input UserUpsertWithoutFriendsInput {
+  update: UserUpdateWithoutFriendsDataInput!
+  create: UserCreateWithoutFriendsInput!
 }
 
 input UserUpsertWithoutOwnedEventsInput {
   update: UserUpdateWithoutOwnedEventsDataInput!
   create: UserCreateWithoutOwnedEventsInput!
+}
+
+input UserUpsertWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput!
+  update: UserUpdateDataInput!
+  create: UserCreateInput!
 }
 
 input UserWhereInput {
@@ -435,6 +994,12 @@ input UserWhereInput {
   ownedEvents_every: EventWhereInput
   ownedEvents_some: EventWhereInput
   ownedEvents_none: EventWhereInput
+  friends_every: FriendWhereInput
+  friends_some: FriendWhereInput
+  friends_none: FriendWhereInput
+  notifications_every: NotificationWhereInput
+  notifications_some: NotificationWhereInput
+  notifications_none: NotificationWhereInput
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]

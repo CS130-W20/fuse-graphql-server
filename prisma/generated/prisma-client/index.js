@@ -15,6 +15,22 @@ var models = [
   {
     name: "EventStatus",
     embedded: false
+  },
+  {
+    name: "Friend",
+    embedded: false
+  },
+  {
+    name: "FriendStatus",
+    embedded: false
+  },
+  {
+    name: "Notification",
+    embedded: false
+  },
+  {
+    name: "NotificationStatus",
+    embedded: false
   }
 ];
 exports.Prisma = prisma_lib_1.makePrismaClientClass({
