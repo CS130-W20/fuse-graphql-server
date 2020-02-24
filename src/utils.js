@@ -13,8 +13,13 @@ function getUserId({ context }) {
   throw new AuthenticationError('Not authenticated');
 }
 
+function createPairKey(selfUserId, userId) {
+  return `${selfUserId}-${userId}`;
+}
+
 
 export {
   APP_SECRET,
   getUserId,
+  createPairKey,
 };

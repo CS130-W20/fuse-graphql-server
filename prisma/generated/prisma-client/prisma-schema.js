@@ -7,7 +7,7 @@ module.exports = {
   count: Int!
 }
 
-type AggregateFriend {
+type AggregateFriendship {
   count: Int!
 }
 
@@ -244,52 +244,61 @@ input EventWhereUniqueInput {
   id: ID
 }
 
-type Friend {
+type Friendship {
   id: ID!
   user: User!
+  friend: User!
+  pairKey: String!
   status: FriendStatus!
 }
 
-type FriendConnection {
+type FriendshipConnection {
   pageInfo: PageInfo!
-  edges: [FriendEdge]!
-  aggregate: AggregateFriend!
+  edges: [FriendshipEdge]!
+  aggregate: AggregateFriendship!
 }
 
-input FriendCreateInput {
+input FriendshipCreateInput {
   id: ID
   user: UserCreateOneWithoutFriendsInput!
+  friend: UserCreateOneInput!
+  pairKey: String!
   status: FriendStatus!
 }
 
-input FriendCreateManyWithoutUserInput {
-  create: [FriendCreateWithoutUserInput!]
-  connect: [FriendWhereUniqueInput!]
+input FriendshipCreateManyWithoutUserInput {
+  create: [FriendshipCreateWithoutUserInput!]
+  connect: [FriendshipWhereUniqueInput!]
 }
 
-input FriendCreateWithoutUserInput {
+input FriendshipCreateWithoutUserInput {
   id: ID
+  friend: UserCreateOneInput!
+  pairKey: String!
   status: FriendStatus!
 }
 
-type FriendEdge {
-  node: Friend!
+type FriendshipEdge {
+  node: Friendship!
   cursor: String!
 }
 
-enum FriendOrderByInput {
+enum FriendshipOrderByInput {
   id_ASC
   id_DESC
+  pairKey_ASC
+  pairKey_DESC
   status_ASC
   status_DESC
 }
 
-type FriendPreviousValues {
+type FriendshipPreviousValues {
   id: ID!
+  pairKey: String!
   status: FriendStatus!
 }
 
-input FriendScalarWhereInput {
+input FriendshipScalarWhereInput {
   id: ID
   id_not: ID
   id_in: [ID!]
@@ -304,85 +313,99 @@ input FriendScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  pairKey: String
+  pairKey_not: String
+  pairKey_in: [String!]
+  pairKey_not_in: [String!]
+  pairKey_lt: String
+  pairKey_lte: String
+  pairKey_gt: String
+  pairKey_gte: String
+  pairKey_contains: String
+  pairKey_not_contains: String
+  pairKey_starts_with: String
+  pairKey_not_starts_with: String
+  pairKey_ends_with: String
+  pairKey_not_ends_with: String
   status: FriendStatus
   status_not: FriendStatus
   status_in: [FriendStatus!]
   status_not_in: [FriendStatus!]
-  AND: [FriendScalarWhereInput!]
-  OR: [FriendScalarWhereInput!]
-  NOT: [FriendScalarWhereInput!]
+  AND: [FriendshipScalarWhereInput!]
+  OR: [FriendshipScalarWhereInput!]
+  NOT: [FriendshipScalarWhereInput!]
 }
 
-enum FriendStatus {
-  SENT_REQUEST
-  RECEIVED_REQUEST
-  CONFIRMED
-}
-
-type FriendSubscriptionPayload {
+type FriendshipSubscriptionPayload {
   mutation: MutationType!
-  node: Friend
+  node: Friendship
   updatedFields: [String!]
-  previousValues: FriendPreviousValues
+  previousValues: FriendshipPreviousValues
 }
 
-input FriendSubscriptionWhereInput {
+input FriendshipSubscriptionWhereInput {
   mutation_in: [MutationType!]
   updatedFields_contains: String
   updatedFields_contains_every: [String!]
   updatedFields_contains_some: [String!]
-  node: FriendWhereInput
-  AND: [FriendSubscriptionWhereInput!]
-  OR: [FriendSubscriptionWhereInput!]
-  NOT: [FriendSubscriptionWhereInput!]
+  node: FriendshipWhereInput
+  AND: [FriendshipSubscriptionWhereInput!]
+  OR: [FriendshipSubscriptionWhereInput!]
+  NOT: [FriendshipSubscriptionWhereInput!]
 }
 
-input FriendUpdateInput {
+input FriendshipUpdateInput {
   user: UserUpdateOneRequiredWithoutFriendsInput
+  friend: UserUpdateOneRequiredInput
+  pairKey: String
   status: FriendStatus
 }
 
-input FriendUpdateManyDataInput {
+input FriendshipUpdateManyDataInput {
+  pairKey: String
   status: FriendStatus
 }
 
-input FriendUpdateManyMutationInput {
+input FriendshipUpdateManyMutationInput {
+  pairKey: String
   status: FriendStatus
 }
 
-input FriendUpdateManyWithoutUserInput {
-  create: [FriendCreateWithoutUserInput!]
-  delete: [FriendWhereUniqueInput!]
-  connect: [FriendWhereUniqueInput!]
-  set: [FriendWhereUniqueInput!]
-  disconnect: [FriendWhereUniqueInput!]
-  update: [FriendUpdateWithWhereUniqueWithoutUserInput!]
-  upsert: [FriendUpsertWithWhereUniqueWithoutUserInput!]
-  deleteMany: [FriendScalarWhereInput!]
-  updateMany: [FriendUpdateManyWithWhereNestedInput!]
+input FriendshipUpdateManyWithoutUserInput {
+  create: [FriendshipCreateWithoutUserInput!]
+  delete: [FriendshipWhereUniqueInput!]
+  connect: [FriendshipWhereUniqueInput!]
+  set: [FriendshipWhereUniqueInput!]
+  disconnect: [FriendshipWhereUniqueInput!]
+  update: [FriendshipUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [FriendshipUpsertWithWhereUniqueWithoutUserInput!]
+  deleteMany: [FriendshipScalarWhereInput!]
+  updateMany: [FriendshipUpdateManyWithWhereNestedInput!]
 }
 
-input FriendUpdateManyWithWhereNestedInput {
-  where: FriendScalarWhereInput!
-  data: FriendUpdateManyDataInput!
+input FriendshipUpdateManyWithWhereNestedInput {
+  where: FriendshipScalarWhereInput!
+  data: FriendshipUpdateManyDataInput!
 }
 
-input FriendUpdateWithoutUserDataInput {
+input FriendshipUpdateWithoutUserDataInput {
+  friend: UserUpdateOneRequiredInput
+  pairKey: String
   status: FriendStatus
 }
 
-input FriendUpdateWithWhereUniqueWithoutUserInput {
-  where: FriendWhereUniqueInput!
-  data: FriendUpdateWithoutUserDataInput!
+input FriendshipUpdateWithWhereUniqueWithoutUserInput {
+  where: FriendshipWhereUniqueInput!
+  data: FriendshipUpdateWithoutUserDataInput!
 }
 
-input FriendUpsertWithWhereUniqueWithoutUserInput {
-  where: FriendWhereUniqueInput!
-  update: FriendUpdateWithoutUserDataInput!
-  create: FriendCreateWithoutUserInput!
+input FriendshipUpsertWithWhereUniqueWithoutUserInput {
+  where: FriendshipWhereUniqueInput!
+  update: FriendshipUpdateWithoutUserDataInput!
+  create: FriendshipCreateWithoutUserInput!
 }
 
-input FriendWhereInput {
+input FriendshipWhereInput {
   id: ID
   id_not: ID
   id_in: [ID!]
@@ -398,17 +421,39 @@ input FriendWhereInput {
   id_ends_with: ID
   id_not_ends_with: ID
   user: UserWhereInput
+  friend: UserWhereInput
+  pairKey: String
+  pairKey_not: String
+  pairKey_in: [String!]
+  pairKey_not_in: [String!]
+  pairKey_lt: String
+  pairKey_lte: String
+  pairKey_gt: String
+  pairKey_gte: String
+  pairKey_contains: String
+  pairKey_not_contains: String
+  pairKey_starts_with: String
+  pairKey_not_starts_with: String
+  pairKey_ends_with: String
+  pairKey_not_ends_with: String
   status: FriendStatus
   status_not: FriendStatus
   status_in: [FriendStatus!]
   status_not_in: [FriendStatus!]
-  AND: [FriendWhereInput!]
-  OR: [FriendWhereInput!]
-  NOT: [FriendWhereInput!]
+  AND: [FriendshipWhereInput!]
+  OR: [FriendshipWhereInput!]
+  NOT: [FriendshipWhereInput!]
 }
 
-input FriendWhereUniqueInput {
+input FriendshipWhereUniqueInput {
   id: ID
+  pairKey: String
+}
+
+enum FriendStatus {
+  SENT_REQUEST
+  RECEIVED_REQUEST
+  CONFIRMED
 }
 
 scalar Long
@@ -420,12 +465,12 @@ type Mutation {
   upsertEvent(where: EventWhereUniqueInput!, create: EventCreateInput!, update: EventUpdateInput!): Event!
   deleteEvent(where: EventWhereUniqueInput!): Event
   deleteManyEvents(where: EventWhereInput): BatchPayload!
-  createFriend(data: FriendCreateInput!): Friend!
-  updateFriend(data: FriendUpdateInput!, where: FriendWhereUniqueInput!): Friend
-  updateManyFriends(data: FriendUpdateManyMutationInput!, where: FriendWhereInput): BatchPayload!
-  upsertFriend(where: FriendWhereUniqueInput!, create: FriendCreateInput!, update: FriendUpdateInput!): Friend!
-  deleteFriend(where: FriendWhereUniqueInput!): Friend
-  deleteManyFriends(where: FriendWhereInput): BatchPayload!
+  createFriendship(data: FriendshipCreateInput!): Friendship!
+  updateFriendship(data: FriendshipUpdateInput!, where: FriendshipWhereUniqueInput!): Friendship
+  updateManyFriendships(data: FriendshipUpdateManyMutationInput!, where: FriendshipWhereInput): BatchPayload!
+  upsertFriendship(where: FriendshipWhereUniqueInput!, create: FriendshipCreateInput!, update: FriendshipUpdateInput!): Friendship!
+  deleteFriendship(where: FriendshipWhereUniqueInput!): Friendship
+  deleteManyFriendships(where: FriendshipWhereInput): BatchPayload!
   createNotification(data: NotificationCreateInput!): Notification!
   updateNotification(data: NotificationUpdateInput!, where: NotificationWhereUniqueInput!): Notification
   updateManyNotifications(data: NotificationUpdateManyMutationInput!, where: NotificationWhereInput): BatchPayload!
@@ -655,9 +700,9 @@ type Query {
   event(where: EventWhereUniqueInput!): Event
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event]!
   eventsConnection(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EventConnection!
-  friend(where: FriendWhereUniqueInput!): Friend
-  friends(where: FriendWhereInput, orderBy: FriendOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Friend]!
-  friendsConnection(where: FriendWhereInput, orderBy: FriendOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FriendConnection!
+  friendship(where: FriendshipWhereUniqueInput!): Friendship
+  friendships(where: FriendshipWhereInput, orderBy: FriendshipOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Friendship]!
+  friendshipsConnection(where: FriendshipWhereInput, orderBy: FriendshipOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FriendshipConnection!
   notification(where: NotificationWhereUniqueInput!): Notification
   notifications(where: NotificationWhereInput, orderBy: NotificationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Notification]!
   notificationsConnection(where: NotificationWhereInput, orderBy: NotificationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): NotificationConnection!
@@ -669,7 +714,7 @@ type Query {
 
 type Subscription {
   event(where: EventSubscriptionWhereInput): EventSubscriptionPayload
-  friend(where: FriendSubscriptionWhereInput): FriendSubscriptionPayload
+  friendship(where: FriendshipSubscriptionWhereInput): FriendshipSubscriptionPayload
   notification(where: NotificationSubscriptionWhereInput): NotificationSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
@@ -680,7 +725,7 @@ type User {
   hash: String!
   name: String!
   ownedEvents(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
-  friends(where: FriendWhereInput, orderBy: FriendOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Friend!]
+  friends(where: FriendshipWhereInput, orderBy: FriendshipOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Friendship!]
   notifications(where: NotificationWhereInput, orderBy: NotificationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Notification!]
 }
 
@@ -696,13 +741,18 @@ input UserCreateInput {
   hash: String!
   name: String!
   ownedEvents: EventCreateManyWithoutOwnerInput
-  friends: FriendCreateManyWithoutUserInput
+  friends: FriendshipCreateManyWithoutUserInput
   notifications: NotificationCreateManyInput
 }
 
 input UserCreateManyInput {
   create: [UserCreateInput!]
   connect: [UserWhereUniqueInput!]
+}
+
+input UserCreateOneInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
 }
 
 input UserCreateOneWithoutFriendsInput {
@@ -729,7 +779,7 @@ input UserCreateWithoutOwnedEventsInput {
   email: String!
   hash: String!
   name: String!
-  friends: FriendCreateManyWithoutUserInput
+  friends: FriendshipCreateManyWithoutUserInput
   notifications: NotificationCreateManyInput
 }
 
@@ -841,7 +891,7 @@ input UserUpdateDataInput {
   hash: String
   name: String
   ownedEvents: EventUpdateManyWithoutOwnerInput
-  friends: FriendUpdateManyWithoutUserInput
+  friends: FriendshipUpdateManyWithoutUserInput
   notifications: NotificationUpdateManyInput
 }
 
@@ -850,7 +900,7 @@ input UserUpdateInput {
   hash: String
   name: String
   ownedEvents: EventUpdateManyWithoutOwnerInput
-  friends: FriendUpdateManyWithoutUserInput
+  friends: FriendshipUpdateManyWithoutUserInput
   notifications: NotificationUpdateManyInput
 }
 
@@ -883,6 +933,13 @@ input UserUpdateManyWithWhereNestedInput {
   data: UserUpdateManyDataInput!
 }
 
+input UserUpdateOneRequiredInput {
+  create: UserCreateInput
+  update: UserUpdateDataInput
+  upsert: UserUpsertNestedInput
+  connect: UserWhereUniqueInput
+}
+
 input UserUpdateOneRequiredWithoutFriendsInput {
   create: UserCreateWithoutFriendsInput
   update: UserUpdateWithoutFriendsDataInput
@@ -909,13 +966,18 @@ input UserUpdateWithoutOwnedEventsDataInput {
   email: String
   hash: String
   name: String
-  friends: FriendUpdateManyWithoutUserInput
+  friends: FriendshipUpdateManyWithoutUserInput
   notifications: NotificationUpdateManyInput
 }
 
 input UserUpdateWithWhereUniqueNestedInput {
   where: UserWhereUniqueInput!
   data: UserUpdateDataInput!
+}
+
+input UserUpsertNestedInput {
+  update: UserUpdateDataInput!
+  create: UserCreateInput!
 }
 
 input UserUpsertWithoutFriendsInput {
@@ -994,9 +1056,9 @@ input UserWhereInput {
   ownedEvents_every: EventWhereInput
   ownedEvents_some: EventWhereInput
   ownedEvents_none: EventWhereInput
-  friends_every: FriendWhereInput
-  friends_some: FriendWhereInput
-  friends_none: FriendWhereInput
+  friends_every: FriendshipWhereInput
+  friends_some: FriendshipWhereInput
+  friends_none: FriendshipWhereInput
   notifications_every: NotificationWhereInput
   notifications_some: NotificationWhereInput
   notifications_none: NotificationWhereInput

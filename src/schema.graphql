@@ -1,6 +1,6 @@
 type Query {
     ping: String!
-    user: User
+    user: User!
     completedEvents(userId: ID): [Event!]!  # TODO
 }
 
@@ -8,7 +8,7 @@ type Mutation {
     signup(email: String!, password: String!, name: String!): AuthPayload
     login(email: String!, password: String!): AuthPayload
     createEvent(title: String!): Event!
-    requestFriend(userId: ID!): String  # TODO
+    requestFriend(userId: ID!): String  # DONE
     confirmFriend(userId: ID!): String  # TODO
     updateEventDetails(eventId: ID!, title: String!): Event!  # TODO
     updateEventStatus(eventId: ID!, currentEventStatus: EventStatus!): Event!   # TODO

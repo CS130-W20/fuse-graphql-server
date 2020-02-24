@@ -4,7 +4,7 @@ type User {
   hash: String!
   name: String!
   ownedEvents: [Event!]! @relation(name: "UserOwnedEvents")
-  friends: [Friend!]!
+  friends: [Friendship!]!   @relation(name: "FriendSource")
   notifications: [Notification!]!
 }
 
@@ -23,9 +23,11 @@ enum EventStatus {
   COMPLETED
 }
 
-type Friend {
+type Friendship {
   id: ID! @id
-  user: User!
+  user: User!   @relation(name: "FriendSource")
+  friend: User! @relation(name: "FriendSink")
+  pairKey: String! @unique
   status: FriendStatus!
 }
 

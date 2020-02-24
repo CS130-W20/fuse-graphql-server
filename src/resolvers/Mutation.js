@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { AuthenticationError } from 'apollo-server';
-import { APP_SECRET, getUserId } from '../utils';
+import { APP_SECRET, createPairKey, getUserId } from '../utils';
 
 async function signup(parent, { email, name, password }, context) {
   const hash = await bcrypt.hash(password, 10);
@@ -50,8 +50,103 @@ async function createEvent(parent, { title }, context) {
   });
 }
 
+async function requestFriend(parent, { userId }, context) {
+  const selfUserId = getUserId({ context });
+  const selfPairKey = createPairKey(selfUserId, userId);
+  const friendPairKey = createPairKey(userId, selfUserId);
+
+  // add sent request
+  await context.prisma.updateUser({
+    where: {
+      id: selfUserId,
+    },
+    data: {
+      friends: {
+        upsert: {
+          where: {
+            pairKey: selfPairKey,
+          },
+          create: {
+            friend: {
+              connect: {
+                id: userId,
+              },
+            },
+            pairKey: selfPairKey,
+            status: 'SENT_REQUEST',
+          },
+          update: {
+            status: 'SENT_REQUEST',
+          },
+        },
+      },
+    },
+  });
+
+  // add received request
+  await context.prisma.updateUser({
+    where: {
+      id: userId,
+    },
+    data: {
+      friends: {
+        upsert: {
+          where: {
+            pairKey: friendPairKey,
+          },
+          create: {
+            friend: {
+              connect: {
+                id: selfUserId,
+              },
+            },
+            pairKey: friendPairKey,
+            status: 'RECEIVED_REQUEST',
+          },
+          update: {
+            status: 'RECEIVED_REQUEST',
+          },
+        },
+      },
+    },
+  });
+}
+
+async function confirmFriend(parent, { userId }, context) {
+  const selfUserId = getUserId({ context });
+  const selfPairKey = createPairKey(selfUserId, userId);
+  const friendPairKey = createPairKey(userId, selfUserId);
+
+  const receivedRequest = await context.prisma.friendship({
+    pairKey: selfPairKey,
+  }).status()
+    .then((status) => status === 'RECEIVED_REQUEST');
+
+  if (!receivedRequest) throw new AuthenticationError('Cannot confirm unreceived friendship request');
+
+  const sentRequest = await context.prisma.friendship({
+    pairKey: friendPairKey,
+  }).status()
+    .then((status) => status === 'SENT_REQUEST');
+
+  if (!sentRequest) throw new AuthenticationError('Cannot confirm unsent friendship request');
+
+  await context.prisma.updateManyFriendships({
+    where: {
+      pairKey_in: [selfPairKey, friendPairKey],
+    },
+    data: {
+      status: 'CONFIRMED',
+    },
+  });
+
+  return 'Frienship confirmed';
+}
+
 export default {
   signup,
   login,
   createEvent,
+  requestFriend,
+  confirmFriend,
 };

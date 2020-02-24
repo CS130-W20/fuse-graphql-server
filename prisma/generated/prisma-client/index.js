@@ -17,7 +17,7 @@ var models = [
     embedded: false
   },
   {
-    name: "Friend",
+    name: "Friendship",
     embedded: false
   },
   {
