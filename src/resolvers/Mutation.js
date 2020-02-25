@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { AuthenticationError } from 'apollo-server';
+import request from 'request';
 import { APP_SECRET, createPairKey, getUserId } from '../utils';
 
 async function signup(parent, { email, name, password }, context) {
@@ -15,23 +16,43 @@ async function signup(parent, { email, name, password }, context) {
   };
 }
 
-async function login(parent, args, context) {
-  const user = await context.prisma.user({ email: args.email });
-  if (!user) {
-    throw new AuthenticationError('Email is not associated with a user');
+async function login(parent, { email, password, fbToken }, context) {
+  if (email && password) {
+    const user = await context.prisma.user({ email });
+    if (!user) {
+      throw new AuthenticationError('Email is not associated with a user');
+    }
+
+    const valid = await bcrypt.compare(password, user.hash);
+    if (!valid) {
+      throw new AuthenticationError('Invalid password');
+    }
+
+    const token = jwt.sign({ userId: user.id }, APP_SECRET);
+
+    return {
+      token,
+      user,
+    };
   }
 
-  const valid = await bcrypt.compare(args.password, user.hash);
-  if (!valid) {
-    throw new AuthenticationError('Invalid password');
+  if (fbToken) {
+    request(`https://graph.facebook.com/me?access_token=${fbToken}\n`, (error, response) => {
+      if (!error && response.statusCode === 200) {
+        // console.log(response.body);
+        const { user } = response.body;
+        return {
+          fbToken,
+          user,
+        };
+      }
+      return null;
+    });
+  } else {
+    throw new AuthenticationError('must provide email + password or fb token');
   }
 
-  const token = jwt.sign({ userId: user.id }, APP_SECRET);
-
-  return {
-    token,
-    user,
-  };
+  return null;
 }
 
 
@@ -143,10 +164,19 @@ async function confirmFriend(parent, { userId }, context) {
   return 'Frienship confirmed';
 }
 
+async function verifyFbLogin(parent, { token }) {
+  request(`https://graph.facebook.com/me?access_token=${token}\n`, (error, response, body) => {
+    if (!error && response.statusCode === 200) {
+      console.log(body);
+    }
+  });
+}
+
 export default {
   signup,
   login,
   createEvent,
   requestFriend,
   confirmFriend,
+  verifyFbLogin,
 };
