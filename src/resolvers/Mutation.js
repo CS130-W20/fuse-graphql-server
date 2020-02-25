@@ -40,7 +40,7 @@ async function login(parent, { email, password, fbToken }, context) {
     request(`https://graph.facebook.com/me?access_token=${fbToken}\n`, (error, response) => {
       if (!error && response.statusCode === 200) {
         // console.log(response.body);
-        const { user } = response.body;
+        const user = response.body;
         return {
           fbToken,
           user,
