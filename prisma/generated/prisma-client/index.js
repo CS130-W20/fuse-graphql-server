@@ -36,7 +36,7 @@ var models = [
 exports.Prisma = prisma_lib_1.makePrismaClientClass({
   typeDefs,
   models,
-  endpoint: `https://us1.prisma.sh/aaron-berdy/fuse/dev`,
+  endpoint: `https://fuse-server-50668288f2.herokuapp.com`,
   secret: `prisma-4uz3-secret`
 });
 exports.prisma = new exports.Prisma();
