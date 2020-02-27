@@ -12,6 +12,9 @@ export const USER_QUERY = gql`
             id
             email
             name
+            ownedEvents {
+                title
+            }
         }
     }
 `;
