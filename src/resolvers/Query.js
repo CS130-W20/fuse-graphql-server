@@ -1,14 +1,11 @@
-import { getUserId } from '../utils';
-
 function ping() {
   return 'pong';
 }
 
-async function user(parent, args, context) {
-  return getUserId({ context })
-    .then((userId) => context.prisma.user({
-      id: userId,
-    }));
+async function user(parent, { userId }, context) {
+  return context.prisma.user({
+    id: userId,
+  });
 }
 
 async function completedEvents(parent, { userId }, context) {
