@@ -59,7 +59,7 @@ async function login(parent, { email, password, fbToken }, context) {
 
 
 async function createEvent(parent, { title }, context) {
-  const ownerId = getUserId({ context });
+  const ownerId = await getUserId({ context });
   const owner = {
     connect: {
       id: ownerId,
