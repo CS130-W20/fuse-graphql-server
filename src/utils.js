@@ -8,21 +8,16 @@ async function getUserId({ context }) {
   const authorization = context.request.get('Authorization');
   if (authorization) {
     const token = authorization.replace('Bearer ', '');
-    try {
-      return fetch(`https://graph.facebook.com/me?access_token=${token}&fields=name,email`)
-        .then((response) => response.json())
-        .then(async ({ email }) => context.prisma.user({ email }).id())
-        .catch(() => {
-          const { userId } = jwt.verify(token, APP_SECRET);
-          return userId;
-        })
-        .catch(() => {
-          throw new AuthenticationError('Not authenticated');
-        });
-    } catch (err) {
-      const { userId } = jwt.verify(token, APP_SECRET);
-      return userId;
-    }
+    return fetch(`https://graph.facebook.com/me?access_token=${token}&fields=name,email`)
+      .then((response) => response.json())
+      .then(async ({ email }) => context.prisma.user({ email }).id())
+      .catch(() => {
+        const { userId } = jwt.verify(token, APP_SECRET);
+        return userId;
+      })
+      .catch(() => {
+        throw new AuthenticationError('Not authenticated');
+      });
   }
   throw new AuthenticationError('Not authenticated');
 }
