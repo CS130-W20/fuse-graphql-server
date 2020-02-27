@@ -1,6 +1,6 @@
 type Query {
     ping: String!
-    user(userId: ID): User!
+    user: User!
     completedEvents(userId: ID): [Event!]!  # TODO
 }
 
