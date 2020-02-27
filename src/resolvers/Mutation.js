@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { AuthenticationError } from 'apollo-server';
-import request from 'request';
+import fetch from 'node-fetch';
 import { APP_SECRET, createPairKey, getUserId } from '../utils';
 
 async function signup(parent, { email, name, password }, context) {
@@ -37,22 +37,24 @@ async function login(parent, { email, password, fbToken }, context) {
   }
 
   if (fbToken) {
-    request(`https://graph.facebook.com/me?access_token=${fbToken}\n`, (error, response) => {
-      if (!error && response.statusCode === 200) {
-        // console.log(response.body);
-        const user = response.body;
-        return {
-          fbToken,
-          user,
-        };
-      }
-      return null;
-    });
-  } else {
-    throw new AuthenticationError('must provide email + password or fb token');
+    return fetch(`https://graph.facebook.com/me?access_token=${fbToken}&fields=name,email`)
+      .then((response) => response.json())
+      .then((data) => context.prisma.upsertUser({
+        where: {
+          email: data.email,
+        },
+        create: {
+          name: data.name,
+          email: data.email,
+        },
+        update: {},
+      }))
+      .then((user) => ({
+        token: fbToken,
+        user,
+      }));
   }
-
-  return null;
+  throw new AuthenticationError('must provide email + password or fb token');
 }
 
 
@@ -164,19 +166,10 @@ async function confirmFriend(parent, { userId }, context) {
   return 'Frienship confirmed';
 }
 
-async function verifyFbLogin(parent, { token }) {
-  request(`https://graph.facebook.com/me?access_token=${token}\n`, (error, response, body) => {
-    if (!error && response.statusCode === 200) {
-      console.log(body);
-    }
-  });
-}
-
 export default {
   signup,
   login,
   createEvent,
   requestFriend,
   confirmFriend,
-  verifyFbLogin,
 };

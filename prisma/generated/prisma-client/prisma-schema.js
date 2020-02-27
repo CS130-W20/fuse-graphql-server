@@ -722,7 +722,7 @@ type Subscription {
 type User {
   id: ID!
   email: String!
-  hash: String!
+  hash: String
   name: String!
   ownedEvents(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
   friends(where: FriendshipWhereInput, orderBy: FriendshipOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Friendship!]
@@ -738,7 +738,7 @@ type UserConnection {
 input UserCreateInput {
   id: ID
   email: String!
-  hash: String!
+  hash: String
   name: String!
   ownedEvents: EventCreateManyWithoutOwnerInput
   friends: FriendshipCreateManyWithoutUserInput
@@ -768,7 +768,7 @@ input UserCreateOneWithoutOwnedEventsInput {
 input UserCreateWithoutFriendsInput {
   id: ID
   email: String!
-  hash: String!
+  hash: String
   name: String!
   ownedEvents: EventCreateManyWithoutOwnerInput
   notifications: NotificationCreateManyInput
@@ -777,7 +777,7 @@ input UserCreateWithoutFriendsInput {
 input UserCreateWithoutOwnedEventsInput {
   id: ID
   email: String!
-  hash: String!
+  hash: String
   name: String!
   friends: FriendshipCreateManyWithoutUserInput
   notifications: NotificationCreateManyInput
@@ -802,7 +802,7 @@ enum UserOrderByInput {
 type UserPreviousValues {
   id: ID!
   email: String!
-  hash: String!
+  hash: String
   name: String!
 }
 

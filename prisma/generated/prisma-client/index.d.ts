@@ -495,7 +495,7 @@ export interface UserCreateOneWithoutOwnedEventsInput {
 export interface UserCreateWithoutOwnedEventsInput {
   id?: Maybe<ID_Input>;
   email: String;
-  hash: String;
+  hash?: Maybe<String>;
   name: String;
   friends?: Maybe<FriendshipCreateManyWithoutUserInput>;
   notifications?: Maybe<NotificationCreateManyInput>;
@@ -523,7 +523,7 @@ export interface UserCreateOneInput {
 export interface UserCreateInput {
   id?: Maybe<ID_Input>;
   email: String;
-  hash: String;
+  hash?: Maybe<String>;
   name: String;
   ownedEvents?: Maybe<EventCreateManyWithoutOwnerInput>;
   friends?: Maybe<FriendshipCreateManyWithoutUserInput>;
@@ -1000,7 +1000,7 @@ export interface UserCreateOneWithoutFriendsInput {
 export interface UserCreateWithoutFriendsInput {
   id?: Maybe<ID_Input>;
   email: String;
-  hash: String;
+  hash?: Maybe<String>;
   name: String;
   ownedEvents?: Maybe<EventCreateManyWithoutOwnerInput>;
   notifications?: Maybe<NotificationCreateManyInput>;
@@ -1211,7 +1211,7 @@ export interface EventNullablePromise
 export interface User {
   id: ID_Output;
   email: String;
-  hash: String;
+  hash?: String;
   name: String;
 }
 
@@ -1813,7 +1813,7 @@ export interface UserSubscriptionPayloadSubscription
 export interface UserPreviousValues {
   id: ID_Output;
   email: String;
-  hash: String;
+  hash?: String;
   name: String;
 }
 

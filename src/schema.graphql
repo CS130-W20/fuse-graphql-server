@@ -12,9 +12,6 @@ type Mutation {
     confirmFriend(userId: ID!): String  # DONE
     updateEventDetails(eventId: ID!, title: String!): Event!  # TODO
     updateEventStatus(eventId: ID!, currentEventStatus: EventStatus!): Event!   # TODO
-
-
-    verifyFbLogin(token: String!): String
 }
 
 type AuthPayload {

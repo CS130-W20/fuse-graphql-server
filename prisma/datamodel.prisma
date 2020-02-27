@@ -1,7 +1,7 @@
 type User {
   id: ID! @id
   email: String! @unique
-  hash: String!
+  hash: String
   name: String!
   ownedEvents: [Event!]! @relation(name: "UserOwnedEvents")
   friends: [Friendship!]!   @relation(name: "FriendSource")

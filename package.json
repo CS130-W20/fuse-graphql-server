@@ -16,7 +16,8 @@
     "graphql-yoga": "1.2.0",
     "jsonwebtoken": "latest",
     "prisma-client-lib": "^1.34.10",
-    "request": "latest"
+    "request": "latest",
+    "node-fetch": "latest"
   },
   "keywords": [],
   "author": "",
