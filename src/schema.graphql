@@ -34,6 +34,7 @@ type Event {
     status: EventStatus!
     invited: [User!]!   # TODO
     joined: [User!]!    # TODO
+    created: DateTime!  # TODO
 }
 
 enum EventStatus {
