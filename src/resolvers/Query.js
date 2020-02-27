@@ -5,10 +5,10 @@ function ping() {
 }
 
 async function user(parent, args, context) {
-  const userId = getUserId({ context });
-  return context.prisma.user({
-    id: userId,
-  });
+  return getUserId({ context })
+    .then((userId) => context.prisma.user({
+      id: userId,
+    }));
 }
 
 async function completedEvents(parent, { userId }, context) {
