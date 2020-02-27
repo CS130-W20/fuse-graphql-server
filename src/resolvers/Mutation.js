@@ -59,111 +59,117 @@ async function login(parent, { email, password, fbToken }, context) {
 
 
 async function createEvent(parent, { title }, context) {
-  const ownerId = getUserId({ context });
-  const owner = {
-    connect: {
-      id: ownerId,
-    },
-  };
+  return getUserId({ context })
+    .then((ownerId) => {
+      const owner = {
+        connect: {
+          id: ownerId,
+        },
+      };
 
-  return context.prisma.createEvent({
-    title,
-    owner,
-    status: 'SET',
-  });
+      return context.prisma.createEvent({
+        title,
+        owner,
+        status: 'SET',
+      });
+    });
 }
 
 async function requestFriend(parent, { userId }, context) {
-  const selfUserId = getUserId({ context });
-  const selfPairKey = createPairKey(selfUserId, userId);
-  const friendPairKey = createPairKey(userId, selfUserId);
+  return getUserId({ context })
+    .then(async (selfUserId) => {
+      const selfPairKey = createPairKey(selfUserId, userId);
+      const friendPairKey = createPairKey(userId, selfUserId);
 
-  // add sent request
-  await context.prisma.updateUser({
-    where: {
-      id: selfUserId,
-    },
-    data: {
-      friends: {
-        upsert: {
-          where: {
-            pairKey: selfPairKey,
-          },
-          create: {
-            friend: {
-              connect: {
-                id: userId,
+      // add sent request
+      await context.prisma.updateUser({
+        where: {
+          id: selfUserId,
+        },
+        data: {
+          friends: {
+            upsert: {
+              where: {
+                pairKey: selfPairKey,
+              },
+              create: {
+                friend: {
+                  connect: {
+                    id: userId,
+                  },
+                },
+                pairKey: selfPairKey,
+                status: 'SENT_REQUEST',
+              },
+              update: {
+                status: 'SENT_REQUEST',
               },
             },
-            pairKey: selfPairKey,
-            status: 'SENT_REQUEST',
-          },
-          update: {
-            status: 'SENT_REQUEST',
           },
         },
-      },
-    },
-  });
+      });
 
-  // add received request
-  await context.prisma.updateUser({
-    where: {
-      id: userId,
-    },
-    data: {
-      friends: {
-        upsert: {
-          where: {
-            pairKey: friendPairKey,
-          },
-          create: {
-            friend: {
-              connect: {
-                id: selfUserId,
+      // add received request
+      await context.prisma.updateUser({
+        where: {
+          id: userId,
+        },
+        data: {
+          friends: {
+            upsert: {
+              where: {
+                pairKey: friendPairKey,
+              },
+              create: {
+                friend: {
+                  connect: {
+                    id: selfUserId,
+                  },
+                },
+                pairKey: friendPairKey,
+                status: 'RECEIVED_REQUEST',
+              },
+              update: {
+                status: 'RECEIVED_REQUEST',
               },
             },
-            pairKey: friendPairKey,
-            status: 'RECEIVED_REQUEST',
-          },
-          update: {
-            status: 'RECEIVED_REQUEST',
           },
         },
-      },
-    },
-  });
+      });
+    });
 }
 
 async function confirmFriend(parent, { userId }, context) {
-  const selfUserId = getUserId({ context });
-  const selfPairKey = createPairKey(selfUserId, userId);
-  const friendPairKey = createPairKey(userId, selfUserId);
+  return getUserId({ context })
+    .then(async (selfUserId) => {
+      const selfPairKey = createPairKey(selfUserId, userId);
+      const friendPairKey = createPairKey(userId, selfUserId);
 
-  const receivedRequest = await context.prisma.friendship({
-    pairKey: selfPairKey,
-  }).status()
-    .then((status) => status === 'RECEIVED_REQUEST');
+      const receivedRequest = await context.prisma.friendship({
+        pairKey: selfPairKey,
+      }).status()
+        .then((status) => status === 'RECEIVED_REQUEST');
 
-  if (!receivedRequest) throw new AuthenticationError('Cannot confirm unreceived friendship request');
+      if (!receivedRequest) throw new AuthenticationError('Cannot confirm unreceived friendship request');
 
-  const sentRequest = await context.prisma.friendship({
-    pairKey: friendPairKey,
-  }).status()
-    .then((status) => status === 'SENT_REQUEST');
+      const sentRequest = await context.prisma.friendship({
+        pairKey: friendPairKey,
+      }).status()
+        .then((status) => status === 'SENT_REQUEST');
 
-  if (!sentRequest) throw new AuthenticationError('Cannot confirm unsent friendship request');
+      if (!sentRequest) throw new AuthenticationError('Cannot confirm unsent friendship request');
 
-  await context.prisma.updateManyFriendships({
-    where: {
-      pairKey_in: [selfPairKey, friendPairKey],
-    },
-    data: {
-      status: 'CONFIRMED',
-    },
-  });
+      await context.prisma.updateManyFriendships({
+        where: {
+          pairKey_in: [selfPairKey, friendPairKey],
+        },
+        data: {
+          status: 'CONFIRMED',
+        },
+      });
 
-  return 'Frienship confirmed';
+      return 'Friendship confirmed';
+    });
 }
 
 export default {
