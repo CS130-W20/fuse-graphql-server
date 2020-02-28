@@ -24,7 +24,7 @@ type User {
     name: String!
     email: String!
     ownedEvents: [Event!]!
-    events(userId: ID, association: [Association!], status: [EventStatus!]): [Event!]!  # TODO
+    events(userId: ID, association: [Association!], status: [EventStatus!]): [Event!]!  # TODO association
 }
 
 type Event {
@@ -34,6 +34,8 @@ type Event {
     status: EventStatus!
     invited: [User!]!   # TODO
     joined: [User!]!    # TODO
+    createdAt: DateTime!
+    updatedAt: DateTime!
 }
 
 enum EventStatus {
@@ -47,3 +49,5 @@ enum Association {
     JOINED
     OWNER
 }
+
+scalar DateTime
