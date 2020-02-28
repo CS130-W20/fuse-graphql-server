@@ -15,7 +15,6 @@ type Event {
   status: EventStatus!
   invited: [User!]! @relation(name: "UserInvitedEvents")
   joined: [User!]! @relation(name: "UserJoinedEvents")
-  created: DateTime!
 }
 
 enum EventStatus {
