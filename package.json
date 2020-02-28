@@ -6,17 +6,17 @@
   "scripts": {
     "setup": "./setup.sh",
     "start": "export NODE_ENV=dev&& node -r esm .",
-    "lint": "eslint src",
+    "lint": "eslint src tests",
     "test": "jest"
   },
   "dependencies": {
-    "apollo-server": "^2.10.1",
-    "bcryptjs": "^2.4.3",
-    "esm": "^3.2.25",
+    "apollo-server": "2.10.1",
+    "bcryptjs": "2.4.3",
+    "esm": "3.2.25",
     "graphql-yoga": "1.2.0",
     "jsonwebtoken": "latest",
     "node-fetch": "latest",
-    "prisma-client-lib": "^1.34.10",
+    "prisma-client-lib": "1.34.10",
     "request": "latest"
   },
   "keywords": [],
@@ -27,6 +27,7 @@
     "@babel/plugin-transform-modules-commonjs": "^7.8.3",
     "apollo-cache-inmemory": "latest",
     "apollo-client": "latest",
+    "apollo-link-context": "1.0.19",
     "apollo-link-http": "latest",
     "babel-jest": "^25.1.0",
     "babel-preset-expo": "~8.0.0",
@@ -38,12 +39,16 @@
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-hooks": "^1.7.0",
     "jest": "^25.1.0",
-    "unfetch": "^4.1.0"
+    "unfetch": "^4.1.0",
+    "apollo-link-error": "latest",
+    "graphql-tag": "latest"
   },
   "babel": {
     "env": {
       "test": {
-        "plugins": ["@babel/plugin-transform-modules-commonjs"]
+        "plugins": [
+          "@babel/plugin-transform-modules-commonjs"
+        ]
       }
     }
   }
