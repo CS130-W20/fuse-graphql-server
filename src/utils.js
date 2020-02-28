@@ -26,9 +26,23 @@ function createPairKey(selfUserId, userId) {
   return `${selfUserId}-${userId}`;
 }
 
+function incrementStatus(currentStatus) {
+  switch (currentStatus) {
+    case 'SET': {
+      return 'LIT';
+    }
+    case 'LIT': {
+      return 'COMPLETED';
+    }
+    default:
+      return 'COMPLETED';
+  }
+}
+
 
 export {
   APP_SECRET,
   getUserId,
   createPairKey,
+  incrementStatus,
 };
