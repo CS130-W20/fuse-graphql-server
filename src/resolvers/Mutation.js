@@ -1,8 +1,10 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { AuthenticationError } from 'apollo-server';
+import { AuthenticationError, ApolloError } from 'apollo-server';
 import fetch from 'node-fetch';
-import { APP_SECRET, createPairKey, getUserId } from '../utils';
+import {
+  APP_SECRET, createPairKey, getUserId, incrementStatus,
+} from '../utils';
 
 async function signup(parent, { email, name, password }, context) {
   const hash = await bcrypt.hash(password, 10);
@@ -172,10 +174,40 @@ async function confirmFriend(parent, { userId }, context) {
     });
 }
 
+async function updateEventStatus(parent, { eventId, currentEventStatus, newEventStatus }, context) {
+  // TODO verify that user has auth to change event status
+  // get the event to verify the currentEventStatus is the same as the event status
+  const event = await context.prisma.event({
+    id: eventId,
+  });
+
+  if (event.status !== currentEventStatus) {
+    throw new ApolloError('Event status and current status does not match');
+  }
+
+  if (newEventStatus == null && currentEventStatus === 'COMPLETED') {
+    throw new ApolloError('Event is already complete');
+  }
+
+  const newAssignedStatus = (newEventStatus == null)
+    ? incrementStatus(currentEventStatus)
+    : newEventStatus;
+
+  return context.prisma.updateEvent({
+    where: {
+      id: eventId,
+    },
+    data: {
+      status: newAssignedStatus,
+    },
+  });
+}
+
 export default {
   signup,
   login,
   createEvent,
   requestFriend,
   confirmFriend,
+  updateEventStatus,
 };
