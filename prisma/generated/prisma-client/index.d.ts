@@ -236,7 +236,11 @@ export type EventOrderByInput =
   | "title_ASC"
   | "title_DESC"
   | "status_ASC"
-  | "status_DESC";
+  | "status_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
 
 export type FriendshipOrderByInput =
   | "id_ASC"
@@ -310,6 +314,22 @@ export interface EventWhereInput {
   joined_every?: Maybe<UserWhereInput>;
   joined_some?: Maybe<UserWhereInput>;
   joined_none?: Maybe<UserWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<EventWhereInput[] | EventWhereInput>;
   OR?: Maybe<EventWhereInput[] | EventWhereInput>;
   NOT?: Maybe<EventWhereInput[] | EventWhereInput>;
@@ -809,6 +829,22 @@ export interface EventScalarWhereInput {
   status_not?: Maybe<EventStatus>;
   status_in?: Maybe<EventStatus[] | EventStatus>;
   status_not_in?: Maybe<EventStatus[] | EventStatus>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<EventScalarWhereInput[] | EventScalarWhereInput>;
   OR?: Maybe<EventScalarWhereInput[] | EventScalarWhereInput>;
   NOT?: Maybe<EventScalarWhereInput[] | EventScalarWhereInput>;
@@ -1127,6 +1163,8 @@ export interface Event {
   id: ID_Output;
   title: String;
   status: EventStatus;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface EventPromise extends Promise<Event>, Fragmentable {
@@ -1152,6 +1190,8 @@ export interface EventPromise extends Promise<Event>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface EventSubscription
@@ -1179,6 +1219,8 @@ export interface EventSubscription
     first?: Int;
     last?: Int;
   }) => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface EventNullablePromise
@@ -1206,6 +1248,8 @@ export interface EventNullablePromise
     first?: Int;
     last?: Int;
   }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface User {
@@ -1673,6 +1717,8 @@ export interface EventPreviousValues {
   id: ID_Output;
   title: String;
   status: EventStatus;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface EventPreviousValuesPromise
@@ -1681,6 +1727,8 @@ export interface EventPreviousValuesPromise
   id: () => Promise<ID_Output>;
   title: () => Promise<String>;
   status: () => Promise<EventStatus>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface EventPreviousValuesSubscription
@@ -1689,6 +1737,8 @@ export interface EventPreviousValuesSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   title: () => Promise<AsyncIterator<String>>;
   status: () => Promise<AsyncIterator<EventStatus>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface FriendshipSubscriptionPayload {
@@ -1845,6 +1895,16 @@ export type ID_Output = string;
 The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
 */
 export type String = string;
+
+/*
+DateTime scalar input type, allowing Date
+*/
+export type DateTimeInput = Date | string;
+
+/*
+DateTime scalar output type, which is always a string
+*/
+export type DateTimeOutput = string;
 
 /*
 The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
