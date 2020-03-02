@@ -30,11 +30,6 @@ async function events(parent, { userId, association, status }, context) {
               },
             },
             {
-              invited_some: {
-                id: queryUserId,
-              },
-            },
-            {
               joined_some: {
                 id: queryUserId,
               },
