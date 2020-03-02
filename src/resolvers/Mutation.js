@@ -174,6 +174,12 @@ async function confirmFriend(parent, { userId }, context) {
     });
 }
 
+/**
+ * Use to update the event title, description, and eventually the date/time etc
+ * @param {*} eventId event ID
+ * @param {*} title new title of event or null
+ * @param {*} description new desciption of event or null
+ */
 async function updateEventDetails(parent, { eventId, title, description }, context) {
   if (title == null && description == null) {
     throw new ApolloError('Nothing to change... Please supply new data');
