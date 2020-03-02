@@ -11,6 +11,7 @@ type User {
 type Event {
   id: ID! @id
   title: String!
+  description: String!
   owner: User! @relation(name: "UserOwnedEvents")
   status: EventStatus!
   invited: [User!]! @relation(name: "UserInvitedEvents")

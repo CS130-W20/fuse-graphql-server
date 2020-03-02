@@ -28,6 +28,7 @@ scalar DateTime
 type Event {
   id: ID!
   title: String!
+  description: String!
   owner: User!
   status: EventStatus!
   invited(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
@@ -45,6 +46,7 @@ type EventConnection {
 input EventCreateInput {
   id: ID
   title: String!
+  description: String!
   owner: UserCreateOneWithoutOwnedEventsInput!
   status: EventStatus!
   invited: UserCreateManyInput
@@ -59,6 +61,7 @@ input EventCreateManyWithoutOwnerInput {
 input EventCreateWithoutOwnerInput {
   id: ID
   title: String!
+  description: String!
   status: EventStatus!
   invited: UserCreateManyInput
   joined: UserCreateManyInput
@@ -74,6 +77,8 @@ enum EventOrderByInput {
   id_DESC
   title_ASC
   title_DESC
+  description_ASC
+  description_DESC
   status_ASC
   status_DESC
   createdAt_ASC
@@ -85,6 +90,7 @@ enum EventOrderByInput {
 type EventPreviousValues {
   id: ID!
   title: String!
+  description: String!
   status: EventStatus!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -119,6 +125,20 @@ input EventScalarWhereInput {
   title_not_starts_with: String
   title_ends_with: String
   title_not_ends_with: String
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_lt: String
+  description_lte: String
+  description_gt: String
+  description_gte: String
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
   status: EventStatus
   status_not: EventStatus
   status_in: [EventStatus!]
@@ -170,6 +190,7 @@ input EventSubscriptionWhereInput {
 
 input EventUpdateInput {
   title: String
+  description: String
   owner: UserUpdateOneRequiredWithoutOwnedEventsInput
   status: EventStatus
   invited: UserUpdateManyInput
@@ -178,11 +199,13 @@ input EventUpdateInput {
 
 input EventUpdateManyDataInput {
   title: String
+  description: String
   status: EventStatus
 }
 
 input EventUpdateManyMutationInput {
   title: String
+  description: String
   status: EventStatus
 }
 
@@ -205,6 +228,7 @@ input EventUpdateManyWithWhereNestedInput {
 
 input EventUpdateWithoutOwnerDataInput {
   title: String
+  description: String
   status: EventStatus
   invited: UserUpdateManyInput
   joined: UserUpdateManyInput
@@ -250,6 +274,20 @@ input EventWhereInput {
   title_not_starts_with: String
   title_ends_with: String
   title_not_ends_with: String
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_lt: String
+  description_lte: String
+  description_gt: String
+  description_gte: String
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
   owner: UserWhereInput
   status: EventStatus
   status_not: EventStatus

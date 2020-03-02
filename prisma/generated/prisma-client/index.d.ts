@@ -235,6 +235,8 @@ export type EventOrderByInput =
   | "id_DESC"
   | "title_ASC"
   | "title_DESC"
+  | "description_ASC"
+  | "description_DESC"
   | "status_ASC"
   | "status_DESC"
   | "createdAt_ASC"
@@ -303,6 +305,20 @@ export interface EventWhereInput {
   title_not_starts_with?: Maybe<String>;
   title_ends_with?: Maybe<String>;
   title_not_ends_with?: Maybe<String>;
+  description?: Maybe<String>;
+  description_not?: Maybe<String>;
+  description_in?: Maybe<String[] | String>;
+  description_not_in?: Maybe<String[] | String>;
+  description_lt?: Maybe<String>;
+  description_lte?: Maybe<String>;
+  description_gt?: Maybe<String>;
+  description_gte?: Maybe<String>;
+  description_contains?: Maybe<String>;
+  description_not_contains?: Maybe<String>;
+  description_starts_with?: Maybe<String>;
+  description_not_starts_with?: Maybe<String>;
+  description_ends_with?: Maybe<String>;
+  description_not_ends_with?: Maybe<String>;
   owner?: Maybe<UserWhereInput>;
   status?: Maybe<EventStatus>;
   status_not?: Maybe<EventStatus>;
@@ -501,6 +517,7 @@ export type UserWhereUniqueInput = AtLeastOne<{
 export interface EventCreateInput {
   id?: Maybe<ID_Input>;
   title: String;
+  description: String;
   owner: UserCreateOneWithoutOwnedEventsInput;
   status: EventStatus;
   invited?: Maybe<UserCreateManyInput>;
@@ -558,6 +575,7 @@ export interface EventCreateManyWithoutOwnerInput {
 export interface EventCreateWithoutOwnerInput {
   id?: Maybe<ID_Input>;
   title: String;
+  description: String;
   status: EventStatus;
   invited?: Maybe<UserCreateManyInput>;
   joined?: Maybe<UserCreateManyInput>;
@@ -583,6 +601,7 @@ export interface NotificationCreateInput {
 
 export interface EventUpdateInput {
   title?: Maybe<String>;
+  description?: Maybe<String>;
   owner?: Maybe<UserUpdateOneRequiredWithoutOwnedEventsInput>;
   status?: Maybe<EventStatus>;
   invited?: Maybe<UserUpdateManyInput>;
@@ -681,6 +700,7 @@ export interface EventUpdateWithWhereUniqueWithoutOwnerInput {
 
 export interface EventUpdateWithoutOwnerDataInput {
   title?: Maybe<String>;
+  description?: Maybe<String>;
   status?: Maybe<EventStatus>;
   invited?: Maybe<UserUpdateManyInput>;
   joined?: Maybe<UserUpdateManyInput>;
@@ -825,6 +845,20 @@ export interface EventScalarWhereInput {
   title_not_starts_with?: Maybe<String>;
   title_ends_with?: Maybe<String>;
   title_not_ends_with?: Maybe<String>;
+  description?: Maybe<String>;
+  description_not?: Maybe<String>;
+  description_in?: Maybe<String[] | String>;
+  description_not_in?: Maybe<String[] | String>;
+  description_lt?: Maybe<String>;
+  description_lte?: Maybe<String>;
+  description_gt?: Maybe<String>;
+  description_gte?: Maybe<String>;
+  description_contains?: Maybe<String>;
+  description_not_contains?: Maybe<String>;
+  description_starts_with?: Maybe<String>;
+  description_not_starts_with?: Maybe<String>;
+  description_ends_with?: Maybe<String>;
+  description_not_ends_with?: Maybe<String>;
   status?: Maybe<EventStatus>;
   status_not?: Maybe<EventStatus>;
   status_in?: Maybe<EventStatus[] | EventStatus>;
@@ -857,6 +891,7 @@ export interface EventUpdateManyWithWhereNestedInput {
 
 export interface EventUpdateManyDataInput {
   title?: Maybe<String>;
+  description?: Maybe<String>;
   status?: Maybe<EventStatus>;
 }
 
@@ -1017,6 +1052,7 @@ export interface UserUpsertWithoutOwnedEventsInput {
 
 export interface EventUpdateManyMutationInput {
   title?: Maybe<String>;
+  description?: Maybe<String>;
   status?: Maybe<EventStatus>;
 }
 
@@ -1162,6 +1198,7 @@ export interface NodeNode {
 export interface Event {
   id: ID_Output;
   title: String;
+  description: String;
   status: EventStatus;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
@@ -1170,6 +1207,7 @@ export interface Event {
 export interface EventPromise extends Promise<Event>, Fragmentable {
   id: () => Promise<ID_Output>;
   title: () => Promise<String>;
+  description: () => Promise<String>;
   owner: <T = UserPromise>() => T;
   status: () => Promise<EventStatus>;
   invited: <T = FragmentableArray<User>>(args?: {
@@ -1199,6 +1237,7 @@ export interface EventSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   title: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
   owner: <T = UserSubscription>() => T;
   status: () => Promise<AsyncIterator<EventStatus>>;
   invited: <T = Promise<AsyncIterator<UserSubscription>>>(args?: {
@@ -1228,6 +1267,7 @@ export interface EventNullablePromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   title: () => Promise<String>;
+  description: () => Promise<String>;
   owner: <T = UserPromise>() => T;
   status: () => Promise<EventStatus>;
   invited: <T = FragmentableArray<User>>(args?: {
@@ -1716,6 +1756,7 @@ export interface EventSubscriptionPayloadSubscription
 export interface EventPreviousValues {
   id: ID_Output;
   title: String;
+  description: String;
   status: EventStatus;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
@@ -1726,6 +1767,7 @@ export interface EventPreviousValuesPromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   title: () => Promise<String>;
+  description: () => Promise<String>;
   status: () => Promise<EventStatus>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
@@ -1736,6 +1778,7 @@ export interface EventPreviousValuesSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   title: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
   status: () => Promise<AsyncIterator<EventStatus>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
