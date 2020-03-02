@@ -2,6 +2,7 @@ type Query {
     ping: String!
     user: User!
     completedEvents(userId: ID): [Event!]!  # TODO
+    newsFeed: [Event!]!
 }
 
 type Mutation {
@@ -24,6 +25,7 @@ type User {
     name: String!
     email: String!
     ownedEvents: [Event!]!
+    joinedEvents: [Event!]!
     events(userId: ID, association: [Association!], status: [EventStatus!]): [Event!]!  # TODO association
 }
 

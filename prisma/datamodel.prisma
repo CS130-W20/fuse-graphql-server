@@ -4,6 +4,7 @@ type User {
   hash: String
   name: String!
   ownedEvents: [Event!]! @relation(name: "UserOwnedEvents")
+  joinedEvents: [Event!]! @relation(name: "UserJoinedEvents")
   friends: [Friendship!]!   @relation(name: "FriendSource")
   notifications: [Notification!]!
 }

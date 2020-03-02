@@ -22,8 +22,35 @@ async function completedEvents(parent, { userId }, context) {
   });
 }
 
+async function newsFeed(parent, args, context) {
+  const userId = await getUserId({ context });
+
+  return context.prisma.events({
+    where: {
+      OR: [
+        {
+          owner: {
+            id: userId,
+          },
+        },
+        {
+          invited_some: {
+            id: userId,
+          },
+        },
+        {
+          joined_some: {
+            id: userId,
+          },
+        },
+      ],
+    },
+  });
+}
+
 export default {
   ping,
   user,
   completedEvents,
+  newsFeed,
 };

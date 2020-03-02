@@ -411,6 +411,9 @@ export interface UserWhereInput {
   ownedEvents_every?: Maybe<EventWhereInput>;
   ownedEvents_some?: Maybe<EventWhereInput>;
   ownedEvents_none?: Maybe<EventWhereInput>;
+  joinedEvents_every?: Maybe<EventWhereInput>;
+  joinedEvents_some?: Maybe<EventWhereInput>;
+  joinedEvents_none?: Maybe<EventWhereInput>;
   friends_every?: Maybe<FriendshipWhereInput>;
   friends_some?: Maybe<FriendshipWhereInput>;
   friends_none?: Maybe<FriendshipWhereInput>;
@@ -521,7 +524,7 @@ export interface EventCreateInput {
   owner: UserCreateOneWithoutOwnedEventsInput;
   status: EventStatus;
   invited?: Maybe<UserCreateManyInput>;
-  joined?: Maybe<UserCreateManyInput>;
+  joined?: Maybe<UserCreateManyWithoutJoinedEventsInput>;
 }
 
 export interface UserCreateOneWithoutOwnedEventsInput {
@@ -534,6 +537,70 @@ export interface UserCreateWithoutOwnedEventsInput {
   email: String;
   hash?: Maybe<String>;
   name: String;
+  joinedEvents?: Maybe<EventCreateManyWithoutJoinedInput>;
+  friends?: Maybe<FriendshipCreateManyWithoutUserInput>;
+  notifications?: Maybe<NotificationCreateManyInput>;
+}
+
+export interface EventCreateManyWithoutJoinedInput {
+  create?: Maybe<
+    EventCreateWithoutJoinedInput[] | EventCreateWithoutJoinedInput
+  >;
+  connect?: Maybe<EventWhereUniqueInput[] | EventWhereUniqueInput>;
+}
+
+export interface EventCreateWithoutJoinedInput {
+  id?: Maybe<ID_Input>;
+  title: String;
+  description: String;
+  owner: UserCreateOneWithoutOwnedEventsInput;
+  status: EventStatus;
+  invited?: Maybe<UserCreateManyInput>;
+}
+
+export interface UserCreateManyInput {
+  create?: Maybe<UserCreateInput[] | UserCreateInput>;
+  connect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+}
+
+export interface UserCreateInput {
+  id?: Maybe<ID_Input>;
+  email: String;
+  hash?: Maybe<String>;
+  name: String;
+  ownedEvents?: Maybe<EventCreateManyWithoutOwnerInput>;
+  joinedEvents?: Maybe<EventCreateManyWithoutJoinedInput>;
+  friends?: Maybe<FriendshipCreateManyWithoutUserInput>;
+  notifications?: Maybe<NotificationCreateManyInput>;
+}
+
+export interface EventCreateManyWithoutOwnerInput {
+  create?: Maybe<EventCreateWithoutOwnerInput[] | EventCreateWithoutOwnerInput>;
+  connect?: Maybe<EventWhereUniqueInput[] | EventWhereUniqueInput>;
+}
+
+export interface EventCreateWithoutOwnerInput {
+  id?: Maybe<ID_Input>;
+  title: String;
+  description: String;
+  status: EventStatus;
+  invited?: Maybe<UserCreateManyInput>;
+  joined?: Maybe<UserCreateManyWithoutJoinedEventsInput>;
+}
+
+export interface UserCreateManyWithoutJoinedEventsInput {
+  create?: Maybe<
+    UserCreateWithoutJoinedEventsInput[] | UserCreateWithoutJoinedEventsInput
+  >;
+  connect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+}
+
+export interface UserCreateWithoutJoinedEventsInput {
+  id?: Maybe<ID_Input>;
+  email: String;
+  hash?: Maybe<String>;
+  name: String;
+  ownedEvents?: Maybe<EventCreateManyWithoutOwnerInput>;
   friends?: Maybe<FriendshipCreateManyWithoutUserInput>;
   notifications?: Maybe<NotificationCreateManyInput>;
 }
@@ -557,35 +624,6 @@ export interface UserCreateOneInput {
   connect?: Maybe<UserWhereUniqueInput>;
 }
 
-export interface UserCreateInput {
-  id?: Maybe<ID_Input>;
-  email: String;
-  hash?: Maybe<String>;
-  name: String;
-  ownedEvents?: Maybe<EventCreateManyWithoutOwnerInput>;
-  friends?: Maybe<FriendshipCreateManyWithoutUserInput>;
-  notifications?: Maybe<NotificationCreateManyInput>;
-}
-
-export interface EventCreateManyWithoutOwnerInput {
-  create?: Maybe<EventCreateWithoutOwnerInput[] | EventCreateWithoutOwnerInput>;
-  connect?: Maybe<EventWhereUniqueInput[] | EventWhereUniqueInput>;
-}
-
-export interface EventCreateWithoutOwnerInput {
-  id?: Maybe<ID_Input>;
-  title: String;
-  description: String;
-  status: EventStatus;
-  invited?: Maybe<UserCreateManyInput>;
-  joined?: Maybe<UserCreateManyInput>;
-}
-
-export interface UserCreateManyInput {
-  create?: Maybe<UserCreateInput[] | UserCreateInput>;
-  connect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-}
-
 export interface NotificationCreateManyInput {
   create?: Maybe<NotificationCreateInput[] | NotificationCreateInput>;
   connect?: Maybe<
@@ -605,7 +643,7 @@ export interface EventUpdateInput {
   owner?: Maybe<UserUpdateOneRequiredWithoutOwnedEventsInput>;
   status?: Maybe<EventStatus>;
   invited?: Maybe<UserUpdateManyInput>;
-  joined?: Maybe<UserUpdateManyInput>;
+  joined?: Maybe<UserUpdateManyWithoutJoinedEventsInput>;
 }
 
 export interface UserUpdateOneRequiredWithoutOwnedEventsInput {
@@ -619,6 +657,146 @@ export interface UserUpdateWithoutOwnedEventsDataInput {
   email?: Maybe<String>;
   hash?: Maybe<String>;
   name?: Maybe<String>;
+  joinedEvents?: Maybe<EventUpdateManyWithoutJoinedInput>;
+  friends?: Maybe<FriendshipUpdateManyWithoutUserInput>;
+  notifications?: Maybe<NotificationUpdateManyInput>;
+}
+
+export interface EventUpdateManyWithoutJoinedInput {
+  create?: Maybe<
+    EventCreateWithoutJoinedInput[] | EventCreateWithoutJoinedInput
+  >;
+  delete?: Maybe<EventWhereUniqueInput[] | EventWhereUniqueInput>;
+  connect?: Maybe<EventWhereUniqueInput[] | EventWhereUniqueInput>;
+  set?: Maybe<EventWhereUniqueInput[] | EventWhereUniqueInput>;
+  disconnect?: Maybe<EventWhereUniqueInput[] | EventWhereUniqueInput>;
+  update?: Maybe<
+    | EventUpdateWithWhereUniqueWithoutJoinedInput[]
+    | EventUpdateWithWhereUniqueWithoutJoinedInput
+  >;
+  upsert?: Maybe<
+    | EventUpsertWithWhereUniqueWithoutJoinedInput[]
+    | EventUpsertWithWhereUniqueWithoutJoinedInput
+  >;
+  deleteMany?: Maybe<EventScalarWhereInput[] | EventScalarWhereInput>;
+  updateMany?: Maybe<
+    EventUpdateManyWithWhereNestedInput[] | EventUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface EventUpdateWithWhereUniqueWithoutJoinedInput {
+  where: EventWhereUniqueInput;
+  data: EventUpdateWithoutJoinedDataInput;
+}
+
+export interface EventUpdateWithoutJoinedDataInput {
+  title?: Maybe<String>;
+  description?: Maybe<String>;
+  owner?: Maybe<UserUpdateOneRequiredWithoutOwnedEventsInput>;
+  status?: Maybe<EventStatus>;
+  invited?: Maybe<UserUpdateManyInput>;
+}
+
+export interface UserUpdateManyInput {
+  create?: Maybe<UserCreateInput[] | UserCreateInput>;
+  update?: Maybe<
+    | UserUpdateWithWhereUniqueNestedInput[]
+    | UserUpdateWithWhereUniqueNestedInput
+  >;
+  upsert?: Maybe<
+    | UserUpsertWithWhereUniqueNestedInput[]
+    | UserUpsertWithWhereUniqueNestedInput
+  >;
+  delete?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  connect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  set?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  disconnect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  deleteMany?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
+  updateMany?: Maybe<
+    UserUpdateManyWithWhereNestedInput[] | UserUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface UserUpdateWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput;
+  data: UserUpdateDataInput;
+}
+
+export interface UserUpdateDataInput {
+  email?: Maybe<String>;
+  hash?: Maybe<String>;
+  name?: Maybe<String>;
+  ownedEvents?: Maybe<EventUpdateManyWithoutOwnerInput>;
+  joinedEvents?: Maybe<EventUpdateManyWithoutJoinedInput>;
+  friends?: Maybe<FriendshipUpdateManyWithoutUserInput>;
+  notifications?: Maybe<NotificationUpdateManyInput>;
+}
+
+export interface EventUpdateManyWithoutOwnerInput {
+  create?: Maybe<EventCreateWithoutOwnerInput[] | EventCreateWithoutOwnerInput>;
+  delete?: Maybe<EventWhereUniqueInput[] | EventWhereUniqueInput>;
+  connect?: Maybe<EventWhereUniqueInput[] | EventWhereUniqueInput>;
+  set?: Maybe<EventWhereUniqueInput[] | EventWhereUniqueInput>;
+  disconnect?: Maybe<EventWhereUniqueInput[] | EventWhereUniqueInput>;
+  update?: Maybe<
+    | EventUpdateWithWhereUniqueWithoutOwnerInput[]
+    | EventUpdateWithWhereUniqueWithoutOwnerInput
+  >;
+  upsert?: Maybe<
+    | EventUpsertWithWhereUniqueWithoutOwnerInput[]
+    | EventUpsertWithWhereUniqueWithoutOwnerInput
+  >;
+  deleteMany?: Maybe<EventScalarWhereInput[] | EventScalarWhereInput>;
+  updateMany?: Maybe<
+    EventUpdateManyWithWhereNestedInput[] | EventUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface EventUpdateWithWhereUniqueWithoutOwnerInput {
+  where: EventWhereUniqueInput;
+  data: EventUpdateWithoutOwnerDataInput;
+}
+
+export interface EventUpdateWithoutOwnerDataInput {
+  title?: Maybe<String>;
+  description?: Maybe<String>;
+  status?: Maybe<EventStatus>;
+  invited?: Maybe<UserUpdateManyInput>;
+  joined?: Maybe<UserUpdateManyWithoutJoinedEventsInput>;
+}
+
+export interface UserUpdateManyWithoutJoinedEventsInput {
+  create?: Maybe<
+    UserCreateWithoutJoinedEventsInput[] | UserCreateWithoutJoinedEventsInput
+  >;
+  delete?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  connect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  set?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  disconnect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  update?: Maybe<
+    | UserUpdateWithWhereUniqueWithoutJoinedEventsInput[]
+    | UserUpdateWithWhereUniqueWithoutJoinedEventsInput
+  >;
+  upsert?: Maybe<
+    | UserUpsertWithWhereUniqueWithoutJoinedEventsInput[]
+    | UserUpsertWithWhereUniqueWithoutJoinedEventsInput
+  >;
+  deleteMany?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
+  updateMany?: Maybe<
+    UserUpdateManyWithWhereNestedInput[] | UserUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface UserUpdateWithWhereUniqueWithoutJoinedEventsInput {
+  where: UserWhereUniqueInput;
+  data: UserUpdateWithoutJoinedEventsDataInput;
+}
+
+export interface UserUpdateWithoutJoinedEventsDataInput {
+  email?: Maybe<String>;
+  hash?: Maybe<String>;
+  name?: Maybe<String>;
+  ownedEvents?: Maybe<EventUpdateManyWithoutOwnerInput>;
   friends?: Maybe<FriendshipUpdateManyWithoutUserInput>;
   notifications?: Maybe<NotificationUpdateManyInput>;
 }
@@ -664,77 +842,160 @@ export interface UserUpdateOneRequiredInput {
   connect?: Maybe<UserWhereUniqueInput>;
 }
 
-export interface UserUpdateDataInput {
-  email?: Maybe<String>;
-  hash?: Maybe<String>;
-  name?: Maybe<String>;
-  ownedEvents?: Maybe<EventUpdateManyWithoutOwnerInput>;
-  friends?: Maybe<FriendshipUpdateManyWithoutUserInput>;
-  notifications?: Maybe<NotificationUpdateManyInput>;
-}
-
-export interface EventUpdateManyWithoutOwnerInput {
-  create?: Maybe<EventCreateWithoutOwnerInput[] | EventCreateWithoutOwnerInput>;
-  delete?: Maybe<EventWhereUniqueInput[] | EventWhereUniqueInput>;
-  connect?: Maybe<EventWhereUniqueInput[] | EventWhereUniqueInput>;
-  set?: Maybe<EventWhereUniqueInput[] | EventWhereUniqueInput>;
-  disconnect?: Maybe<EventWhereUniqueInput[] | EventWhereUniqueInput>;
-  update?: Maybe<
-    | EventUpdateWithWhereUniqueWithoutOwnerInput[]
-    | EventUpdateWithWhereUniqueWithoutOwnerInput
-  >;
-  upsert?: Maybe<
-    | EventUpsertWithWhereUniqueWithoutOwnerInput[]
-    | EventUpsertWithWhereUniqueWithoutOwnerInput
-  >;
-  deleteMany?: Maybe<EventScalarWhereInput[] | EventScalarWhereInput>;
-  updateMany?: Maybe<
-    EventUpdateManyWithWhereNestedInput[] | EventUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface EventUpdateWithWhereUniqueWithoutOwnerInput {
-  where: EventWhereUniqueInput;
-  data: EventUpdateWithoutOwnerDataInput;
-}
-
-export interface EventUpdateWithoutOwnerDataInput {
-  title?: Maybe<String>;
-  description?: Maybe<String>;
-  status?: Maybe<EventStatus>;
-  invited?: Maybe<UserUpdateManyInput>;
-  joined?: Maybe<UserUpdateManyInput>;
-}
-
-export interface UserUpdateManyInput {
-  create?: Maybe<UserCreateInput[] | UserCreateInput>;
-  update?: Maybe<
-    | UserUpdateWithWhereUniqueNestedInput[]
-    | UserUpdateWithWhereUniqueNestedInput
-  >;
-  upsert?: Maybe<
-    | UserUpsertWithWhereUniqueNestedInput[]
-    | UserUpsertWithWhereUniqueNestedInput
-  >;
-  delete?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-  connect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-  set?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-  disconnect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-  deleteMany?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
-  updateMany?: Maybe<
-    UserUpdateManyWithWhereNestedInput[] | UserUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface UserUpdateWithWhereUniqueNestedInput {
-  where: UserWhereUniqueInput;
-  data: UserUpdateDataInput;
-}
-
-export interface UserUpsertWithWhereUniqueNestedInput {
-  where: UserWhereUniqueInput;
+export interface UserUpsertNestedInput {
   update: UserUpdateDataInput;
   create: UserCreateInput;
+}
+
+export interface FriendshipUpsertWithWhereUniqueWithoutUserInput {
+  where: FriendshipWhereUniqueInput;
+  update: FriendshipUpdateWithoutUserDataInput;
+  create: FriendshipCreateWithoutUserInput;
+}
+
+export interface FriendshipScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  pairKey?: Maybe<String>;
+  pairKey_not?: Maybe<String>;
+  pairKey_in?: Maybe<String[] | String>;
+  pairKey_not_in?: Maybe<String[] | String>;
+  pairKey_lt?: Maybe<String>;
+  pairKey_lte?: Maybe<String>;
+  pairKey_gt?: Maybe<String>;
+  pairKey_gte?: Maybe<String>;
+  pairKey_contains?: Maybe<String>;
+  pairKey_not_contains?: Maybe<String>;
+  pairKey_starts_with?: Maybe<String>;
+  pairKey_not_starts_with?: Maybe<String>;
+  pairKey_ends_with?: Maybe<String>;
+  pairKey_not_ends_with?: Maybe<String>;
+  status?: Maybe<FriendStatus>;
+  status_not?: Maybe<FriendStatus>;
+  status_in?: Maybe<FriendStatus[] | FriendStatus>;
+  status_not_in?: Maybe<FriendStatus[] | FriendStatus>;
+  AND?: Maybe<FriendshipScalarWhereInput[] | FriendshipScalarWhereInput>;
+  OR?: Maybe<FriendshipScalarWhereInput[] | FriendshipScalarWhereInput>;
+  NOT?: Maybe<FriendshipScalarWhereInput[] | FriendshipScalarWhereInput>;
+}
+
+export interface FriendshipUpdateManyWithWhereNestedInput {
+  where: FriendshipScalarWhereInput;
+  data: FriendshipUpdateManyDataInput;
+}
+
+export interface FriendshipUpdateManyDataInput {
+  pairKey?: Maybe<String>;
+  status?: Maybe<FriendStatus>;
+}
+
+export interface NotificationUpdateManyInput {
+  create?: Maybe<NotificationCreateInput[] | NotificationCreateInput>;
+  update?: Maybe<
+    | NotificationUpdateWithWhereUniqueNestedInput[]
+    | NotificationUpdateWithWhereUniqueNestedInput
+  >;
+  upsert?: Maybe<
+    | NotificationUpsertWithWhereUniqueNestedInput[]
+    | NotificationUpsertWithWhereUniqueNestedInput
+  >;
+  delete?: Maybe<NotificationWhereUniqueInput[] | NotificationWhereUniqueInput>;
+  connect?: Maybe<
+    NotificationWhereUniqueInput[] | NotificationWhereUniqueInput
+  >;
+  set?: Maybe<NotificationWhereUniqueInput[] | NotificationWhereUniqueInput>;
+  disconnect?: Maybe<
+    NotificationWhereUniqueInput[] | NotificationWhereUniqueInput
+  >;
+  deleteMany?: Maybe<
+    NotificationScalarWhereInput[] | NotificationScalarWhereInput
+  >;
+  updateMany?: Maybe<
+    | NotificationUpdateManyWithWhereNestedInput[]
+    | NotificationUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface NotificationUpdateWithWhereUniqueNestedInput {
+  where: NotificationWhereUniqueInput;
+  data: NotificationUpdateDataInput;
+}
+
+export interface NotificationUpdateDataInput {
+  status?: Maybe<NotificationStatus>;
+  text?: Maybe<String>;
+}
+
+export interface NotificationUpsertWithWhereUniqueNestedInput {
+  where: NotificationWhereUniqueInput;
+  update: NotificationUpdateDataInput;
+  create: NotificationCreateInput;
+}
+
+export interface NotificationScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  status?: Maybe<NotificationStatus>;
+  status_not?: Maybe<NotificationStatus>;
+  status_in?: Maybe<NotificationStatus[] | NotificationStatus>;
+  status_not_in?: Maybe<NotificationStatus[] | NotificationStatus>;
+  text?: Maybe<String>;
+  text_not?: Maybe<String>;
+  text_in?: Maybe<String[] | String>;
+  text_not_in?: Maybe<String[] | String>;
+  text_lt?: Maybe<String>;
+  text_lte?: Maybe<String>;
+  text_gt?: Maybe<String>;
+  text_gte?: Maybe<String>;
+  text_contains?: Maybe<String>;
+  text_not_contains?: Maybe<String>;
+  text_starts_with?: Maybe<String>;
+  text_not_starts_with?: Maybe<String>;
+  text_ends_with?: Maybe<String>;
+  text_not_ends_with?: Maybe<String>;
+  AND?: Maybe<NotificationScalarWhereInput[] | NotificationScalarWhereInput>;
+  OR?: Maybe<NotificationScalarWhereInput[] | NotificationScalarWhereInput>;
+  NOT?: Maybe<NotificationScalarWhereInput[] | NotificationScalarWhereInput>;
+}
+
+export interface NotificationUpdateManyWithWhereNestedInput {
+  where: NotificationScalarWhereInput;
+  data: NotificationUpdateManyDataInput;
+}
+
+export interface NotificationUpdateManyDataInput {
+  status?: Maybe<NotificationStatus>;
+  text?: Maybe<String>;
+}
+
+export interface UserUpsertWithWhereUniqueWithoutJoinedEventsInput {
+  where: UserWhereUniqueInput;
+  update: UserUpdateWithoutJoinedEventsDataInput;
+  create: UserCreateWithoutJoinedEventsInput;
 }
 
 export interface UserScalarWhereInput {
@@ -895,154 +1156,16 @@ export interface EventUpdateManyDataInput {
   status?: Maybe<EventStatus>;
 }
 
-export interface NotificationUpdateManyInput {
-  create?: Maybe<NotificationCreateInput[] | NotificationCreateInput>;
-  update?: Maybe<
-    | NotificationUpdateWithWhereUniqueNestedInput[]
-    | NotificationUpdateWithWhereUniqueNestedInput
-  >;
-  upsert?: Maybe<
-    | NotificationUpsertWithWhereUniqueNestedInput[]
-    | NotificationUpsertWithWhereUniqueNestedInput
-  >;
-  delete?: Maybe<NotificationWhereUniqueInput[] | NotificationWhereUniqueInput>;
-  connect?: Maybe<
-    NotificationWhereUniqueInput[] | NotificationWhereUniqueInput
-  >;
-  set?: Maybe<NotificationWhereUniqueInput[] | NotificationWhereUniqueInput>;
-  disconnect?: Maybe<
-    NotificationWhereUniqueInput[] | NotificationWhereUniqueInput
-  >;
-  deleteMany?: Maybe<
-    NotificationScalarWhereInput[] | NotificationScalarWhereInput
-  >;
-  updateMany?: Maybe<
-    | NotificationUpdateManyWithWhereNestedInput[]
-    | NotificationUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface NotificationUpdateWithWhereUniqueNestedInput {
-  where: NotificationWhereUniqueInput;
-  data: NotificationUpdateDataInput;
-}
-
-export interface NotificationUpdateDataInput {
-  status?: Maybe<NotificationStatus>;
-  text?: Maybe<String>;
-}
-
-export interface NotificationUpsertWithWhereUniqueNestedInput {
-  where: NotificationWhereUniqueInput;
-  update: NotificationUpdateDataInput;
-  create: NotificationCreateInput;
-}
-
-export interface NotificationScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  status?: Maybe<NotificationStatus>;
-  status_not?: Maybe<NotificationStatus>;
-  status_in?: Maybe<NotificationStatus[] | NotificationStatus>;
-  status_not_in?: Maybe<NotificationStatus[] | NotificationStatus>;
-  text?: Maybe<String>;
-  text_not?: Maybe<String>;
-  text_in?: Maybe<String[] | String>;
-  text_not_in?: Maybe<String[] | String>;
-  text_lt?: Maybe<String>;
-  text_lte?: Maybe<String>;
-  text_gt?: Maybe<String>;
-  text_gte?: Maybe<String>;
-  text_contains?: Maybe<String>;
-  text_not_contains?: Maybe<String>;
-  text_starts_with?: Maybe<String>;
-  text_not_starts_with?: Maybe<String>;
-  text_ends_with?: Maybe<String>;
-  text_not_ends_with?: Maybe<String>;
-  AND?: Maybe<NotificationScalarWhereInput[] | NotificationScalarWhereInput>;
-  OR?: Maybe<NotificationScalarWhereInput[] | NotificationScalarWhereInput>;
-  NOT?: Maybe<NotificationScalarWhereInput[] | NotificationScalarWhereInput>;
-}
-
-export interface NotificationUpdateManyWithWhereNestedInput {
-  where: NotificationScalarWhereInput;
-  data: NotificationUpdateManyDataInput;
-}
-
-export interface NotificationUpdateManyDataInput {
-  status?: Maybe<NotificationStatus>;
-  text?: Maybe<String>;
-}
-
-export interface UserUpsertNestedInput {
+export interface UserUpsertWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput;
   update: UserUpdateDataInput;
   create: UserCreateInput;
 }
 
-export interface FriendshipUpsertWithWhereUniqueWithoutUserInput {
-  where: FriendshipWhereUniqueInput;
-  update: FriendshipUpdateWithoutUserDataInput;
-  create: FriendshipCreateWithoutUserInput;
-}
-
-export interface FriendshipScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  pairKey?: Maybe<String>;
-  pairKey_not?: Maybe<String>;
-  pairKey_in?: Maybe<String[] | String>;
-  pairKey_not_in?: Maybe<String[] | String>;
-  pairKey_lt?: Maybe<String>;
-  pairKey_lte?: Maybe<String>;
-  pairKey_gt?: Maybe<String>;
-  pairKey_gte?: Maybe<String>;
-  pairKey_contains?: Maybe<String>;
-  pairKey_not_contains?: Maybe<String>;
-  pairKey_starts_with?: Maybe<String>;
-  pairKey_not_starts_with?: Maybe<String>;
-  pairKey_ends_with?: Maybe<String>;
-  pairKey_not_ends_with?: Maybe<String>;
-  status?: Maybe<FriendStatus>;
-  status_not?: Maybe<FriendStatus>;
-  status_in?: Maybe<FriendStatus[] | FriendStatus>;
-  status_not_in?: Maybe<FriendStatus[] | FriendStatus>;
-  AND?: Maybe<FriendshipScalarWhereInput[] | FriendshipScalarWhereInput>;
-  OR?: Maybe<FriendshipScalarWhereInput[] | FriendshipScalarWhereInput>;
-  NOT?: Maybe<FriendshipScalarWhereInput[] | FriendshipScalarWhereInput>;
-}
-
-export interface FriendshipUpdateManyWithWhereNestedInput {
-  where: FriendshipScalarWhereInput;
-  data: FriendshipUpdateManyDataInput;
-}
-
-export interface FriendshipUpdateManyDataInput {
-  pairKey?: Maybe<String>;
-  status?: Maybe<FriendStatus>;
+export interface EventUpsertWithWhereUniqueWithoutJoinedInput {
+  where: EventWhereUniqueInput;
+  update: EventUpdateWithoutJoinedDataInput;
+  create: EventCreateWithoutJoinedInput;
 }
 
 export interface UserUpsertWithoutOwnedEventsInput {
@@ -1075,6 +1198,7 @@ export interface UserCreateWithoutFriendsInput {
   hash?: Maybe<String>;
   name: String;
   ownedEvents?: Maybe<EventCreateManyWithoutOwnerInput>;
+  joinedEvents?: Maybe<EventCreateManyWithoutJoinedInput>;
   notifications?: Maybe<NotificationCreateManyInput>;
 }
 
@@ -1097,6 +1221,7 @@ export interface UserUpdateWithoutFriendsDataInput {
   hash?: Maybe<String>;
   name?: Maybe<String>;
   ownedEvents?: Maybe<EventUpdateManyWithoutOwnerInput>;
+  joinedEvents?: Maybe<EventUpdateManyWithoutJoinedInput>;
   notifications?: Maybe<NotificationUpdateManyInput>;
 }
 
@@ -1125,6 +1250,7 @@ export interface UserUpdateInput {
   hash?: Maybe<String>;
   name?: Maybe<String>;
   ownedEvents?: Maybe<EventUpdateManyWithoutOwnerInput>;
+  joinedEvents?: Maybe<EventUpdateManyWithoutJoinedInput>;
   friends?: Maybe<FriendshipUpdateManyWithoutUserInput>;
   notifications?: Maybe<NotificationUpdateManyInput>;
 }
@@ -1313,6 +1439,15 @@ export interface UserPromise extends Promise<User>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
+  joinedEvents: <T = FragmentableArray<Event>>(args?: {
+    where?: EventWhereInput;
+    orderBy?: EventOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
   friends: <T = FragmentableArray<Friendship>>(args?: {
     where?: FriendshipWhereInput;
     orderBy?: FriendshipOrderByInput;
@@ -1349,6 +1484,15 @@ export interface UserSubscription
     first?: Int;
     last?: Int;
   }) => T;
+  joinedEvents: <T = Promise<AsyncIterator<EventSubscription>>>(args?: {
+    where?: EventWhereInput;
+    orderBy?: EventOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
   friends: <T = Promise<AsyncIterator<FriendshipSubscription>>>(args?: {
     where?: FriendshipWhereInput;
     orderBy?: FriendshipOrderByInput;
@@ -1377,6 +1521,15 @@ export interface UserNullablePromise
   hash: () => Promise<String>;
   name: () => Promise<String>;
   ownedEvents: <T = FragmentableArray<Event>>(args?: {
+    where?: EventWhereInput;
+    orderBy?: EventOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  joinedEvents: <T = FragmentableArray<Event>>(args?: {
     where?: EventWhereInput;
     orderBy?: EventOrderByInput;
     skip?: Int;
