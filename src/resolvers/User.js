@@ -1,3 +1,5 @@
+import { getUserId } from '../utils';
+
 async function ownedEvents(parent, args, context) {
   return context.prisma.events({
     where: {
@@ -11,6 +13,12 @@ async function ownedEvents(parent, args, context) {
 // eslint-disable-next-line no-unused-vars
 async function events(parent, { userId, association, status }, context) {
   // TODO add association support
+  let queryUserId;
+
+  if (userId == null) {
+    queryUserId = await getUserId({ context });
+  }
+
   return context.prisma.events({
     where: {
       AND: [
@@ -18,17 +26,17 @@ async function events(parent, { userId, association, status }, context) {
           OR: [
             {
               owner: {
-                id: userId,
+                id: queryUserId,
               },
             },
             {
               invited_some: {
-                id: userId,
+                id: queryUserId,
               },
             },
             {
               joined_some: {
-                id: userId,
+                id: queryUserId,
               },
             },
           ],
