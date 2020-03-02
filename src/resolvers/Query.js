@@ -45,6 +45,7 @@ async function newsFeed(parent, args, context) {
         },
       ],
     },
+    orderBy: 'updatedAt_DESC',
   });
 }
 
