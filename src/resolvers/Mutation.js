@@ -174,6 +174,28 @@ async function confirmFriend(parent, { userId }, context) {
     });
 }
 
+async function updateEventDetails(parent, { eventId, title, description }, context) {
+  if (title == null && description == null) {
+    throw new ApolloError('Nothing to change... Please supply new data');
+  }
+
+  const eventUpdate = {};
+
+  if (title != null) {
+    eventUpdate.title = title;
+  }
+  if (description != null) {
+    eventUpdate.description = description;
+  }
+
+  return context.prisma.updateEvent({
+    where: {
+      id: eventId,
+    },
+    data: eventUpdate,
+  });
+}
+
 async function updateEventStatus(parent, { eventId, currentEventStatus, newEventStatus }, context) {
   // TODO verify that user has auth to change event status
   // get the event to verify the currentEventStatus is the same as the event status
@@ -210,4 +232,5 @@ export default {
   requestFriend,
   confirmFriend,
   updateEventStatus,
+  updateEventDetails,
 };
