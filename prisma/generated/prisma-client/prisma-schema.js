@@ -50,26 +50,12 @@ input EventCreateInput {
   owner: UserCreateOneWithoutOwnedEventsInput!
   status: EventStatus!
   invited: UserCreateManyInput
-  joined: UserCreateManyWithoutJoinedEventsInput
-}
-
-input EventCreateManyWithoutJoinedInput {
-  create: [EventCreateWithoutJoinedInput!]
-  connect: [EventWhereUniqueInput!]
+  joined: UserCreateManyInput
 }
 
 input EventCreateManyWithoutOwnerInput {
   create: [EventCreateWithoutOwnerInput!]
   connect: [EventWhereUniqueInput!]
-}
-
-input EventCreateWithoutJoinedInput {
-  id: ID
-  title: String!
-  description: String!
-  owner: UserCreateOneWithoutOwnedEventsInput!
-  status: EventStatus!
-  invited: UserCreateManyInput
 }
 
 input EventCreateWithoutOwnerInput {
@@ -78,7 +64,7 @@ input EventCreateWithoutOwnerInput {
   description: String!
   status: EventStatus!
   invited: UserCreateManyInput
-  joined: UserCreateManyWithoutJoinedEventsInput
+  joined: UserCreateManyInput
 }
 
 type EventEdge {
@@ -208,7 +194,7 @@ input EventUpdateInput {
   owner: UserUpdateOneRequiredWithoutOwnedEventsInput
   status: EventStatus
   invited: UserUpdateManyInput
-  joined: UserUpdateManyWithoutJoinedEventsInput
+  joined: UserUpdateManyInput
 }
 
 input EventUpdateManyDataInput {
@@ -221,18 +207,6 @@ input EventUpdateManyMutationInput {
   title: String
   description: String
   status: EventStatus
-}
-
-input EventUpdateManyWithoutJoinedInput {
-  create: [EventCreateWithoutJoinedInput!]
-  delete: [EventWhereUniqueInput!]
-  connect: [EventWhereUniqueInput!]
-  set: [EventWhereUniqueInput!]
-  disconnect: [EventWhereUniqueInput!]
-  update: [EventUpdateWithWhereUniqueWithoutJoinedInput!]
-  upsert: [EventUpsertWithWhereUniqueWithoutJoinedInput!]
-  deleteMany: [EventScalarWhereInput!]
-  updateMany: [EventUpdateManyWithWhereNestedInput!]
 }
 
 input EventUpdateManyWithoutOwnerInput {
@@ -252,36 +226,17 @@ input EventUpdateManyWithWhereNestedInput {
   data: EventUpdateManyDataInput!
 }
 
-input EventUpdateWithoutJoinedDataInput {
-  title: String
-  description: String
-  owner: UserUpdateOneRequiredWithoutOwnedEventsInput
-  status: EventStatus
-  invited: UserUpdateManyInput
-}
-
 input EventUpdateWithoutOwnerDataInput {
   title: String
   description: String
   status: EventStatus
   invited: UserUpdateManyInput
-  joined: UserUpdateManyWithoutJoinedEventsInput
-}
-
-input EventUpdateWithWhereUniqueWithoutJoinedInput {
-  where: EventWhereUniqueInput!
-  data: EventUpdateWithoutJoinedDataInput!
+  joined: UserUpdateManyInput
 }
 
 input EventUpdateWithWhereUniqueWithoutOwnerInput {
   where: EventWhereUniqueInput!
   data: EventUpdateWithoutOwnerDataInput!
-}
-
-input EventUpsertWithWhereUniqueWithoutJoinedInput {
-  where: EventWhereUniqueInput!
-  update: EventUpdateWithoutJoinedDataInput!
-  create: EventCreateWithoutJoinedInput!
 }
 
 input EventUpsertWithWhereUniqueWithoutOwnerInput {
@@ -850,7 +805,6 @@ type User {
   hash: String
   name: String!
   ownedEvents(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
-  joinedEvents(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
   friends(where: FriendshipWhereInput, orderBy: FriendshipOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Friendship!]
   notifications(where: NotificationWhereInput, orderBy: NotificationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Notification!]
 }
@@ -867,18 +821,12 @@ input UserCreateInput {
   hash: String
   name: String!
   ownedEvents: EventCreateManyWithoutOwnerInput
-  joinedEvents: EventCreateManyWithoutJoinedInput
   friends: FriendshipCreateManyWithoutUserInput
   notifications: NotificationCreateManyInput
 }
 
 input UserCreateManyInput {
   create: [UserCreateInput!]
-  connect: [UserWhereUniqueInput!]
-}
-
-input UserCreateManyWithoutJoinedEventsInput {
-  create: [UserCreateWithoutJoinedEventsInput!]
   connect: [UserWhereUniqueInput!]
 }
 
@@ -903,17 +851,6 @@ input UserCreateWithoutFriendsInput {
   hash: String
   name: String!
   ownedEvents: EventCreateManyWithoutOwnerInput
-  joinedEvents: EventCreateManyWithoutJoinedInput
-  notifications: NotificationCreateManyInput
-}
-
-input UserCreateWithoutJoinedEventsInput {
-  id: ID
-  email: String!
-  hash: String
-  name: String!
-  ownedEvents: EventCreateManyWithoutOwnerInput
-  friends: FriendshipCreateManyWithoutUserInput
   notifications: NotificationCreateManyInput
 }
 
@@ -922,7 +859,6 @@ input UserCreateWithoutOwnedEventsInput {
   email: String!
   hash: String
   name: String!
-  joinedEvents: EventCreateManyWithoutJoinedInput
   friends: FriendshipCreateManyWithoutUserInput
   notifications: NotificationCreateManyInput
 }
@@ -1035,7 +971,6 @@ input UserUpdateDataInput {
   hash: String
   name: String
   ownedEvents: EventUpdateManyWithoutOwnerInput
-  joinedEvents: EventUpdateManyWithoutJoinedInput
   friends: FriendshipUpdateManyWithoutUserInput
   notifications: NotificationUpdateManyInput
 }
@@ -1045,7 +980,6 @@ input UserUpdateInput {
   hash: String
   name: String
   ownedEvents: EventUpdateManyWithoutOwnerInput
-  joinedEvents: EventUpdateManyWithoutJoinedInput
   friends: FriendshipUpdateManyWithoutUserInput
   notifications: NotificationUpdateManyInput
 }
@@ -1072,18 +1006,6 @@ input UserUpdateManyMutationInput {
   email: String
   hash: String
   name: String
-}
-
-input UserUpdateManyWithoutJoinedEventsInput {
-  create: [UserCreateWithoutJoinedEventsInput!]
-  delete: [UserWhereUniqueInput!]
-  connect: [UserWhereUniqueInput!]
-  set: [UserWhereUniqueInput!]
-  disconnect: [UserWhereUniqueInput!]
-  update: [UserUpdateWithWhereUniqueWithoutJoinedEventsInput!]
-  upsert: [UserUpsertWithWhereUniqueWithoutJoinedEventsInput!]
-  deleteMany: [UserScalarWhereInput!]
-  updateMany: [UserUpdateManyWithWhereNestedInput!]
 }
 
 input UserUpdateManyWithWhereNestedInput {
@@ -1117,16 +1039,6 @@ input UserUpdateWithoutFriendsDataInput {
   hash: String
   name: String
   ownedEvents: EventUpdateManyWithoutOwnerInput
-  joinedEvents: EventUpdateManyWithoutJoinedInput
-  notifications: NotificationUpdateManyInput
-}
-
-input UserUpdateWithoutJoinedEventsDataInput {
-  email: String
-  hash: String
-  name: String
-  ownedEvents: EventUpdateManyWithoutOwnerInput
-  friends: FriendshipUpdateManyWithoutUserInput
   notifications: NotificationUpdateManyInput
 }
 
@@ -1134,7 +1046,6 @@ input UserUpdateWithoutOwnedEventsDataInput {
   email: String
   hash: String
   name: String
-  joinedEvents: EventUpdateManyWithoutJoinedInput
   friends: FriendshipUpdateManyWithoutUserInput
   notifications: NotificationUpdateManyInput
 }
@@ -1142,11 +1053,6 @@ input UserUpdateWithoutOwnedEventsDataInput {
 input UserUpdateWithWhereUniqueNestedInput {
   where: UserWhereUniqueInput!
   data: UserUpdateDataInput!
-}
-
-input UserUpdateWithWhereUniqueWithoutJoinedEventsInput {
-  where: UserWhereUniqueInput!
-  data: UserUpdateWithoutJoinedEventsDataInput!
 }
 
 input UserUpsertNestedInput {
@@ -1168,12 +1074,6 @@ input UserUpsertWithWhereUniqueNestedInput {
   where: UserWhereUniqueInput!
   update: UserUpdateDataInput!
   create: UserCreateInput!
-}
-
-input UserUpsertWithWhereUniqueWithoutJoinedEventsInput {
-  where: UserWhereUniqueInput!
-  update: UserUpdateWithoutJoinedEventsDataInput!
-  create: UserCreateWithoutJoinedEventsInput!
 }
 
 input UserWhereInput {
@@ -1236,9 +1136,6 @@ input UserWhereInput {
   ownedEvents_every: EventWhereInput
   ownedEvents_some: EventWhereInput
   ownedEvents_none: EventWhereInput
-  joinedEvents_every: EventWhereInput
-  joinedEvents_some: EventWhereInput
-  joinedEvents_none: EventWhereInput
   friends_every: FriendshipWhereInput
   friends_some: FriendshipWhereInput
   friends_none: FriendshipWhereInput

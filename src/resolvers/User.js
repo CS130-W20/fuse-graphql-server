@@ -11,37 +11,69 @@ async function ownedEvents(parent, args, context) {
 }
 
 // eslint-disable-next-line no-unused-vars
-async function events(parent, { userId, association, status }, context) {
+async function events(parent, { association, status }, context) {
   // TODO add association support
-  let queryUserId;
+  const userId = await getUserId({ context });
+  let eventList = [];
 
-  if (userId == null) {
-    queryUserId = await getUserId({ context });
+  if (association.includes('OWNER')) {
+    const ownerEvents = await context.prisma.events({
+      where: {
+        AND: [
+          {
+            owner: {
+              id: userId,
+            },
+          },
+          {
+            status_in: status,
+          },
+        ],
+      },
+    });
+
+    eventList = eventList.concat(ownerEvents);
   }
 
-  return context.prisma.events({
-    where: {
-      AND: [
-        {
-          OR: [
-            {
-              owner: {
-                id: queryUserId,
-              },
+  if (association.includes('INVITED')) {
+    const invitedEvents = await context.prisma.events({
+      where: {
+        AND: [
+          {
+            invited_some: {
+              id: userId,
             },
-            {
-              joined_some: {
-                id: queryUserId,
-              },
+          },
+          {
+            status_in: status,
+          },
+        ],
+      },
+    });
+
+    eventList = eventList.concat(invitedEvents);
+  }
+
+  if (association.includes('JOINED')) {
+    const joinedEvents = await context.prisma.events({
+      where: {
+        AND: [
+          {
+            joined_some: {
+              id: userId,
             },
-          ],
-        },
-        {
-          status_in: status,
-        },
-      ],
-    },
-  });
+          },
+          {
+            status_in: status,
+          },
+        ],
+      },
+    });
+
+    eventList = eventList.concat(joinedEvents);
+  }
+
+  return eventList;
 }
 
 export default {

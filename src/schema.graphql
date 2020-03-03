@@ -25,8 +25,7 @@ type User {
     name: String!
     email: String!
     ownedEvents: [Event!]!
-    joinedEvents: [Event!]!
-    events(userId: ID, association: [Association!], status: [EventStatus!]): [Event!]!  # TODO association
+    events(association: [Association!], status: [EventStatus!]): [Event!]!  # TODO association
 }
 
 type Event {
