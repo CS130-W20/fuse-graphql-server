@@ -231,6 +231,21 @@ async function updateEventStatus(parent, { eventId, currentEventStatus, newEvent
   });
 }
 
+async function updateProfileDetails(parent, { name, bio }, context) {
+  const userId = await getUserId({ context });
+
+  const data = {};
+  if (name != null) data.name = name;
+  if (bio != null) data.bio = bio;
+
+  return context.prisma.updateUser({
+    where: {
+      id: userId,
+    },
+    data,
+  });
+}
+
 export default {
   signup,
   login,
@@ -239,4 +254,5 @@ export default {
   confirmFriend,
   updateEventStatus,
   updateEventDetails,
+  updateProfileDetails,
 };

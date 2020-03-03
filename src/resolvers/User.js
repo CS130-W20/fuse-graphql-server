@@ -1,16 +1,5 @@
 import { getUserId } from '../utils';
 
-async function ownedEvents(parent, args, context) {
-  return context.prisma.events({
-    where: {
-      owner: {
-        id: parent.id,
-      },
-    },
-  });
-}
-
-// eslint-disable-next-line no-unused-vars
 async function events(parent, { association, status }, context) {
   // TODO add association support
   const userId = await getUserId({ context });
@@ -76,7 +65,11 @@ async function events(parent, { association, status }, context) {
   return eventList;
 }
 
+async function ownedEvents(parent, args, context) {
+  return events(parent, { association: ['OWNER'], status: ['SET', 'INVITED', 'JOINED'] }, context);
+}
+
 export default {
-  ownedEvents,
   events,
+  ownedEvents,
 };

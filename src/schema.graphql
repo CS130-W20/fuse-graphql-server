@@ -2,6 +2,8 @@ type Query {
     ping: String!
     user: User!
     completedEvents(userId: ID): [Event!]!  # TODO
+    completedEventsCount(userId: ID): Int!
+    friendsCount(userId: ID): Int!
     newsFeed: [Event!]!
 }
 
@@ -13,6 +15,7 @@ type Mutation {
     confirmFriend(userId: ID!): String  # DONE
     updateEventDetails(eventId: ID!, title: String, description: String): Event!  # TODO
     updateEventStatus(eventId: ID!, currentEventStatus: EventStatus!, newEventStatus: EventStatus): Event!   # TODO
+    updateProfileDetails(name: String, bio: String): User!
 }
 
 type AuthPayload {
@@ -24,6 +27,8 @@ type User {
     id: ID!
     name: String!
     email: String!
+    bio: String
+    score: Int!
     ownedEvents: [Event!]!
     events(association: [Association!], status: [EventStatus!]): [Event!]!  # TODO association
 }
