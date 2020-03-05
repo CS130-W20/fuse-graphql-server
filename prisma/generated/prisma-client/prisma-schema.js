@@ -804,6 +804,8 @@ type User {
   email: String!
   hash: String
   name: String!
+  bio: String
+  score: Int!
   ownedEvents(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
   friends(where: FriendshipWhereInput, orderBy: FriendshipOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Friendship!]
   notifications(where: NotificationWhereInput, orderBy: NotificationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Notification!]
@@ -820,6 +822,8 @@ input UserCreateInput {
   email: String!
   hash: String
   name: String!
+  bio: String
+  score: Int!
   ownedEvents: EventCreateManyWithoutOwnerInput
   friends: FriendshipCreateManyWithoutUserInput
   notifications: NotificationCreateManyInput
@@ -850,6 +854,8 @@ input UserCreateWithoutFriendsInput {
   email: String!
   hash: String
   name: String!
+  bio: String
+  score: Int!
   ownedEvents: EventCreateManyWithoutOwnerInput
   notifications: NotificationCreateManyInput
 }
@@ -859,6 +865,8 @@ input UserCreateWithoutOwnedEventsInput {
   email: String!
   hash: String
   name: String!
+  bio: String
+  score: Int!
   friends: FriendshipCreateManyWithoutUserInput
   notifications: NotificationCreateManyInput
 }
@@ -877,6 +885,10 @@ enum UserOrderByInput {
   hash_DESC
   name_ASC
   name_DESC
+  bio_ASC
+  bio_DESC
+  score_ASC
+  score_DESC
 }
 
 type UserPreviousValues {
@@ -884,6 +896,8 @@ type UserPreviousValues {
   email: String!
   hash: String
   name: String!
+  bio: String
+  score: Int!
 }
 
 input UserScalarWhereInput {
@@ -943,6 +957,28 @@ input UserScalarWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
+  bio: String
+  bio_not: String
+  bio_in: [String!]
+  bio_not_in: [String!]
+  bio_lt: String
+  bio_lte: String
+  bio_gt: String
+  bio_gte: String
+  bio_contains: String
+  bio_not_contains: String
+  bio_starts_with: String
+  bio_not_starts_with: String
+  bio_ends_with: String
+  bio_not_ends_with: String
+  score: Int
+  score_not: Int
+  score_in: [Int!]
+  score_not_in: [Int!]
+  score_lt: Int
+  score_lte: Int
+  score_gt: Int
+  score_gte: Int
   AND: [UserScalarWhereInput!]
   OR: [UserScalarWhereInput!]
   NOT: [UserScalarWhereInput!]
@@ -970,6 +1006,8 @@ input UserUpdateDataInput {
   email: String
   hash: String
   name: String
+  bio: String
+  score: Int
   ownedEvents: EventUpdateManyWithoutOwnerInput
   friends: FriendshipUpdateManyWithoutUserInput
   notifications: NotificationUpdateManyInput
@@ -979,6 +1017,8 @@ input UserUpdateInput {
   email: String
   hash: String
   name: String
+  bio: String
+  score: Int
   ownedEvents: EventUpdateManyWithoutOwnerInput
   friends: FriendshipUpdateManyWithoutUserInput
   notifications: NotificationUpdateManyInput
@@ -988,6 +1028,8 @@ input UserUpdateManyDataInput {
   email: String
   hash: String
   name: String
+  bio: String
+  score: Int
 }
 
 input UserUpdateManyInput {
@@ -1006,6 +1048,8 @@ input UserUpdateManyMutationInput {
   email: String
   hash: String
   name: String
+  bio: String
+  score: Int
 }
 
 input UserUpdateManyWithWhereNestedInput {
@@ -1038,6 +1082,8 @@ input UserUpdateWithoutFriendsDataInput {
   email: String
   hash: String
   name: String
+  bio: String
+  score: Int
   ownedEvents: EventUpdateManyWithoutOwnerInput
   notifications: NotificationUpdateManyInput
 }
@@ -1046,6 +1092,8 @@ input UserUpdateWithoutOwnedEventsDataInput {
   email: String
   hash: String
   name: String
+  bio: String
+  score: Int
   friends: FriendshipUpdateManyWithoutUserInput
   notifications: NotificationUpdateManyInput
 }
@@ -1133,6 +1181,28 @@ input UserWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
+  bio: String
+  bio_not: String
+  bio_in: [String!]
+  bio_not_in: [String!]
+  bio_lt: String
+  bio_lte: String
+  bio_gt: String
+  bio_gte: String
+  bio_contains: String
+  bio_not_contains: String
+  bio_starts_with: String
+  bio_not_starts_with: String
+  bio_ends_with: String
+  bio_not_ends_with: String
+  score: Int
+  score_not: Int
+  score_in: [Int!]
+  score_not_in: [Int!]
+  score_lt: Int
+  score_lte: Int
+  score_gt: Int
+  score_gte: Int
   ownedEvents_every: EventWhereInput
   ownedEvents_some: EventWhereInput
   ownedEvents_none: EventWhereInput

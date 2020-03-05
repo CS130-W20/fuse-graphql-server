@@ -1,23 +1,14 @@
-import { getUserId } from '../utils';
+import { getUserId, mergeListsByUpdateTime } from '../utils';
 
-async function ownedEvents(parent, args, context) {
-  return context.prisma.events({
-    where: {
-      owner: {
-        id: parent.id,
-      },
-    },
-  });
-}
-
-// eslint-disable-next-line no-unused-vars
 async function events(parent, { association, status }, context) {
   // TODO add association support
   const userId = await getUserId({ context });
-  let eventList = [];
+  let ownerEvents = [];
+  let invitedEvents = [];
+  let joinedEvents = [];
 
   if (association.includes('OWNER')) {
-    const ownerEvents = await context.prisma.events({
+    const fetchedOwnedEvents = await context.prisma.events({
       where: {
         AND: [
           {
@@ -30,13 +21,14 @@ async function events(parent, { association, status }, context) {
           },
         ],
       },
+      orderBy: 'updatedAt_DESC',
     });
 
-    eventList = eventList.concat(ownerEvents);
+    ownerEvents = ownerEvents.concat(fetchedOwnedEvents);
   }
 
   if (association.includes('INVITED')) {
-    const invitedEvents = await context.prisma.events({
+    const fetchedInvitedEvents = await context.prisma.events({
       where: {
         AND: [
           {
@@ -49,13 +41,14 @@ async function events(parent, { association, status }, context) {
           },
         ],
       },
+      orderBy: 'updatedAt_DESC',
     });
 
-    eventList = eventList.concat(invitedEvents);
+    invitedEvents = invitedEvents.concat(fetchedInvitedEvents);
   }
 
   if (association.includes('JOINED')) {
-    const joinedEvents = await context.prisma.events({
+    const fetchedJoinedEvents = await context.prisma.events({
       where: {
         AND: [
           {
@@ -68,15 +61,24 @@ async function events(parent, { association, status }, context) {
           },
         ],
       },
+      orderBy: 'updatedAt_DESC',
     });
 
-    eventList = eventList.concat(joinedEvents);
+    joinedEvents = joinedEvents.concat(fetchedJoinedEvents);
   }
+
+  // Merge the 3 sorted lists to create one sorted list by update time
+  const ownedAndInvitedEvents = mergeListsByUpdateTime(ownerEvents, invitedEvents);
+  const eventList = mergeListsByUpdateTime(ownedAndInvitedEvents, joinedEvents);
 
   return eventList;
 }
 
+async function ownedEvents(parent, args, context) {
+  return events(parent, { association: ['OWNER'], status: ['SET', 'INVITED', 'JOINED'] }, context);
+}
+
 export default {
-  ownedEvents,
   events,
+  ownedEvents,
 };

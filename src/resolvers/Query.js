@@ -22,6 +22,38 @@ async function completedEvents(parent, { userId }, context) {
   });
 }
 
+async function completedEventsCount(parent, { userId }, context) {
+  let queryUserId;
+
+  if (userId != null) {
+    queryUserId = userId;
+  } else {
+    queryUserId = await getUserId({ context });
+  }
+
+  const eventsConnection = await context.prisma.eventsConnection({
+    where: {
+      AND: [{
+        OR: [{
+          owner: {
+            id: queryUserId,
+          },
+        },
+        {
+          joined_some: {
+            id: queryUserId,
+          },
+        }],
+      },
+      {
+        status: 'COMPLETED',
+      }],
+    },
+  }).aggregate();
+
+  return eventsConnection.count;
+}
+
 async function newsFeed(parent, args, context) {
   const userId = await getUserId({ context });
 
@@ -49,9 +81,29 @@ async function newsFeed(parent, args, context) {
   });
 }
 
+async function friendsCount(parent, { userId }, context) {
+  let queryUserId;
+
+  if (userId != null) {
+    queryUserId = userId;
+  } else {
+    queryUserId = await getUserId({ context });
+  }
+
+  const friendsConnection = await context.prisma.friendshipsConnection({
+    where: {
+      id: queryUserId,
+    },
+  }).aggregate();
+
+  return friendsConnection.count;
+}
+
 export default {
   ping,
   user,
   completedEvents,
+  completedEventsCount,
   newsFeed,
+  friendsCount,
 };

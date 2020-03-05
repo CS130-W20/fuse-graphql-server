@@ -39,10 +39,41 @@ function incrementStatus(currentStatus) {
   }
 }
 
+function mergeListsByUpdateTime(eventListA, eventListB) {
+  let merged = [];
+  const lenA = eventListA.length;
+  const lenB = eventListB.length;
+  let iA = 0;
+  let iB = 0;
+
+  while (iA < lenA && iB < lenB) {
+    const timeUpdatedA = Date.parse(eventListA[iA].updatedAt);
+    const timeUpdatedB = Date.parse(eventListB[iB].updatedAt);
+
+    if (timeUpdatedA > timeUpdatedB) {
+      merged.push(eventListA[iA]);
+      iA += 1;
+    } else {
+      merged.push(eventListB[iB]);
+      iB += 1;
+    }
+  }
+
+  if (iA < lenA) {
+    merged = merged.concat(eventListA.slice(iA));
+  }
+
+  if (iB < lenB) {
+    merged = merged.concat(eventListB.slice(iB));
+  }
+
+  return merged;
+}
 
 export {
   APP_SECRET,
   getUserId,
   createPairKey,
   incrementStatus,
+  mergeListsByUpdateTime,
 };

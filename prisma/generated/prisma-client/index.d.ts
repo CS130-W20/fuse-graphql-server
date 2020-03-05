@@ -268,7 +268,11 @@ export type UserOrderByInput =
   | "hash_ASC"
   | "hash_DESC"
   | "name_ASC"
-  | "name_DESC";
+  | "name_DESC"
+  | "bio_ASC"
+  | "bio_DESC"
+  | "score_ASC"
+  | "score_DESC";
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
@@ -408,6 +412,28 @@ export interface UserWhereInput {
   name_not_starts_with?: Maybe<String>;
   name_ends_with?: Maybe<String>;
   name_not_ends_with?: Maybe<String>;
+  bio?: Maybe<String>;
+  bio_not?: Maybe<String>;
+  bio_in?: Maybe<String[] | String>;
+  bio_not_in?: Maybe<String[] | String>;
+  bio_lt?: Maybe<String>;
+  bio_lte?: Maybe<String>;
+  bio_gt?: Maybe<String>;
+  bio_gte?: Maybe<String>;
+  bio_contains?: Maybe<String>;
+  bio_not_contains?: Maybe<String>;
+  bio_starts_with?: Maybe<String>;
+  bio_not_starts_with?: Maybe<String>;
+  bio_ends_with?: Maybe<String>;
+  bio_not_ends_with?: Maybe<String>;
+  score?: Maybe<Int>;
+  score_not?: Maybe<Int>;
+  score_in?: Maybe<Int[] | Int>;
+  score_not_in?: Maybe<Int[] | Int>;
+  score_lt?: Maybe<Int>;
+  score_lte?: Maybe<Int>;
+  score_gt?: Maybe<Int>;
+  score_gte?: Maybe<Int>;
   ownedEvents_every?: Maybe<EventWhereInput>;
   ownedEvents_some?: Maybe<EventWhereInput>;
   ownedEvents_none?: Maybe<EventWhereInput>;
@@ -534,6 +560,8 @@ export interface UserCreateWithoutOwnedEventsInput {
   email: String;
   hash?: Maybe<String>;
   name: String;
+  bio?: Maybe<String>;
+  score: Int;
   friends?: Maybe<FriendshipCreateManyWithoutUserInput>;
   notifications?: Maybe<NotificationCreateManyInput>;
 }
@@ -562,6 +590,8 @@ export interface UserCreateInput {
   email: String;
   hash?: Maybe<String>;
   name: String;
+  bio?: Maybe<String>;
+  score: Int;
   ownedEvents?: Maybe<EventCreateManyWithoutOwnerInput>;
   friends?: Maybe<FriendshipCreateManyWithoutUserInput>;
   notifications?: Maybe<NotificationCreateManyInput>;
@@ -619,6 +649,8 @@ export interface UserUpdateWithoutOwnedEventsDataInput {
   email?: Maybe<String>;
   hash?: Maybe<String>;
   name?: Maybe<String>;
+  bio?: Maybe<String>;
+  score?: Maybe<Int>;
   friends?: Maybe<FriendshipUpdateManyWithoutUserInput>;
   notifications?: Maybe<NotificationUpdateManyInput>;
 }
@@ -668,6 +700,8 @@ export interface UserUpdateDataInput {
   email?: Maybe<String>;
   hash?: Maybe<String>;
   name?: Maybe<String>;
+  bio?: Maybe<String>;
+  score?: Maybe<Int>;
   ownedEvents?: Maybe<EventUpdateManyWithoutOwnerInput>;
   friends?: Maybe<FriendshipUpdateManyWithoutUserInput>;
   notifications?: Maybe<NotificationUpdateManyInput>;
@@ -794,6 +828,28 @@ export interface UserScalarWhereInput {
   name_not_starts_with?: Maybe<String>;
   name_ends_with?: Maybe<String>;
   name_not_ends_with?: Maybe<String>;
+  bio?: Maybe<String>;
+  bio_not?: Maybe<String>;
+  bio_in?: Maybe<String[] | String>;
+  bio_not_in?: Maybe<String[] | String>;
+  bio_lt?: Maybe<String>;
+  bio_lte?: Maybe<String>;
+  bio_gt?: Maybe<String>;
+  bio_gte?: Maybe<String>;
+  bio_contains?: Maybe<String>;
+  bio_not_contains?: Maybe<String>;
+  bio_starts_with?: Maybe<String>;
+  bio_not_starts_with?: Maybe<String>;
+  bio_ends_with?: Maybe<String>;
+  bio_not_ends_with?: Maybe<String>;
+  score?: Maybe<Int>;
+  score_not?: Maybe<Int>;
+  score_in?: Maybe<Int[] | Int>;
+  score_not_in?: Maybe<Int[] | Int>;
+  score_lt?: Maybe<Int>;
+  score_lte?: Maybe<Int>;
+  score_gt?: Maybe<Int>;
+  score_gte?: Maybe<Int>;
   AND?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
   OR?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
   NOT?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
@@ -808,6 +864,8 @@ export interface UserUpdateManyDataInput {
   email?: Maybe<String>;
   hash?: Maybe<String>;
   name?: Maybe<String>;
+  bio?: Maybe<String>;
+  score?: Maybe<Int>;
 }
 
 export interface EventUpsertWithWhereUniqueWithoutOwnerInput {
@@ -1074,6 +1132,8 @@ export interface UserCreateWithoutFriendsInput {
   email: String;
   hash?: Maybe<String>;
   name: String;
+  bio?: Maybe<String>;
+  score: Int;
   ownedEvents?: Maybe<EventCreateManyWithoutOwnerInput>;
   notifications?: Maybe<NotificationCreateManyInput>;
 }
@@ -1096,6 +1156,8 @@ export interface UserUpdateWithoutFriendsDataInput {
   email?: Maybe<String>;
   hash?: Maybe<String>;
   name?: Maybe<String>;
+  bio?: Maybe<String>;
+  score?: Maybe<Int>;
   ownedEvents?: Maybe<EventUpdateManyWithoutOwnerInput>;
   notifications?: Maybe<NotificationUpdateManyInput>;
 }
@@ -1124,6 +1186,8 @@ export interface UserUpdateInput {
   email?: Maybe<String>;
   hash?: Maybe<String>;
   name?: Maybe<String>;
+  bio?: Maybe<String>;
+  score?: Maybe<Int>;
   ownedEvents?: Maybe<EventUpdateManyWithoutOwnerInput>;
   friends?: Maybe<FriendshipUpdateManyWithoutUserInput>;
   notifications?: Maybe<NotificationUpdateManyInput>;
@@ -1133,6 +1197,8 @@ export interface UserUpdateManyMutationInput {
   email?: Maybe<String>;
   hash?: Maybe<String>;
   name?: Maybe<String>;
+  bio?: Maybe<String>;
+  score?: Maybe<Int>;
 }
 
 export interface EventSubscriptionWhereInput {
@@ -1297,6 +1363,8 @@ export interface User {
   email: String;
   hash?: String;
   name: String;
+  bio?: String;
+  score: Int;
 }
 
 export interface UserPromise extends Promise<User>, Fragmentable {
@@ -1304,6 +1372,8 @@ export interface UserPromise extends Promise<User>, Fragmentable {
   email: () => Promise<String>;
   hash: () => Promise<String>;
   name: () => Promise<String>;
+  bio: () => Promise<String>;
+  score: () => Promise<Int>;
   ownedEvents: <T = FragmentableArray<Event>>(args?: {
     where?: EventWhereInput;
     orderBy?: EventOrderByInput;
@@ -1340,6 +1410,8 @@ export interface UserSubscription
   email: () => Promise<AsyncIterator<String>>;
   hash: () => Promise<AsyncIterator<String>>;
   name: () => Promise<AsyncIterator<String>>;
+  bio: () => Promise<AsyncIterator<String>>;
+  score: () => Promise<AsyncIterator<Int>>;
   ownedEvents: <T = Promise<AsyncIterator<EventSubscription>>>(args?: {
     where?: EventWhereInput;
     orderBy?: EventOrderByInput;
@@ -1376,6 +1448,8 @@ export interface UserNullablePromise
   email: () => Promise<String>;
   hash: () => Promise<String>;
   name: () => Promise<String>;
+  bio: () => Promise<String>;
+  score: () => Promise<Int>;
   ownedEvents: <T = FragmentableArray<Event>>(args?: {
     where?: EventWhereInput;
     orderBy?: EventOrderByInput;
@@ -1908,6 +1982,8 @@ export interface UserPreviousValues {
   email: String;
   hash?: String;
   name: String;
+  bio?: String;
+  score: Int;
 }
 
 export interface UserPreviousValuesPromise
@@ -1917,6 +1993,8 @@ export interface UserPreviousValuesPromise
   email: () => Promise<String>;
   hash: () => Promise<String>;
   name: () => Promise<String>;
+  bio: () => Promise<String>;
+  score: () => Promise<Int>;
 }
 
 export interface UserPreviousValuesSubscription
@@ -1926,6 +2004,8 @@ export interface UserPreviousValuesSubscription
   email: () => Promise<AsyncIterator<String>>;
   hash: () => Promise<AsyncIterator<String>>;
   name: () => Promise<AsyncIterator<String>>;
+  bio: () => Promise<AsyncIterator<String>>;
+  score: () => Promise<AsyncIterator<Int>>;
 }
 
 /*
@@ -1940,6 +2020,11 @@ The `String` scalar type represents textual data, represented as UTF-8 character
 export type String = string;
 
 /*
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
+*/
+export type Int = number;
+
+/*
 DateTime scalar input type, allowing Date
 */
 export type DateTimeInput = Date | string;
@@ -1948,11 +2033,6 @@ export type DateTimeInput = Date | string;
 DateTime scalar output type, which is always a string
 */
 export type DateTimeOutput = string;
-
-/*
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
-*/
-export type Int = number;
 
 /*
 The `Boolean` scalar type represents `true` or `false`.
