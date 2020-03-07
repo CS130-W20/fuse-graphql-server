@@ -75,7 +75,7 @@ async function events(parent, { association, status }, context) {
 }
 
 async function ownedEvents(parent, args, context) {
-  return events(parent, { association: ['OWNER'], status: ['SET', 'INVITED', 'JOINED'] }, context);
+  return events(parent, { association: ['OWNER'], status: ['SET', 'LIT', 'COMPLETED'] }, context);
 }
 
 export default {
