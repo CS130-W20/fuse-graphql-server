@@ -4,7 +4,13 @@ function ping() {
   return 'pong';
 }
 
-async function user(parent, args, context) {
+async function user(parent, { id }, context) {
+  return context.prisma.user({
+    id,
+  });
+}
+
+async function me(parent, args, context) {
   return getUserId({ context })
     .then((userId) => context.prisma.user({
       id: userId,
@@ -102,6 +108,7 @@ async function friendsCount(parent, { userId }, context) {
 export default {
   ping,
   user,
+  me,
   completedEvents,
   completedEventsCount,
   newsFeed,

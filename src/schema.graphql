@@ -1,6 +1,7 @@
 type Query {
     ping: String!
-    user: User!
+    me: User!
+    user (id: ID!): User!
     completedEvents(userId: ID): [Event!]!  # TODO
     completedEventsCount(userId: ID): Int!
     friendsCount(userId: ID): Int!
