@@ -8,7 +8,12 @@ import {
 
 async function signup(parent, { email, name, password }, context) {
   const hash = await bcrypt.hash(password, 10);
-  const user = await context.prisma.createUser({ email, name, hash });
+  const user = await context.prisma.createUser({
+    email,
+    name,
+    score: 0,
+    hash,
+  });
 
   const token = jwt.sign({ userId: user.id }, APP_SECRET);
 
