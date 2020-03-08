@@ -9,3 +9,8 @@ export const ASSOCIATION = {
   joined: 'JOINED',
   owner: 'OWNER',
 };
+
+export const LIST_DIFF_TYPE = {
+  add: 'ADD',
+  remove: 'REMOVE',
+};
