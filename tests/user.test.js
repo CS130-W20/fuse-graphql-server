@@ -1,9 +1,13 @@
 import { authClient } from './client';
 import { USER_QUERY } from './graphqlQueries';
+import { TEST_USER } from './constants';
 
 test('ping the graphql server', async () => {
   const { data } = await authClient.query({
     query: USER_QUERY,
+    variables: {
+      id: TEST_USER.id,
+    },
   });
   expect(data).toStrictEqual({
     user: {

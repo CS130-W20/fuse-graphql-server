@@ -5,6 +5,7 @@ export const NAME = 'auth-name';
 export const EMAIL = 'email';
 
 export const TEST_USER = {
+  id: 'ck751iad6000h0711u9sqkbfa',
   name: 'Test User',
   email: 'test@testmail.com',
   password: 'password',

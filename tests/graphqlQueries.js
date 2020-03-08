@@ -7,8 +7,8 @@ export const PING_QUERY = gql`
 `;
 
 export const USER_QUERY = gql`
-    query userQuery {
-        user {
+    query userQuery ($id: ID!) {
+        user (id: $id) {
             id
             email
             name
