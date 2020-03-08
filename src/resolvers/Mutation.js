@@ -65,7 +65,7 @@ async function login(parent, { email, password, fbToken }, context) {
 }
 
 
-async function createEvent(parent, { title }, context) {
+async function createEvent(parent, { title, description }, context) {
   return getUserId({ context })
     .then((ownerId) => {
       const owner = {
@@ -76,6 +76,7 @@ async function createEvent(parent, { title }, context) {
 
       return context.prisma.createEvent({
         title,
+        description,
         owner,
         status: 'SET',
       });
