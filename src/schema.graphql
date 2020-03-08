@@ -6,7 +6,7 @@ type Query {
     completedEventsCount(userId: ID): Int!
     friendsCount(userId: ID): Int!
     newsFeed: [Event!]!
-    friendProfileEvents(friendUserId: ID): [Event!]!
+    friendProfileEvents(friendUserId: ID!): [Event!]
 }
 
 type Mutation {
