@@ -1,4 +1,5 @@
 import { getUserId } from '../utils';
+import { EVENT_STATUS, EVENT_ORDER } from '../constants';
 
 function ping() {
   return 'pong';
@@ -23,7 +24,7 @@ async function completedEvents(parent, { userId }, context) {
       owner: {
         id: userId,
       },
-      status: 'COMPLETED',
+      status: EVENT_STATUS.completed,
     },
   });
 }
@@ -52,7 +53,7 @@ async function completedEventsCount(parent, { userId }, context) {
         }],
       },
       {
-        status: 'COMPLETED',
+        status: EVENT_STATUS.completed,
       }],
     },
   }).aggregate();
@@ -83,7 +84,81 @@ async function newsFeed(parent, args, context) {
         },
       ],
     },
-    orderBy: 'updatedAt_DESC',
+    orderBy: EVENT_ORDER.updateTimeDesc,
+  });
+}
+
+async function friendProfileEvents(parent, { friendUserId }, context) {
+  // TODO verify that friendUserId is in fact a friend
+  const currentUserId = await getUserId({ context });
+  return context.prisma.events({
+    where: {
+      OR: [
+        {
+          // friend-owned set/lit events where user is invited
+          AND: [
+            {
+              owner: {
+                id: friendUserId,
+              },
+              invited_some: {
+                id: currentUserId,
+              },
+            },
+            {
+              status_in: [EVENT_STATUS.set, EVENT_STATUS.lit],
+            },
+          ],
+        },
+        {
+          // friend-owned set/lit events where user joined
+          AND: [
+            {
+              owner: {
+                id: friendUserId,
+              },
+              joined_some: {
+                id: currentUserId,
+              },
+            },
+            {
+              status_in: [EVENT_STATUS.set, EVENT_STATUS.lit],
+            },
+          ],
+        },
+        {
+          OR: [
+            {
+              // friend-owned completed events
+              AND: [
+                {
+                  owner: {
+                    id: friendUserId,
+                  },
+                },
+                {
+                  status_in: [EVENT_STATUS.completed],
+                },
+              ],
+            },
+            {
+              // friend-participated completed events
+              AND: [
+                {
+                  joined_some: {
+                    id: friendUserId,
+                  },
+                },
+                {
+                  status_in: [EVENT_STATUS.completed],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    orderBy: EVENT_ORDER.updateTimeDesc,
   });
 }
 
@@ -112,5 +187,6 @@ export default {
   completedEvents,
   completedEventsCount,
   newsFeed,
+  friendProfileEvents,
   friendsCount,
 };

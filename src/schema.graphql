@@ -6,16 +6,18 @@ type Query {
     completedEventsCount(userId: ID): Int!
     friendsCount(userId: ID): Int!
     newsFeed: [Event!]!
+    friendProfileEvents(friendUserId: ID!): [Event!]
 }
 
 type Mutation {
     signup(email: String!, password: String!, name: String!): AuthPayload
     login(email: String, password: String, fbToken: String): AuthPayload
-    createEvent(title: String!): Event!
+    createEvent(title: String!, description: String!): Event!
     requestFriend(userId: ID!): String  # DONE
     confirmFriend(userId: ID!): String  # DONE
-    updateEventDetails(eventId: ID!, title: String, description: String): Event!  # TODO
-    updateEventStatus(eventId: ID!, currentEventStatus: EventStatus!, newEventStatus: EventStatus): Event!   # TODO
+    updateEventDetails(eventId: ID!, title: String, description: String): Event!
+    updateEventStatus(eventId: ID!, currentEventStatus: EventStatus!, newEventStatus: EventStatus): Event!
+    updateEventInviteList(eventId: ID!, userDiffList: [UserListDiff!]!): Event!
     updateProfileDetails(name: String, bio: String): User!
 }
 
@@ -44,6 +46,16 @@ type Event {
     joined: [User!]!
     createdAt: DateTime!
     updatedAt: DateTime!
+}
+
+input UserListDiff {
+    userId: ID!
+    diffType: ListDiffType!
+}
+
+enum ListDiffType {
+    ADD
+    REMOVE
 }
 
 enum EventStatus {

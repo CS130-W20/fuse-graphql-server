@@ -5,6 +5,7 @@ import fetch from 'node-fetch';
 import {
   APP_SECRET, createPairKey, getUserId, incrementStatus,
 } from '../utils';
+import { LIST_DIFF_TYPE } from '../constants';
 
 async function signup(parent, { email, name, password }, context) {
   const hash = await bcrypt.hash(password, 10);
@@ -65,7 +66,7 @@ async function login(parent, { email, password, fbToken }, context) {
 }
 
 
-async function createEvent(parent, { title }, context) {
+async function createEvent(parent, { title, description }, context) {
   return getUserId({ context })
     .then((ownerId) => {
       const owner = {
@@ -76,6 +77,7 @@ async function createEvent(parent, { title }, context) {
 
       return context.prisma.createEvent({
         title,
+        description,
         owner,
         status: 'SET',
       });
@@ -236,6 +238,56 @@ async function updateEventStatus(parent, { eventId, currentEventStatus, newEvent
   });
 }
 
+async function updateEventInviteList(parent, { eventId, userDiffList }, context) {
+  // TODO verify authorization to do this
+
+  // TODO verify first that all requested operations are valid. E.g. all users
+  // to add are not in the list and all users to remove are in the list
+
+  await userDiffList.forEach(async (diff) => {
+    const { userId, diffType } = diff;
+    const where = {
+      id: eventId,
+    };
+
+    switch (diffType) {
+      case LIST_DIFF_TYPE.add: {
+        await context.prisma.updateEvent({
+          where,
+          data: {
+            invited: {
+              connect: {
+                id: userId,
+              },
+            },
+          },
+        });
+        break;
+      }
+      case LIST_DIFF_TYPE.remove: {
+        await context.prisma.updateEvent({
+          where,
+          data: {
+            invited: {
+              disconnect: {
+                id: userId,
+              },
+            },
+          },
+        });
+        break;
+      }
+      default: {
+        throw new ApolloError('Invalid list diff type');
+      }
+    }
+  });
+
+  return context.prisma.event({
+    id: eventId,
+  });
+}
+
 async function updateProfileDetails(parent, { name, bio }, context) {
   const userId = await getUserId({ context });
 
@@ -257,5 +309,6 @@ export default {
   confirmFriend,
   updateEventStatus,
   updateEventDetails,
+  updateEventInviteList,
   updateProfileDetails,
 };
