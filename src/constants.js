@@ -14,3 +14,7 @@ export const LIST_DIFF_TYPE = {
   add: 'ADD',
   remove: 'REMOVE',
 };
+
+export const EVENT_ORDER = {
+  updateTimeDesc: 'updatedAt_DESC',
+};
