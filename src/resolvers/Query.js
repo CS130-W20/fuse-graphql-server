@@ -200,6 +200,15 @@ async function friendshipStatus(parent, { friendUserId }, context) {
     });
 }
 
+async function users(parent, { prefix }, context) {
+  return context.prisma.users({
+    where: {
+      name_starts_with: prefix,
+    },
+    orderBy: 'name_ASC',
+  });
+}
+
 export default {
   ping,
   user,
@@ -211,4 +220,5 @@ export default {
   friendsCount,
   isFriend,
   friendshipStatus,
+  users,
 };
