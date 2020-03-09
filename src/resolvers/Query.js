@@ -1,4 +1,4 @@
-import { getUserId } from '../utils';
+import { createPairKey, getUserId } from '../utils';
 import { EVENT_STATUS, EVENT_ORDER } from '../constants';
 
 function ping() {
@@ -180,6 +180,26 @@ async function friendsCount(parent, { userId }, context) {
   return friendsConnection.count;
 }
 
+async function isFriend(parent, { friendUserId }, context) {
+  return getUserId({ context })
+    .then((userId) => {
+      const pairKey = createPairKey(userId, friendUserId);
+      return context.prisma.friendship({
+        pairKey,
+      });
+    });
+}
+
+async function friendshipStatus(parent, { friendUserId }, context) {
+  return getUserId({ context })
+    .then((userId) => {
+      const pairKey = createPairKey(userId, friendUserId);
+      return context.prisma.friendship({
+        pairKey,
+      }).status();
+    });
+}
+
 export default {
   ping,
   user,
@@ -189,4 +209,6 @@ export default {
   newsFeed,
   friendProfileEvents,
   friendsCount,
+  isFriend,
+  friendshipStatus,
 };
