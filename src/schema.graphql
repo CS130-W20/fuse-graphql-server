@@ -7,6 +7,9 @@ type Query {
     friendsCount(userId: ID): Int!
     newsFeed: [Event!]!
     friendProfileEvents(friendUserId: ID!): [Event!]
+    isFriend(friendUserId: ID!): Boolean!
+    friendshipStatus(friendUserId: ID!): String!
+    users(prefix: String!): [User!]!
 }
 
 type Mutation {

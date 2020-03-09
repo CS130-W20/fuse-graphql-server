@@ -18,3 +18,10 @@ export const LIST_DIFF_TYPE = {
 export const EVENT_ORDER = {
   updateTimeDesc: 'updatedAt_DESC',
 };
+
+export const FRIEND_STATUS = {
+  SENT_REQUEST: 'sent-request',
+  RECEIVED_REQUEST: 'received-request',
+  CONFIRMED: 'confirmed',
+  NONE: 'none',
+};
