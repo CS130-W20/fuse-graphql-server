@@ -20,8 +20,8 @@ export const EVENT_ORDER = {
 };
 
 export const FRIEND_STATUS = {
-  SENT_REQUEST: 'sent-request',
-  RECEIVED_REQUEST: 'received-request',
-  CONFIRMED: 'confirmed',
-  NONE: 'none',
+  SENT_REQUEST: 'SENT_REQUEST',
+  RECEIVED_REQUEST: 'RECEIVED_REQUEST',
+  CONFIRMED: 'CONFIRMED',
+  NONE: 'NONE',
 };
