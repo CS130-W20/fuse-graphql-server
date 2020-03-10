@@ -5,6 +5,4 @@
 #
 # To enable this hook, rename this file to "post-merge".
 
-echo hello
-
 npm run setup

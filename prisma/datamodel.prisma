@@ -1,12 +1,54 @@
 type User {
   id: ID! @id
   email: String! @unique
-  hash: String!
+  hash: String
   name: String!
+  bio: String
+  score: Int!
+  ownedEvents: [Event!]! @relation(name: "UserOwnedEvents")
+  friends: [Friendship!]!   @relation(name: "FriendSource")
+  notifications: [Notification!]!
 }
 
-type Person {
-    id: ID! @id
-    name: String!
-    age: Int!
+type Event {
+  id: ID! @id
+  title: String!
+  description: String!
+  owner: User! @relation(name: "UserOwnedEvents")
+  status: EventStatus!
+  invited: [User!]! @relation(name: "UserInvitedEvents")
+  joined: [User!]! @relation(name: "UserJoinedEvents")
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
+
+enum EventStatus {
+  SET
+  LIT
+  COMPLETED
+}
+
+type Friendship {
+  id: ID! @id
+  user: User!   @relation(name: "FriendSource")
+  friend: User! @relation(name: "FriendSink")
+  pairKey: String! @unique
+  status: FriendStatus!
+}
+
+enum FriendStatus {
+  SENT_REQUEST
+  RECEIVED_REQUEST
+  CONFIRMED
+}
+
+type Notification {
+  id: ID! @id
+  status: NotificationStatus!
+  text: String!
+}
+
+enum NotificationStatus {
+  UNREAD
+  READ
 }

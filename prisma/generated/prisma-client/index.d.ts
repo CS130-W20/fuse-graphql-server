@@ -16,7 +16,9 @@ export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
 export type Maybe<T> = T | undefined | null;
 
 export interface Exists {
-  person: (where?: PersonWhereInput) => Promise<boolean>;
+  event: (where?: EventWhereInput) => Promise<boolean>;
+  friendship: (where?: FriendshipWhereInput) => Promise<boolean>;
+  notification: (where?: NotificationWhereInput) => Promise<boolean>;
   user: (where?: UserWhereInput) => Promise<boolean>;
 }
 
@@ -39,25 +41,65 @@ export interface Prisma {
    * Queries
    */
 
-  person: (where: PersonWhereUniqueInput) => PersonNullablePromise;
-  persons: (args?: {
-    where?: PersonWhereInput;
-    orderBy?: PersonOrderByInput;
+  event: (where: EventWhereUniqueInput) => EventNullablePromise;
+  events: (args?: {
+    where?: EventWhereInput;
+    orderBy?: EventOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
-  }) => FragmentableArray<Person>;
-  personsConnection: (args?: {
-    where?: PersonWhereInput;
-    orderBy?: PersonOrderByInput;
+  }) => FragmentableArray<Event>;
+  eventsConnection: (args?: {
+    where?: EventWhereInput;
+    orderBy?: EventOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
-  }) => PersonConnectionPromise;
+  }) => EventConnectionPromise;
+  friendship: (where: FriendshipWhereUniqueInput) => FriendshipNullablePromise;
+  friendships: (args?: {
+    where?: FriendshipWhereInput;
+    orderBy?: FriendshipOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<Friendship>;
+  friendshipsConnection: (args?: {
+    where?: FriendshipWhereInput;
+    orderBy?: FriendshipOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FriendshipConnectionPromise;
+  notification: (
+    where: NotificationWhereUniqueInput
+  ) => NotificationNullablePromise;
+  notifications: (args?: {
+    where?: NotificationWhereInput;
+    orderBy?: NotificationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<Notification>;
+  notificationsConnection: (args?: {
+    where?: NotificationWhereInput;
+    orderBy?: NotificationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => NotificationConnectionPromise;
   user: (where: UserWhereUniqueInput) => UserNullablePromise;
   users: (args?: {
     where?: UserWhereInput;
@@ -83,22 +125,58 @@ export interface Prisma {
    * Mutations
    */
 
-  createPerson: (data: PersonCreateInput) => PersonPromise;
-  updatePerson: (args: {
-    data: PersonUpdateInput;
-    where: PersonWhereUniqueInput;
-  }) => PersonPromise;
-  updateManyPersons: (args: {
-    data: PersonUpdateManyMutationInput;
-    where?: PersonWhereInput;
+  createEvent: (data: EventCreateInput) => EventPromise;
+  updateEvent: (args: {
+    data: EventUpdateInput;
+    where: EventWhereUniqueInput;
+  }) => EventPromise;
+  updateManyEvents: (args: {
+    data: EventUpdateManyMutationInput;
+    where?: EventWhereInput;
   }) => BatchPayloadPromise;
-  upsertPerson: (args: {
-    where: PersonWhereUniqueInput;
-    create: PersonCreateInput;
-    update: PersonUpdateInput;
-  }) => PersonPromise;
-  deletePerson: (where: PersonWhereUniqueInput) => PersonPromise;
-  deleteManyPersons: (where?: PersonWhereInput) => BatchPayloadPromise;
+  upsertEvent: (args: {
+    where: EventWhereUniqueInput;
+    create: EventCreateInput;
+    update: EventUpdateInput;
+  }) => EventPromise;
+  deleteEvent: (where: EventWhereUniqueInput) => EventPromise;
+  deleteManyEvents: (where?: EventWhereInput) => BatchPayloadPromise;
+  createFriendship: (data: FriendshipCreateInput) => FriendshipPromise;
+  updateFriendship: (args: {
+    data: FriendshipUpdateInput;
+    where: FriendshipWhereUniqueInput;
+  }) => FriendshipPromise;
+  updateManyFriendships: (args: {
+    data: FriendshipUpdateManyMutationInput;
+    where?: FriendshipWhereInput;
+  }) => BatchPayloadPromise;
+  upsertFriendship: (args: {
+    where: FriendshipWhereUniqueInput;
+    create: FriendshipCreateInput;
+    update: FriendshipUpdateInput;
+  }) => FriendshipPromise;
+  deleteFriendship: (where: FriendshipWhereUniqueInput) => FriendshipPromise;
+  deleteManyFriendships: (where?: FriendshipWhereInput) => BatchPayloadPromise;
+  createNotification: (data: NotificationCreateInput) => NotificationPromise;
+  updateNotification: (args: {
+    data: NotificationUpdateInput;
+    where: NotificationWhereUniqueInput;
+  }) => NotificationPromise;
+  updateManyNotifications: (args: {
+    data: NotificationUpdateManyMutationInput;
+    where?: NotificationWhereInput;
+  }) => BatchPayloadPromise;
+  upsertNotification: (args: {
+    where: NotificationWhereUniqueInput;
+    create: NotificationCreateInput;
+    update: NotificationUpdateInput;
+  }) => NotificationPromise;
+  deleteNotification: (
+    where: NotificationWhereUniqueInput
+  ) => NotificationPromise;
+  deleteManyNotifications: (
+    where?: NotificationWhereInput
+  ) => BatchPayloadPromise;
   createUser: (data: UserCreateInput) => UserPromise;
   updateUser: (args: {
     data: UserUpdateInput;
@@ -124,9 +202,15 @@ export interface Prisma {
 }
 
 export interface Subscription {
-  person: (
-    where?: PersonSubscriptionWhereInput
-  ) => PersonSubscriptionPayloadSubscription;
+  event: (
+    where?: EventSubscriptionWhereInput
+  ) => EventSubscriptionPayloadSubscription;
+  friendship: (
+    where?: FriendshipSubscriptionWhereInput
+  ) => FriendshipSubscriptionPayloadSubscription;
+  notification: (
+    where?: NotificationSubscriptionWhereInput
+  ) => NotificationSubscriptionPayloadSubscription;
   user: (
     where?: UserSubscriptionWhereInput
   ) => UserSubscriptionPayloadSubscription;
@@ -140,13 +224,41 @@ export interface ClientConstructor<T> {
  * Types
  */
 
-export type PersonOrderByInput =
+export type FriendStatus = "SENT_REQUEST" | "RECEIVED_REQUEST" | "CONFIRMED";
+
+export type NotificationStatus = "UNREAD" | "READ";
+
+export type EventStatus = "SET" | "LIT" | "COMPLETED";
+
+export type EventOrderByInput =
   | "id_ASC"
   | "id_DESC"
-  | "name_ASC"
-  | "name_DESC"
-  | "age_ASC"
-  | "age_DESC";
+  | "title_ASC"
+  | "title_DESC"
+  | "description_ASC"
+  | "description_DESC"
+  | "status_ASC"
+  | "status_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
+
+export type FriendshipOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "pairKey_ASC"
+  | "pairKey_DESC"
+  | "status_ASC"
+  | "status_DESC";
+
+export type NotificationOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "status_ASC"
+  | "status_DESC"
+  | "text_ASC"
+  | "text_DESC";
 
 export type UserOrderByInput =
   | "id_ASC"
@@ -156,15 +268,19 @@ export type UserOrderByInput =
   | "hash_ASC"
   | "hash_DESC"
   | "name_ASC"
-  | "name_DESC";
+  | "name_DESC"
+  | "bio_ASC"
+  | "bio_DESC"
+  | "score_ASC"
+  | "score_DESC";
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export type PersonWhereUniqueInput = AtLeastOne<{
+export type EventWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
 
-export interface PersonWhereInput {
+export interface EventWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
   id_in?: Maybe<ID_Input[] | ID_Input>;
@@ -179,37 +295,65 @@ export interface PersonWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  age?: Maybe<Int>;
-  age_not?: Maybe<Int>;
-  age_in?: Maybe<Int[] | Int>;
-  age_not_in?: Maybe<Int[] | Int>;
-  age_lt?: Maybe<Int>;
-  age_lte?: Maybe<Int>;
-  age_gt?: Maybe<Int>;
-  age_gte?: Maybe<Int>;
-  AND?: Maybe<PersonWhereInput[] | PersonWhereInput>;
-  OR?: Maybe<PersonWhereInput[] | PersonWhereInput>;
-  NOT?: Maybe<PersonWhereInput[] | PersonWhereInput>;
+  title?: Maybe<String>;
+  title_not?: Maybe<String>;
+  title_in?: Maybe<String[] | String>;
+  title_not_in?: Maybe<String[] | String>;
+  title_lt?: Maybe<String>;
+  title_lte?: Maybe<String>;
+  title_gt?: Maybe<String>;
+  title_gte?: Maybe<String>;
+  title_contains?: Maybe<String>;
+  title_not_contains?: Maybe<String>;
+  title_starts_with?: Maybe<String>;
+  title_not_starts_with?: Maybe<String>;
+  title_ends_with?: Maybe<String>;
+  title_not_ends_with?: Maybe<String>;
+  description?: Maybe<String>;
+  description_not?: Maybe<String>;
+  description_in?: Maybe<String[] | String>;
+  description_not_in?: Maybe<String[] | String>;
+  description_lt?: Maybe<String>;
+  description_lte?: Maybe<String>;
+  description_gt?: Maybe<String>;
+  description_gte?: Maybe<String>;
+  description_contains?: Maybe<String>;
+  description_not_contains?: Maybe<String>;
+  description_starts_with?: Maybe<String>;
+  description_not_starts_with?: Maybe<String>;
+  description_ends_with?: Maybe<String>;
+  description_not_ends_with?: Maybe<String>;
+  owner?: Maybe<UserWhereInput>;
+  status?: Maybe<EventStatus>;
+  status_not?: Maybe<EventStatus>;
+  status_in?: Maybe<EventStatus[] | EventStatus>;
+  status_not_in?: Maybe<EventStatus[] | EventStatus>;
+  invited_every?: Maybe<UserWhereInput>;
+  invited_some?: Maybe<UserWhereInput>;
+  invited_none?: Maybe<UserWhereInput>;
+  joined_every?: Maybe<UserWhereInput>;
+  joined_some?: Maybe<UserWhereInput>;
+  joined_none?: Maybe<UserWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<EventWhereInput[] | EventWhereInput>;
+  OR?: Maybe<EventWhereInput[] | EventWhereInput>;
+  NOT?: Maybe<EventWhereInput[] | EventWhereInput>;
 }
-
-export type UserWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  email?: Maybe<String>;
-}>;
 
 export interface UserWhereInput {
   id?: Maybe<ID_Input>;
@@ -268,55 +412,838 @@ export interface UserWhereInput {
   name_not_starts_with?: Maybe<String>;
   name_ends_with?: Maybe<String>;
   name_not_ends_with?: Maybe<String>;
+  bio?: Maybe<String>;
+  bio_not?: Maybe<String>;
+  bio_in?: Maybe<String[] | String>;
+  bio_not_in?: Maybe<String[] | String>;
+  bio_lt?: Maybe<String>;
+  bio_lte?: Maybe<String>;
+  bio_gt?: Maybe<String>;
+  bio_gte?: Maybe<String>;
+  bio_contains?: Maybe<String>;
+  bio_not_contains?: Maybe<String>;
+  bio_starts_with?: Maybe<String>;
+  bio_not_starts_with?: Maybe<String>;
+  bio_ends_with?: Maybe<String>;
+  bio_not_ends_with?: Maybe<String>;
+  score?: Maybe<Int>;
+  score_not?: Maybe<Int>;
+  score_in?: Maybe<Int[] | Int>;
+  score_not_in?: Maybe<Int[] | Int>;
+  score_lt?: Maybe<Int>;
+  score_lte?: Maybe<Int>;
+  score_gt?: Maybe<Int>;
+  score_gte?: Maybe<Int>;
+  ownedEvents_every?: Maybe<EventWhereInput>;
+  ownedEvents_some?: Maybe<EventWhereInput>;
+  ownedEvents_none?: Maybe<EventWhereInput>;
+  friends_every?: Maybe<FriendshipWhereInput>;
+  friends_some?: Maybe<FriendshipWhereInput>;
+  friends_none?: Maybe<FriendshipWhereInput>;
+  notifications_every?: Maybe<NotificationWhereInput>;
+  notifications_some?: Maybe<NotificationWhereInput>;
+  notifications_none?: Maybe<NotificationWhereInput>;
   AND?: Maybe<UserWhereInput[] | UserWhereInput>;
   OR?: Maybe<UserWhereInput[] | UserWhereInput>;
   NOT?: Maybe<UserWhereInput[] | UserWhereInput>;
 }
 
-export interface PersonCreateInput {
+export interface FriendshipWhereInput {
   id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  user?: Maybe<UserWhereInput>;
+  friend?: Maybe<UserWhereInput>;
+  pairKey?: Maybe<String>;
+  pairKey_not?: Maybe<String>;
+  pairKey_in?: Maybe<String[] | String>;
+  pairKey_not_in?: Maybe<String[] | String>;
+  pairKey_lt?: Maybe<String>;
+  pairKey_lte?: Maybe<String>;
+  pairKey_gt?: Maybe<String>;
+  pairKey_gte?: Maybe<String>;
+  pairKey_contains?: Maybe<String>;
+  pairKey_not_contains?: Maybe<String>;
+  pairKey_starts_with?: Maybe<String>;
+  pairKey_not_starts_with?: Maybe<String>;
+  pairKey_ends_with?: Maybe<String>;
+  pairKey_not_ends_with?: Maybe<String>;
+  status?: Maybe<FriendStatus>;
+  status_not?: Maybe<FriendStatus>;
+  status_in?: Maybe<FriendStatus[] | FriendStatus>;
+  status_not_in?: Maybe<FriendStatus[] | FriendStatus>;
+  AND?: Maybe<FriendshipWhereInput[] | FriendshipWhereInput>;
+  OR?: Maybe<FriendshipWhereInput[] | FriendshipWhereInput>;
+  NOT?: Maybe<FriendshipWhereInput[] | FriendshipWhereInput>;
+}
+
+export interface NotificationWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  status?: Maybe<NotificationStatus>;
+  status_not?: Maybe<NotificationStatus>;
+  status_in?: Maybe<NotificationStatus[] | NotificationStatus>;
+  status_not_in?: Maybe<NotificationStatus[] | NotificationStatus>;
+  text?: Maybe<String>;
+  text_not?: Maybe<String>;
+  text_in?: Maybe<String[] | String>;
+  text_not_in?: Maybe<String[] | String>;
+  text_lt?: Maybe<String>;
+  text_lte?: Maybe<String>;
+  text_gt?: Maybe<String>;
+  text_gte?: Maybe<String>;
+  text_contains?: Maybe<String>;
+  text_not_contains?: Maybe<String>;
+  text_starts_with?: Maybe<String>;
+  text_not_starts_with?: Maybe<String>;
+  text_ends_with?: Maybe<String>;
+  text_not_ends_with?: Maybe<String>;
+  AND?: Maybe<NotificationWhereInput[] | NotificationWhereInput>;
+  OR?: Maybe<NotificationWhereInput[] | NotificationWhereInput>;
+  NOT?: Maybe<NotificationWhereInput[] | NotificationWhereInput>;
+}
+
+export type FriendshipWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  pairKey?: Maybe<String>;
+}>;
+
+export type NotificationWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export type UserWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  email?: Maybe<String>;
+}>;
+
+export interface EventCreateInput {
+  id?: Maybe<ID_Input>;
+  title: String;
+  description: String;
+  owner: UserCreateOneWithoutOwnedEventsInput;
+  status: EventStatus;
+  invited?: Maybe<UserCreateManyInput>;
+  joined?: Maybe<UserCreateManyInput>;
+}
+
+export interface UserCreateOneWithoutOwnedEventsInput {
+  create?: Maybe<UserCreateWithoutOwnedEventsInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserCreateWithoutOwnedEventsInput {
+  id?: Maybe<ID_Input>;
+  email: String;
+  hash?: Maybe<String>;
   name: String;
-  age: Int;
+  bio?: Maybe<String>;
+  score: Int;
+  friends?: Maybe<FriendshipCreateManyWithoutUserInput>;
+  notifications?: Maybe<NotificationCreateManyInput>;
 }
 
-export interface PersonUpdateInput {
-  name?: Maybe<String>;
-  age?: Maybe<Int>;
+export interface FriendshipCreateManyWithoutUserInput {
+  create?: Maybe<
+    FriendshipCreateWithoutUserInput[] | FriendshipCreateWithoutUserInput
+  >;
+  connect?: Maybe<FriendshipWhereUniqueInput[] | FriendshipWhereUniqueInput>;
 }
 
-export interface PersonUpdateManyMutationInput {
-  name?: Maybe<String>;
-  age?: Maybe<Int>;
+export interface FriendshipCreateWithoutUserInput {
+  id?: Maybe<ID_Input>;
+  friend: UserCreateOneInput;
+  pairKey: String;
+  status: FriendStatus;
+}
+
+export interface UserCreateOneInput {
+  create?: Maybe<UserCreateInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
 }
 
 export interface UserCreateInput {
   id?: Maybe<ID_Input>;
   email: String;
-  hash: String;
+  hash?: Maybe<String>;
   name: String;
+  bio?: Maybe<String>;
+  score: Int;
+  ownedEvents?: Maybe<EventCreateManyWithoutOwnerInput>;
+  friends?: Maybe<FriendshipCreateManyWithoutUserInput>;
+  notifications?: Maybe<NotificationCreateManyInput>;
+}
+
+export interface EventCreateManyWithoutOwnerInput {
+  create?: Maybe<EventCreateWithoutOwnerInput[] | EventCreateWithoutOwnerInput>;
+  connect?: Maybe<EventWhereUniqueInput[] | EventWhereUniqueInput>;
+}
+
+export interface EventCreateWithoutOwnerInput {
+  id?: Maybe<ID_Input>;
+  title: String;
+  description: String;
+  status: EventStatus;
+  invited?: Maybe<UserCreateManyInput>;
+  joined?: Maybe<UserCreateManyInput>;
+}
+
+export interface UserCreateManyInput {
+  create?: Maybe<UserCreateInput[] | UserCreateInput>;
+  connect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+}
+
+export interface NotificationCreateManyInput {
+  create?: Maybe<NotificationCreateInput[] | NotificationCreateInput>;
+  connect?: Maybe<
+    NotificationWhereUniqueInput[] | NotificationWhereUniqueInput
+  >;
+}
+
+export interface NotificationCreateInput {
+  id?: Maybe<ID_Input>;
+  status: NotificationStatus;
+  text: String;
+}
+
+export interface EventUpdateInput {
+  title?: Maybe<String>;
+  description?: Maybe<String>;
+  owner?: Maybe<UserUpdateOneRequiredWithoutOwnedEventsInput>;
+  status?: Maybe<EventStatus>;
+  invited?: Maybe<UserUpdateManyInput>;
+  joined?: Maybe<UserUpdateManyInput>;
+}
+
+export interface UserUpdateOneRequiredWithoutOwnedEventsInput {
+  create?: Maybe<UserCreateWithoutOwnedEventsInput>;
+  update?: Maybe<UserUpdateWithoutOwnedEventsDataInput>;
+  upsert?: Maybe<UserUpsertWithoutOwnedEventsInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserUpdateWithoutOwnedEventsDataInput {
+  email?: Maybe<String>;
+  hash?: Maybe<String>;
+  name?: Maybe<String>;
+  bio?: Maybe<String>;
+  score?: Maybe<Int>;
+  friends?: Maybe<FriendshipUpdateManyWithoutUserInput>;
+  notifications?: Maybe<NotificationUpdateManyInput>;
+}
+
+export interface FriendshipUpdateManyWithoutUserInput {
+  create?: Maybe<
+    FriendshipCreateWithoutUserInput[] | FriendshipCreateWithoutUserInput
+  >;
+  delete?: Maybe<FriendshipWhereUniqueInput[] | FriendshipWhereUniqueInput>;
+  connect?: Maybe<FriendshipWhereUniqueInput[] | FriendshipWhereUniqueInput>;
+  set?: Maybe<FriendshipWhereUniqueInput[] | FriendshipWhereUniqueInput>;
+  disconnect?: Maybe<FriendshipWhereUniqueInput[] | FriendshipWhereUniqueInput>;
+  update?: Maybe<
+    | FriendshipUpdateWithWhereUniqueWithoutUserInput[]
+    | FriendshipUpdateWithWhereUniqueWithoutUserInput
+  >;
+  upsert?: Maybe<
+    | FriendshipUpsertWithWhereUniqueWithoutUserInput[]
+    | FriendshipUpsertWithWhereUniqueWithoutUserInput
+  >;
+  deleteMany?: Maybe<FriendshipScalarWhereInput[] | FriendshipScalarWhereInput>;
+  updateMany?: Maybe<
+    | FriendshipUpdateManyWithWhereNestedInput[]
+    | FriendshipUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface FriendshipUpdateWithWhereUniqueWithoutUserInput {
+  where: FriendshipWhereUniqueInput;
+  data: FriendshipUpdateWithoutUserDataInput;
+}
+
+export interface FriendshipUpdateWithoutUserDataInput {
+  friend?: Maybe<UserUpdateOneRequiredInput>;
+  pairKey?: Maybe<String>;
+  status?: Maybe<FriendStatus>;
+}
+
+export interface UserUpdateOneRequiredInput {
+  create?: Maybe<UserCreateInput>;
+  update?: Maybe<UserUpdateDataInput>;
+  upsert?: Maybe<UserUpsertNestedInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserUpdateDataInput {
+  email?: Maybe<String>;
+  hash?: Maybe<String>;
+  name?: Maybe<String>;
+  bio?: Maybe<String>;
+  score?: Maybe<Int>;
+  ownedEvents?: Maybe<EventUpdateManyWithoutOwnerInput>;
+  friends?: Maybe<FriendshipUpdateManyWithoutUserInput>;
+  notifications?: Maybe<NotificationUpdateManyInput>;
+}
+
+export interface EventUpdateManyWithoutOwnerInput {
+  create?: Maybe<EventCreateWithoutOwnerInput[] | EventCreateWithoutOwnerInput>;
+  delete?: Maybe<EventWhereUniqueInput[] | EventWhereUniqueInput>;
+  connect?: Maybe<EventWhereUniqueInput[] | EventWhereUniqueInput>;
+  set?: Maybe<EventWhereUniqueInput[] | EventWhereUniqueInput>;
+  disconnect?: Maybe<EventWhereUniqueInput[] | EventWhereUniqueInput>;
+  update?: Maybe<
+    | EventUpdateWithWhereUniqueWithoutOwnerInput[]
+    | EventUpdateWithWhereUniqueWithoutOwnerInput
+  >;
+  upsert?: Maybe<
+    | EventUpsertWithWhereUniqueWithoutOwnerInput[]
+    | EventUpsertWithWhereUniqueWithoutOwnerInput
+  >;
+  deleteMany?: Maybe<EventScalarWhereInput[] | EventScalarWhereInput>;
+  updateMany?: Maybe<
+    EventUpdateManyWithWhereNestedInput[] | EventUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface EventUpdateWithWhereUniqueWithoutOwnerInput {
+  where: EventWhereUniqueInput;
+  data: EventUpdateWithoutOwnerDataInput;
+}
+
+export interface EventUpdateWithoutOwnerDataInput {
+  title?: Maybe<String>;
+  description?: Maybe<String>;
+  status?: Maybe<EventStatus>;
+  invited?: Maybe<UserUpdateManyInput>;
+  joined?: Maybe<UserUpdateManyInput>;
+}
+
+export interface UserUpdateManyInput {
+  create?: Maybe<UserCreateInput[] | UserCreateInput>;
+  update?: Maybe<
+    | UserUpdateWithWhereUniqueNestedInput[]
+    | UserUpdateWithWhereUniqueNestedInput
+  >;
+  upsert?: Maybe<
+    | UserUpsertWithWhereUniqueNestedInput[]
+    | UserUpsertWithWhereUniqueNestedInput
+  >;
+  delete?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  connect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  set?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  disconnect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  deleteMany?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
+  updateMany?: Maybe<
+    UserUpdateManyWithWhereNestedInput[] | UserUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface UserUpdateWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput;
+  data: UserUpdateDataInput;
+}
+
+export interface UserUpsertWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput;
+  update: UserUpdateDataInput;
+  create: UserCreateInput;
+}
+
+export interface UserScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  email?: Maybe<String>;
+  email_not?: Maybe<String>;
+  email_in?: Maybe<String[] | String>;
+  email_not_in?: Maybe<String[] | String>;
+  email_lt?: Maybe<String>;
+  email_lte?: Maybe<String>;
+  email_gt?: Maybe<String>;
+  email_gte?: Maybe<String>;
+  email_contains?: Maybe<String>;
+  email_not_contains?: Maybe<String>;
+  email_starts_with?: Maybe<String>;
+  email_not_starts_with?: Maybe<String>;
+  email_ends_with?: Maybe<String>;
+  email_not_ends_with?: Maybe<String>;
+  hash?: Maybe<String>;
+  hash_not?: Maybe<String>;
+  hash_in?: Maybe<String[] | String>;
+  hash_not_in?: Maybe<String[] | String>;
+  hash_lt?: Maybe<String>;
+  hash_lte?: Maybe<String>;
+  hash_gt?: Maybe<String>;
+  hash_gte?: Maybe<String>;
+  hash_contains?: Maybe<String>;
+  hash_not_contains?: Maybe<String>;
+  hash_starts_with?: Maybe<String>;
+  hash_not_starts_with?: Maybe<String>;
+  hash_ends_with?: Maybe<String>;
+  hash_not_ends_with?: Maybe<String>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  bio?: Maybe<String>;
+  bio_not?: Maybe<String>;
+  bio_in?: Maybe<String[] | String>;
+  bio_not_in?: Maybe<String[] | String>;
+  bio_lt?: Maybe<String>;
+  bio_lte?: Maybe<String>;
+  bio_gt?: Maybe<String>;
+  bio_gte?: Maybe<String>;
+  bio_contains?: Maybe<String>;
+  bio_not_contains?: Maybe<String>;
+  bio_starts_with?: Maybe<String>;
+  bio_not_starts_with?: Maybe<String>;
+  bio_ends_with?: Maybe<String>;
+  bio_not_ends_with?: Maybe<String>;
+  score?: Maybe<Int>;
+  score_not?: Maybe<Int>;
+  score_in?: Maybe<Int[] | Int>;
+  score_not_in?: Maybe<Int[] | Int>;
+  score_lt?: Maybe<Int>;
+  score_lte?: Maybe<Int>;
+  score_gt?: Maybe<Int>;
+  score_gte?: Maybe<Int>;
+  AND?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
+  OR?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
+  NOT?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
+}
+
+export interface UserUpdateManyWithWhereNestedInput {
+  where: UserScalarWhereInput;
+  data: UserUpdateManyDataInput;
+}
+
+export interface UserUpdateManyDataInput {
+  email?: Maybe<String>;
+  hash?: Maybe<String>;
+  name?: Maybe<String>;
+  bio?: Maybe<String>;
+  score?: Maybe<Int>;
+}
+
+export interface EventUpsertWithWhereUniqueWithoutOwnerInput {
+  where: EventWhereUniqueInput;
+  update: EventUpdateWithoutOwnerDataInput;
+  create: EventCreateWithoutOwnerInput;
+}
+
+export interface EventScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  title?: Maybe<String>;
+  title_not?: Maybe<String>;
+  title_in?: Maybe<String[] | String>;
+  title_not_in?: Maybe<String[] | String>;
+  title_lt?: Maybe<String>;
+  title_lte?: Maybe<String>;
+  title_gt?: Maybe<String>;
+  title_gte?: Maybe<String>;
+  title_contains?: Maybe<String>;
+  title_not_contains?: Maybe<String>;
+  title_starts_with?: Maybe<String>;
+  title_not_starts_with?: Maybe<String>;
+  title_ends_with?: Maybe<String>;
+  title_not_ends_with?: Maybe<String>;
+  description?: Maybe<String>;
+  description_not?: Maybe<String>;
+  description_in?: Maybe<String[] | String>;
+  description_not_in?: Maybe<String[] | String>;
+  description_lt?: Maybe<String>;
+  description_lte?: Maybe<String>;
+  description_gt?: Maybe<String>;
+  description_gte?: Maybe<String>;
+  description_contains?: Maybe<String>;
+  description_not_contains?: Maybe<String>;
+  description_starts_with?: Maybe<String>;
+  description_not_starts_with?: Maybe<String>;
+  description_ends_with?: Maybe<String>;
+  description_not_ends_with?: Maybe<String>;
+  status?: Maybe<EventStatus>;
+  status_not?: Maybe<EventStatus>;
+  status_in?: Maybe<EventStatus[] | EventStatus>;
+  status_not_in?: Maybe<EventStatus[] | EventStatus>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<EventScalarWhereInput[] | EventScalarWhereInput>;
+  OR?: Maybe<EventScalarWhereInput[] | EventScalarWhereInput>;
+  NOT?: Maybe<EventScalarWhereInput[] | EventScalarWhereInput>;
+}
+
+export interface EventUpdateManyWithWhereNestedInput {
+  where: EventScalarWhereInput;
+  data: EventUpdateManyDataInput;
+}
+
+export interface EventUpdateManyDataInput {
+  title?: Maybe<String>;
+  description?: Maybe<String>;
+  status?: Maybe<EventStatus>;
+}
+
+export interface NotificationUpdateManyInput {
+  create?: Maybe<NotificationCreateInput[] | NotificationCreateInput>;
+  update?: Maybe<
+    | NotificationUpdateWithWhereUniqueNestedInput[]
+    | NotificationUpdateWithWhereUniqueNestedInput
+  >;
+  upsert?: Maybe<
+    | NotificationUpsertWithWhereUniqueNestedInput[]
+    | NotificationUpsertWithWhereUniqueNestedInput
+  >;
+  delete?: Maybe<NotificationWhereUniqueInput[] | NotificationWhereUniqueInput>;
+  connect?: Maybe<
+    NotificationWhereUniqueInput[] | NotificationWhereUniqueInput
+  >;
+  set?: Maybe<NotificationWhereUniqueInput[] | NotificationWhereUniqueInput>;
+  disconnect?: Maybe<
+    NotificationWhereUniqueInput[] | NotificationWhereUniqueInput
+  >;
+  deleteMany?: Maybe<
+    NotificationScalarWhereInput[] | NotificationScalarWhereInput
+  >;
+  updateMany?: Maybe<
+    | NotificationUpdateManyWithWhereNestedInput[]
+    | NotificationUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface NotificationUpdateWithWhereUniqueNestedInput {
+  where: NotificationWhereUniqueInput;
+  data: NotificationUpdateDataInput;
+}
+
+export interface NotificationUpdateDataInput {
+  status?: Maybe<NotificationStatus>;
+  text?: Maybe<String>;
+}
+
+export interface NotificationUpsertWithWhereUniqueNestedInput {
+  where: NotificationWhereUniqueInput;
+  update: NotificationUpdateDataInput;
+  create: NotificationCreateInput;
+}
+
+export interface NotificationScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  status?: Maybe<NotificationStatus>;
+  status_not?: Maybe<NotificationStatus>;
+  status_in?: Maybe<NotificationStatus[] | NotificationStatus>;
+  status_not_in?: Maybe<NotificationStatus[] | NotificationStatus>;
+  text?: Maybe<String>;
+  text_not?: Maybe<String>;
+  text_in?: Maybe<String[] | String>;
+  text_not_in?: Maybe<String[] | String>;
+  text_lt?: Maybe<String>;
+  text_lte?: Maybe<String>;
+  text_gt?: Maybe<String>;
+  text_gte?: Maybe<String>;
+  text_contains?: Maybe<String>;
+  text_not_contains?: Maybe<String>;
+  text_starts_with?: Maybe<String>;
+  text_not_starts_with?: Maybe<String>;
+  text_ends_with?: Maybe<String>;
+  text_not_ends_with?: Maybe<String>;
+  AND?: Maybe<NotificationScalarWhereInput[] | NotificationScalarWhereInput>;
+  OR?: Maybe<NotificationScalarWhereInput[] | NotificationScalarWhereInput>;
+  NOT?: Maybe<NotificationScalarWhereInput[] | NotificationScalarWhereInput>;
+}
+
+export interface NotificationUpdateManyWithWhereNestedInput {
+  where: NotificationScalarWhereInput;
+  data: NotificationUpdateManyDataInput;
+}
+
+export interface NotificationUpdateManyDataInput {
+  status?: Maybe<NotificationStatus>;
+  text?: Maybe<String>;
+}
+
+export interface UserUpsertNestedInput {
+  update: UserUpdateDataInput;
+  create: UserCreateInput;
+}
+
+export interface FriendshipUpsertWithWhereUniqueWithoutUserInput {
+  where: FriendshipWhereUniqueInput;
+  update: FriendshipUpdateWithoutUserDataInput;
+  create: FriendshipCreateWithoutUserInput;
+}
+
+export interface FriendshipScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  pairKey?: Maybe<String>;
+  pairKey_not?: Maybe<String>;
+  pairKey_in?: Maybe<String[] | String>;
+  pairKey_not_in?: Maybe<String[] | String>;
+  pairKey_lt?: Maybe<String>;
+  pairKey_lte?: Maybe<String>;
+  pairKey_gt?: Maybe<String>;
+  pairKey_gte?: Maybe<String>;
+  pairKey_contains?: Maybe<String>;
+  pairKey_not_contains?: Maybe<String>;
+  pairKey_starts_with?: Maybe<String>;
+  pairKey_not_starts_with?: Maybe<String>;
+  pairKey_ends_with?: Maybe<String>;
+  pairKey_not_ends_with?: Maybe<String>;
+  status?: Maybe<FriendStatus>;
+  status_not?: Maybe<FriendStatus>;
+  status_in?: Maybe<FriendStatus[] | FriendStatus>;
+  status_not_in?: Maybe<FriendStatus[] | FriendStatus>;
+  AND?: Maybe<FriendshipScalarWhereInput[] | FriendshipScalarWhereInput>;
+  OR?: Maybe<FriendshipScalarWhereInput[] | FriendshipScalarWhereInput>;
+  NOT?: Maybe<FriendshipScalarWhereInput[] | FriendshipScalarWhereInput>;
+}
+
+export interface FriendshipUpdateManyWithWhereNestedInput {
+  where: FriendshipScalarWhereInput;
+  data: FriendshipUpdateManyDataInput;
+}
+
+export interface FriendshipUpdateManyDataInput {
+  pairKey?: Maybe<String>;
+  status?: Maybe<FriendStatus>;
+}
+
+export interface UserUpsertWithoutOwnedEventsInput {
+  update: UserUpdateWithoutOwnedEventsDataInput;
+  create: UserCreateWithoutOwnedEventsInput;
+}
+
+export interface EventUpdateManyMutationInput {
+  title?: Maybe<String>;
+  description?: Maybe<String>;
+  status?: Maybe<EventStatus>;
+}
+
+export interface FriendshipCreateInput {
+  id?: Maybe<ID_Input>;
+  user: UserCreateOneWithoutFriendsInput;
+  friend: UserCreateOneInput;
+  pairKey: String;
+  status: FriendStatus;
+}
+
+export interface UserCreateOneWithoutFriendsInput {
+  create?: Maybe<UserCreateWithoutFriendsInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserCreateWithoutFriendsInput {
+  id?: Maybe<ID_Input>;
+  email: String;
+  hash?: Maybe<String>;
+  name: String;
+  bio?: Maybe<String>;
+  score: Int;
+  ownedEvents?: Maybe<EventCreateManyWithoutOwnerInput>;
+  notifications?: Maybe<NotificationCreateManyInput>;
+}
+
+export interface FriendshipUpdateInput {
+  user?: Maybe<UserUpdateOneRequiredWithoutFriendsInput>;
+  friend?: Maybe<UserUpdateOneRequiredInput>;
+  pairKey?: Maybe<String>;
+  status?: Maybe<FriendStatus>;
+}
+
+export interface UserUpdateOneRequiredWithoutFriendsInput {
+  create?: Maybe<UserCreateWithoutFriendsInput>;
+  update?: Maybe<UserUpdateWithoutFriendsDataInput>;
+  upsert?: Maybe<UserUpsertWithoutFriendsInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserUpdateWithoutFriendsDataInput {
+  email?: Maybe<String>;
+  hash?: Maybe<String>;
+  name?: Maybe<String>;
+  bio?: Maybe<String>;
+  score?: Maybe<Int>;
+  ownedEvents?: Maybe<EventUpdateManyWithoutOwnerInput>;
+  notifications?: Maybe<NotificationUpdateManyInput>;
+}
+
+export interface UserUpsertWithoutFriendsInput {
+  update: UserUpdateWithoutFriendsDataInput;
+  create: UserCreateWithoutFriendsInput;
+}
+
+export interface FriendshipUpdateManyMutationInput {
+  pairKey?: Maybe<String>;
+  status?: Maybe<FriendStatus>;
+}
+
+export interface NotificationUpdateInput {
+  status?: Maybe<NotificationStatus>;
+  text?: Maybe<String>;
+}
+
+export interface NotificationUpdateManyMutationInput {
+  status?: Maybe<NotificationStatus>;
+  text?: Maybe<String>;
 }
 
 export interface UserUpdateInput {
   email?: Maybe<String>;
   hash?: Maybe<String>;
   name?: Maybe<String>;
+  bio?: Maybe<String>;
+  score?: Maybe<Int>;
+  ownedEvents?: Maybe<EventUpdateManyWithoutOwnerInput>;
+  friends?: Maybe<FriendshipUpdateManyWithoutUserInput>;
+  notifications?: Maybe<NotificationUpdateManyInput>;
 }
 
 export interface UserUpdateManyMutationInput {
   email?: Maybe<String>;
   hash?: Maybe<String>;
   name?: Maybe<String>;
+  bio?: Maybe<String>;
+  score?: Maybe<Int>;
 }
 
-export interface PersonSubscriptionWhereInput {
+export interface EventSubscriptionWhereInput {
   mutation_in?: Maybe<MutationType[] | MutationType>;
   updatedFields_contains?: Maybe<String>;
   updatedFields_contains_every?: Maybe<String[] | String>;
   updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<PersonWhereInput>;
-  AND?: Maybe<PersonSubscriptionWhereInput[] | PersonSubscriptionWhereInput>;
-  OR?: Maybe<PersonSubscriptionWhereInput[] | PersonSubscriptionWhereInput>;
-  NOT?: Maybe<PersonSubscriptionWhereInput[] | PersonSubscriptionWhereInput>;
+  node?: Maybe<EventWhereInput>;
+  AND?: Maybe<EventSubscriptionWhereInput[] | EventSubscriptionWhereInput>;
+  OR?: Maybe<EventSubscriptionWhereInput[] | EventSubscriptionWhereInput>;
+  NOT?: Maybe<EventSubscriptionWhereInput[] | EventSubscriptionWhereInput>;
+}
+
+export interface FriendshipSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<FriendshipWhereInput>;
+  AND?: Maybe<
+    FriendshipSubscriptionWhereInput[] | FriendshipSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    FriendshipSubscriptionWhereInput[] | FriendshipSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    FriendshipSubscriptionWhereInput[] | FriendshipSubscriptionWhereInput
+  >;
+}
+
+export interface NotificationSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<NotificationWhereInput>;
+  AND?: Maybe<
+    NotificationSubscriptionWhereInput[] | NotificationSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    NotificationSubscriptionWhereInput[] | NotificationSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    NotificationSubscriptionWhereInput[] | NotificationSubscriptionWhereInput
+  >;
 }
 
 export interface UserSubscriptionWhereInput {
@@ -334,53 +1261,307 @@ export interface NodeNode {
   id: ID_Output;
 }
 
-export interface Person {
+export interface Event {
   id: ID_Output;
-  name: String;
-  age: Int;
+  title: String;
+  description: String;
+  status: EventStatus;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
-export interface PersonPromise extends Promise<Person>, Fragmentable {
+export interface EventPromise extends Promise<Event>, Fragmentable {
   id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  age: () => Promise<Int>;
+  title: () => Promise<String>;
+  description: () => Promise<String>;
+  owner: <T = UserPromise>() => T;
+  status: () => Promise<EventStatus>;
+  invited: <T = FragmentableArray<User>>(args?: {
+    where?: UserWhereInput;
+    orderBy?: UserOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  joined: <T = FragmentableArray<User>>(args?: {
+    where?: UserWhereInput;
+    orderBy?: UserOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
-export interface PersonSubscription
-  extends Promise<AsyncIterator<Person>>,
+export interface EventSubscription
+  extends Promise<AsyncIterator<Event>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  age: () => Promise<AsyncIterator<Int>>;
+  title: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
+  owner: <T = UserSubscription>() => T;
+  status: () => Promise<AsyncIterator<EventStatus>>;
+  invited: <T = Promise<AsyncIterator<UserSubscription>>>(args?: {
+    where?: UserWhereInput;
+    orderBy?: UserOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  joined: <T = Promise<AsyncIterator<UserSubscription>>>(args?: {
+    where?: UserWhereInput;
+    orderBy?: UserOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
-export interface PersonNullablePromise
-  extends Promise<Person | null>,
+export interface EventNullablePromise
+  extends Promise<Event | null>,
     Fragmentable {
   id: () => Promise<ID_Output>;
+  title: () => Promise<String>;
+  description: () => Promise<String>;
+  owner: <T = UserPromise>() => T;
+  status: () => Promise<EventStatus>;
+  invited: <T = FragmentableArray<User>>(args?: {
+    where?: UserWhereInput;
+    orderBy?: UserOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  joined: <T = FragmentableArray<User>>(args?: {
+    where?: UserWhereInput;
+    orderBy?: UserOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface User {
+  id: ID_Output;
+  email: String;
+  hash?: String;
+  name: String;
+  bio?: String;
+  score: Int;
+}
+
+export interface UserPromise extends Promise<User>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  email: () => Promise<String>;
+  hash: () => Promise<String>;
   name: () => Promise<String>;
-  age: () => Promise<Int>;
+  bio: () => Promise<String>;
+  score: () => Promise<Int>;
+  ownedEvents: <T = FragmentableArray<Event>>(args?: {
+    where?: EventWhereInput;
+    orderBy?: EventOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  friends: <T = FragmentableArray<Friendship>>(args?: {
+    where?: FriendshipWhereInput;
+    orderBy?: FriendshipOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  notifications: <T = FragmentableArray<Notification>>(args?: {
+    where?: NotificationWhereInput;
+    orderBy?: NotificationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
-export interface PersonConnection {
+export interface UserSubscription
+  extends Promise<AsyncIterator<User>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  email: () => Promise<AsyncIterator<String>>;
+  hash: () => Promise<AsyncIterator<String>>;
+  name: () => Promise<AsyncIterator<String>>;
+  bio: () => Promise<AsyncIterator<String>>;
+  score: () => Promise<AsyncIterator<Int>>;
+  ownedEvents: <T = Promise<AsyncIterator<EventSubscription>>>(args?: {
+    where?: EventWhereInput;
+    orderBy?: EventOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  friends: <T = Promise<AsyncIterator<FriendshipSubscription>>>(args?: {
+    where?: FriendshipWhereInput;
+    orderBy?: FriendshipOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  notifications: <T = Promise<AsyncIterator<NotificationSubscription>>>(args?: {
+    where?: NotificationWhereInput;
+    orderBy?: NotificationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface UserNullablePromise
+  extends Promise<User | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  email: () => Promise<String>;
+  hash: () => Promise<String>;
+  name: () => Promise<String>;
+  bio: () => Promise<String>;
+  score: () => Promise<Int>;
+  ownedEvents: <T = FragmentableArray<Event>>(args?: {
+    where?: EventWhereInput;
+    orderBy?: EventOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  friends: <T = FragmentableArray<Friendship>>(args?: {
+    where?: FriendshipWhereInput;
+    orderBy?: FriendshipOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  notifications: <T = FragmentableArray<Notification>>(args?: {
+    where?: NotificationWhereInput;
+    orderBy?: NotificationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface Friendship {
+  id: ID_Output;
+  pairKey: String;
+  status: FriendStatus;
+}
+
+export interface FriendshipPromise extends Promise<Friendship>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  user: <T = UserPromise>() => T;
+  friend: <T = UserPromise>() => T;
+  pairKey: () => Promise<String>;
+  status: () => Promise<FriendStatus>;
+}
+
+export interface FriendshipSubscription
+  extends Promise<AsyncIterator<Friendship>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  user: <T = UserSubscription>() => T;
+  friend: <T = UserSubscription>() => T;
+  pairKey: () => Promise<AsyncIterator<String>>;
+  status: () => Promise<AsyncIterator<FriendStatus>>;
+}
+
+export interface FriendshipNullablePromise
+  extends Promise<Friendship | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  user: <T = UserPromise>() => T;
+  friend: <T = UserPromise>() => T;
+  pairKey: () => Promise<String>;
+  status: () => Promise<FriendStatus>;
+}
+
+export interface Notification {
+  id: ID_Output;
+  status: NotificationStatus;
+  text: String;
+}
+
+export interface NotificationPromise
+  extends Promise<Notification>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  status: () => Promise<NotificationStatus>;
+  text: () => Promise<String>;
+}
+
+export interface NotificationSubscription
+  extends Promise<AsyncIterator<Notification>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  status: () => Promise<AsyncIterator<NotificationStatus>>;
+  text: () => Promise<AsyncIterator<String>>;
+}
+
+export interface NotificationNullablePromise
+  extends Promise<Notification | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  status: () => Promise<NotificationStatus>;
+  text: () => Promise<String>;
+}
+
+export interface EventConnection {
   pageInfo: PageInfo;
-  edges: PersonEdge[];
+  edges: EventEdge[];
 }
 
-export interface PersonConnectionPromise
-  extends Promise<PersonConnection>,
+export interface EventConnectionPromise
+  extends Promise<EventConnection>,
     Fragmentable {
   pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<PersonEdge>>() => T;
-  aggregate: <T = AggregatePersonPromise>() => T;
+  edges: <T = FragmentableArray<EventEdge>>() => T;
+  aggregate: <T = AggregateEventPromise>() => T;
 }
 
-export interface PersonConnectionSubscription
-  extends Promise<AsyncIterator<PersonConnection>>,
+export interface EventConnectionSubscription
+  extends Promise<AsyncIterator<EventConnection>>,
     Fragmentable {
   pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<PersonEdgeSubscription>>>() => T;
-  aggregate: <T = AggregatePersonSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<EventEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateEventSubscription>() => T;
 }
 
 export interface PageInfo {
@@ -406,69 +1587,149 @@ export interface PageInfoSubscription
   endCursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface PersonEdge {
-  node: Person;
+export interface EventEdge {
+  node: Event;
   cursor: String;
 }
 
-export interface PersonEdgePromise extends Promise<PersonEdge>, Fragmentable {
-  node: <T = PersonPromise>() => T;
+export interface EventEdgePromise extends Promise<EventEdge>, Fragmentable {
+  node: <T = EventPromise>() => T;
   cursor: () => Promise<String>;
 }
 
-export interface PersonEdgeSubscription
-  extends Promise<AsyncIterator<PersonEdge>>,
+export interface EventEdgeSubscription
+  extends Promise<AsyncIterator<EventEdge>>,
     Fragmentable {
-  node: <T = PersonSubscription>() => T;
+  node: <T = EventSubscription>() => T;
   cursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface AggregatePerson {
+export interface AggregateEvent {
   count: Int;
 }
 
-export interface AggregatePersonPromise
-  extends Promise<AggregatePerson>,
+export interface AggregateEventPromise
+  extends Promise<AggregateEvent>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregatePersonSubscription
-  extends Promise<AsyncIterator<AggregatePerson>>,
+export interface AggregateEventSubscription
+  extends Promise<AsyncIterator<AggregateEvent>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface User {
-  id: ID_Output;
-  email: String;
-  hash: String;
-  name: String;
+export interface FriendshipConnection {
+  pageInfo: PageInfo;
+  edges: FriendshipEdge[];
 }
 
-export interface UserPromise extends Promise<User>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  email: () => Promise<String>;
-  hash: () => Promise<String>;
-  name: () => Promise<String>;
-}
-
-export interface UserSubscription
-  extends Promise<AsyncIterator<User>>,
+export interface FriendshipConnectionPromise
+  extends Promise<FriendshipConnection>,
     Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  email: () => Promise<AsyncIterator<String>>;
-  hash: () => Promise<AsyncIterator<String>>;
-  name: () => Promise<AsyncIterator<String>>;
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<FriendshipEdge>>() => T;
+  aggregate: <T = AggregateFriendshipPromise>() => T;
 }
 
-export interface UserNullablePromise
-  extends Promise<User | null>,
+export interface FriendshipConnectionSubscription
+  extends Promise<AsyncIterator<FriendshipConnection>>,
     Fragmentable {
-  id: () => Promise<ID_Output>;
-  email: () => Promise<String>;
-  hash: () => Promise<String>;
-  name: () => Promise<String>;
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<FriendshipEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateFriendshipSubscription>() => T;
+}
+
+export interface FriendshipEdge {
+  node: Friendship;
+  cursor: String;
+}
+
+export interface FriendshipEdgePromise
+  extends Promise<FriendshipEdge>,
+    Fragmentable {
+  node: <T = FriendshipPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface FriendshipEdgeSubscription
+  extends Promise<AsyncIterator<FriendshipEdge>>,
+    Fragmentable {
+  node: <T = FriendshipSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateFriendship {
+  count: Int;
+}
+
+export interface AggregateFriendshipPromise
+  extends Promise<AggregateFriendship>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateFriendshipSubscription
+  extends Promise<AsyncIterator<AggregateFriendship>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface NotificationConnection {
+  pageInfo: PageInfo;
+  edges: NotificationEdge[];
+}
+
+export interface NotificationConnectionPromise
+  extends Promise<NotificationConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<NotificationEdge>>() => T;
+  aggregate: <T = AggregateNotificationPromise>() => T;
+}
+
+export interface NotificationConnectionSubscription
+  extends Promise<AsyncIterator<NotificationConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<NotificationEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateNotificationSubscription>() => T;
+}
+
+export interface NotificationEdge {
+  node: Notification;
+  cursor: String;
+}
+
+export interface NotificationEdgePromise
+  extends Promise<NotificationEdge>,
+    Fragmentable {
+  node: <T = NotificationPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface NotificationEdgeSubscription
+  extends Promise<AsyncIterator<NotificationEdge>>,
+    Fragmentable {
+  node: <T = NotificationSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateNotification {
+  count: Int;
+}
+
+export interface AggregateNotificationPromise
+  extends Promise<AggregateNotification>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateNotificationSubscription
+  extends Promise<AsyncIterator<AggregateNotification>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface UserConnection {
@@ -541,51 +1802,154 @@ export interface BatchPayloadSubscription
   count: () => Promise<AsyncIterator<Long>>;
 }
 
-export interface PersonSubscriptionPayload {
+export interface EventSubscriptionPayload {
   mutation: MutationType;
-  node: Person;
+  node: Event;
   updatedFields: String[];
-  previousValues: PersonPreviousValues;
+  previousValues: EventPreviousValues;
 }
 
-export interface PersonSubscriptionPayloadPromise
-  extends Promise<PersonSubscriptionPayload>,
+export interface EventSubscriptionPayloadPromise
+  extends Promise<EventSubscriptionPayload>,
     Fragmentable {
   mutation: () => Promise<MutationType>;
-  node: <T = PersonPromise>() => T;
+  node: <T = EventPromise>() => T;
   updatedFields: () => Promise<String[]>;
-  previousValues: <T = PersonPreviousValuesPromise>() => T;
+  previousValues: <T = EventPreviousValuesPromise>() => T;
 }
 
-export interface PersonSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<PersonSubscriptionPayload>>,
+export interface EventSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<EventSubscriptionPayload>>,
     Fragmentable {
   mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = PersonSubscription>() => T;
+  node: <T = EventSubscription>() => T;
   updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = PersonPreviousValuesSubscription>() => T;
+  previousValues: <T = EventPreviousValuesSubscription>() => T;
 }
 
-export interface PersonPreviousValues {
+export interface EventPreviousValues {
   id: ID_Output;
-  name: String;
-  age: Int;
+  title: String;
+  description: String;
+  status: EventStatus;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
-export interface PersonPreviousValuesPromise
-  extends Promise<PersonPreviousValues>,
+export interface EventPreviousValuesPromise
+  extends Promise<EventPreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  age: () => Promise<Int>;
+  title: () => Promise<String>;
+  description: () => Promise<String>;
+  status: () => Promise<EventStatus>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
-export interface PersonPreviousValuesSubscription
-  extends Promise<AsyncIterator<PersonPreviousValues>>,
+export interface EventPreviousValuesSubscription
+  extends Promise<AsyncIterator<EventPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  age: () => Promise<AsyncIterator<Int>>;
+  title: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
+  status: () => Promise<AsyncIterator<EventStatus>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface FriendshipSubscriptionPayload {
+  mutation: MutationType;
+  node: Friendship;
+  updatedFields: String[];
+  previousValues: FriendshipPreviousValues;
+}
+
+export interface FriendshipSubscriptionPayloadPromise
+  extends Promise<FriendshipSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = FriendshipPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = FriendshipPreviousValuesPromise>() => T;
+}
+
+export interface FriendshipSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<FriendshipSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = FriendshipSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = FriendshipPreviousValuesSubscription>() => T;
+}
+
+export interface FriendshipPreviousValues {
+  id: ID_Output;
+  pairKey: String;
+  status: FriendStatus;
+}
+
+export interface FriendshipPreviousValuesPromise
+  extends Promise<FriendshipPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  pairKey: () => Promise<String>;
+  status: () => Promise<FriendStatus>;
+}
+
+export interface FriendshipPreviousValuesSubscription
+  extends Promise<AsyncIterator<FriendshipPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  pairKey: () => Promise<AsyncIterator<String>>;
+  status: () => Promise<AsyncIterator<FriendStatus>>;
+}
+
+export interface NotificationSubscriptionPayload {
+  mutation: MutationType;
+  node: Notification;
+  updatedFields: String[];
+  previousValues: NotificationPreviousValues;
+}
+
+export interface NotificationSubscriptionPayloadPromise
+  extends Promise<NotificationSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = NotificationPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = NotificationPreviousValuesPromise>() => T;
+}
+
+export interface NotificationSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<NotificationSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = NotificationSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = NotificationPreviousValuesSubscription>() => T;
+}
+
+export interface NotificationPreviousValues {
+  id: ID_Output;
+  status: NotificationStatus;
+  text: String;
+}
+
+export interface NotificationPreviousValuesPromise
+  extends Promise<NotificationPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  status: () => Promise<NotificationStatus>;
+  text: () => Promise<String>;
+}
+
+export interface NotificationPreviousValuesSubscription
+  extends Promise<AsyncIterator<NotificationPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  status: () => Promise<AsyncIterator<NotificationStatus>>;
+  text: () => Promise<AsyncIterator<String>>;
 }
 
 export interface UserSubscriptionPayload {
@@ -616,8 +1980,10 @@ export interface UserSubscriptionPayloadSubscription
 export interface UserPreviousValues {
   id: ID_Output;
   email: String;
-  hash: String;
+  hash?: String;
   name: String;
+  bio?: String;
+  score: Int;
 }
 
 export interface UserPreviousValuesPromise
@@ -627,6 +1993,8 @@ export interface UserPreviousValuesPromise
   email: () => Promise<String>;
   hash: () => Promise<String>;
   name: () => Promise<String>;
+  bio: () => Promise<String>;
+  score: () => Promise<Int>;
 }
 
 export interface UserPreviousValuesSubscription
@@ -636,6 +2004,8 @@ export interface UserPreviousValuesSubscription
   email: () => Promise<AsyncIterator<String>>;
   hash: () => Promise<AsyncIterator<String>>;
   name: () => Promise<AsyncIterator<String>>;
+  bio: () => Promise<AsyncIterator<String>>;
+  score: () => Promise<AsyncIterator<Int>>;
 }
 
 /*
@@ -655,6 +2025,16 @@ The `Int` scalar type represents non-fractional signed whole numeric values. Int
 export type Int = number;
 
 /*
+DateTime scalar input type, allowing Date
+*/
+export type DateTimeInput = Date | string;
+
+/*
+DateTime scalar output type, which is always a string
+*/
+export type DateTimeOutput = string;
+
+/*
 The `Boolean` scalar type represents `true` or `false`.
 */
 export type Boolean = boolean;
@@ -671,7 +2051,27 @@ export const models: Model[] = [
     embedded: false
   },
   {
-    name: "Person",
+    name: "Event",
+    embedded: false
+  },
+  {
+    name: "EventStatus",
+    embedded: false
+  },
+  {
+    name: "Friendship",
+    embedded: false
+  },
+  {
+    name: "FriendStatus",
+    embedded: false
+  },
+  {
+    name: "Notification",
+    embedded: false
+  },
+  {
+    name: "NotificationStatus",
     embedded: false
   }
 ];

@@ -1,5 +1,5 @@
 #endpoint: ''
-endpoint: https://us1.prisma.sh/aaron-berdy/fuse/dev
+endpoint: https://fuse-server-50668288f2.herokuapp.com
 
 datamodel: datamodel.prisma
 

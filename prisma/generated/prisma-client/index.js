@@ -9,14 +9,34 @@ var models = [
     embedded: false
   },
   {
-    name: "Person",
+    name: "Event",
+    embedded: false
+  },
+  {
+    name: "EventStatus",
+    embedded: false
+  },
+  {
+    name: "Friendship",
+    embedded: false
+  },
+  {
+    name: "FriendStatus",
+    embedded: false
+  },
+  {
+    name: "Notification",
+    embedded: false
+  },
+  {
+    name: "NotificationStatus",
     embedded: false
   }
 ];
 exports.Prisma = prisma_lib_1.makePrismaClientClass({
   typeDefs,
   models,
-  endpoint: `https://us1.prisma.sh/aaron-berdy/fuse/dev`,
+  endpoint: `https://fuse-server-50668288f2.herokuapp.com`,
   secret: `prisma-4uz3-secret`
 });
 exports.prisma = new exports.Prisma();

@@ -1,16 +1,26 @@
 type Query {
     ping: String!
-    people: [Person]
-}
-
-type Person {
-    name: String!
-    age: Int!
+    me: User!
+    user (id: ID!): User!
+    completedEvents(userId: ID): [Event!]!  # TODO
+    completedEventsCount(userId: ID): Int!
+    friendsCount(userId: ID): Int!
+    newsFeed: [Event!]!
+    friendProfileEvents(friendUserId: ID!): [Event!]
+    friendshipStatus(friendUserId: ID!): String!
+    users(prefix: String!): [User!]!
 }
 
 type Mutation {
     signup(email: String!, password: String!, name: String!): AuthPayload
-    login(email: String!, password: String!): AuthPayload
+    login(email: String, password: String, fbToken: String): AuthPayload
+    createEvent(title: String!, description: String!): Event!
+    requestFriend(userId: ID!): String  # DONE
+    confirmFriend(userId: ID!): String  # DONE
+    updateEventDetails(eventId: ID!, title: String, description: String): Event!
+    updateEventStatus(eventId: ID!, currentEventStatus: EventStatus!, newEventStatus: EventStatus): Event!
+    updateEventInviteList(eventId: ID!, userDiffList: [UserListDiff!]!): Event!
+    updateProfileDetails(name: String, bio: String): User!
 }
 
 type AuthPayload {
@@ -22,4 +32,44 @@ type User {
     id: ID!
     name: String!
     email: String!
+    bio: String
+    score: Int!
+    ownedEvents: [Event!]!
+    events(association: [Association!], status: [EventStatus!]): [Event!]!  # TODO association
 }
+
+type Event {
+    id: ID!
+    title: String!
+    description: String!
+    owner: User!
+    status: EventStatus!
+    invited: [User!]!
+    joined: [User!]!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+input UserListDiff {
+    userId: ID!
+    diffType: ListDiffType!
+}
+
+enum ListDiffType {
+    ADD
+    REMOVE
+}
+
+enum EventStatus {
+    SET
+    LIT
+    COMPLETED
+}
+
+enum Association {
+    INVITED
+    JOINED
+    OWNER
+}
+
+scalar DateTime
