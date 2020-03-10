@@ -327,6 +327,62 @@ async function updateProfileDetails(parent, { name, bio }, context) {
   });
 }
 
+async function joinEvent(parent, { eventId }, context) {
+  const userId = await getUserId({ context });
+
+  const invited = await context.prisma.event({
+    id: eventId,
+  }).invited();
+
+  if (!invited.find((user) => user.id === userId)) throw new Error('Cannot join this event');
+
+  return context.prisma.updateEvent({
+    where: {
+      id: eventId,
+    },
+    data: {
+      joined: {
+        connect: {
+          id: userId,
+        },
+      },
+      invited: {
+        disconnect: {
+          id: userId,
+        },
+      },
+    },
+  });
+}
+
+async function leaveEvent(parent, { eventId }, context) {
+  const userId = await getUserId({ context });
+
+  const joined = await context.prisma.event({
+    id: eventId,
+  }).joined();
+
+  if (!joined.find((user) => user.id === userId)) throw new Error('Cannot leave this event');
+
+  return context.prisma.updateEvent({
+    where: {
+      id: eventId,
+    },
+    data: {
+      joined: {
+        disconnect: {
+          id: userId,
+        },
+      },
+      invited: {
+        connect: {
+          id: userId,
+        },
+      },
+    },
+  });
+}
+
 export default {
   signup,
   login,
@@ -338,4 +394,6 @@ export default {
   updateEventDetails,
   updateEventInviteList,
   updateProfileDetails,
+  joinEvent,
+  leaveEvent,
 };
