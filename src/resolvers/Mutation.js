@@ -145,6 +145,8 @@ async function requestFriend(parent, { userId }, context) {
           },
         },
       });
+
+      return 'Request sent.';
     });
 }
 
