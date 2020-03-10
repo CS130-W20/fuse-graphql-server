@@ -191,7 +191,7 @@ async function friendshipStatus(parent, { friendUserId }, context) {
     return FRIEND_STATUS.NONE;
   }
 
-  return friendship.status();
+  return friendship.status;
 }
 
 async function users(parent, { prefix }, context) {
