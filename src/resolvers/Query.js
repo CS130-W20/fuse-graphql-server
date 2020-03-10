@@ -174,6 +174,7 @@ async function friendsCount(parent, { userId }, context) {
   const friendsConnection = await context.prisma.friendshipsConnection({
     where: {
       pairKey_starts_with: queryUserId,
+      status: FRIEND_STATUS.CONFIRMED,
     },
   }).aggregate();
 
