@@ -1,5 +1,5 @@
 import { createPairKey, getUserId } from '../utils';
-import { EVENT_STATUS, EVENT_ORDER } from '../constants';
+import { EVENT_STATUS, EVENT_ORDER, FRIEND_STATUS } from '../constants';
 
 function ping() {
   return 'pong';
@@ -180,24 +180,18 @@ async function friendsCount(parent, { userId }, context) {
   return friendsConnection.count;
 }
 
-async function isFriend(parent, { friendUserId }, context) {
-  return getUserId({ context })
-    .then((userId) => {
-      const pairKey = createPairKey(userId, friendUserId);
-      return context.prisma.friendship({
-        pairKey,
-      });
-    });
-}
-
 async function friendshipStatus(parent, { friendUserId }, context) {
-  return getUserId({ context })
-    .then((userId) => {
-      const pairKey = createPairKey(userId, friendUserId);
-      return context.prisma.friendship({
-        pairKey,
-      }).status();
-    });
+  const userId = await getUserId({ context });
+  const pairKey = createPairKey(userId, friendUserId);
+  const friendship = await context.prisma.friendship({
+    pairKey,
+  });
+
+  if (!friendship) {
+    return FRIEND_STATUS.NONE;
+  }
+
+  return friendship.status();
 }
 
 async function users(parent, { prefix }, context) {
@@ -218,7 +212,6 @@ export default {
   newsFeed,
   friendProfileEvents,
   friendsCount,
-  isFriend,
   friendshipStatus,
   users,
 };
