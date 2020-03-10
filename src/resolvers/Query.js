@@ -1,3 +1,4 @@
+import { ApolloError } from 'apollo-server';
 import { createPairKey, getUserId } from '../utils';
 import { EVENT_STATUS, EVENT_ORDER, FRIEND_STATUS } from '../constants';
 
@@ -16,6 +17,19 @@ async function me(parent, args, context) {
     .then((userId) => context.prisma.user({
       id: userId,
     }));
+}
+
+async function event(parent, { eventId }, context) {
+  // TODO verify that use has permissions to access event
+  const eventQuery = await context.prisma.event({
+    id: eventId,
+  });
+
+  if (!eventQuery) {
+    throw new ApolloError('An event with that ID does not exist');
+  }
+
+  return eventQuery;
 }
 
 async function completedEvents(parent, { userId }, context) {
@@ -208,6 +222,7 @@ export default {
   ping,
   user,
   me,
+  event,
   completedEvents,
   completedEventsCount,
   newsFeed,
