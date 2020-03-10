@@ -23,6 +23,10 @@ type Mutation {
     updateEventStatus(eventId: ID!, currentEventStatus: EventStatus!, newEventStatus: EventStatus): Event!
     updateEventInviteList(eventId: ID!, userDiffList: [UserListDiff!]!): Event!
     updateProfileDetails(name: String, bio: String): User!
+
+    # TODO
+    joinEvent(eventId: ID!): Event!
+    leaveEvent(eventId: ID!): Boolean
 }
 
 type AuthPayload {
