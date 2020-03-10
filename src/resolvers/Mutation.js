@@ -5,7 +5,8 @@ import fetch from 'node-fetch';
 import {
   APP_SECRET, createPairKey, getUserId, incrementStatus,
 } from '../utils';
-import { LIST_DIFF_TYPE } from '../constants';
+import query from './Query';
+import { LIST_DIFF_TYPE, FRIEND_STATUS } from '../constants';
 
 async function signup(parent, { email, name, password }, context) {
   const hash = await bcrypt.hash(password, 10);
@@ -183,6 +184,29 @@ async function confirmFriend(parent, { userId }, context) {
     });
 }
 
+async function removeFriend(parent, { userId }, context) {
+  // get user id
+  const selfUserId = await getUserId({ context });
+  const selfPairKey = createPairKey(selfUserId, userId);
+  const friendPairKey = createPairKey(userId, selfUserId);
+
+  // verify users are friends
+  const friendshipStatus = await query.friendshipStatus(parent, { friendUserId: userId }, context);
+  if (friendshipStatus !== FRIEND_STATUS.CONFIRMED) {
+    throw new ApolloError('Cannot remove someone who is not already your friend');
+  }
+
+  const removalMutation = await context.prisma.deleteManyFriendships({
+    pairKey_in: [selfPairKey, friendPairKey],
+  });
+
+  if (removalMutation && removalMutation.count === 2) {
+    return true;
+  }
+
+  return false;
+}
+
 /**
  * Use to update the event title, description, and eventually the date/time etc
  * @param {*} eventId event ID
@@ -309,6 +333,7 @@ export default {
   createEvent,
   requestFriend,
   confirmFriend,
+  removeFriend,
   updateEventStatus,
   updateEventDetails,
   updateEventInviteList,

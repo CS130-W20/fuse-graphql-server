@@ -17,6 +17,7 @@ type Mutation {
     createEvent(title: String!, description: String!): Event!
     requestFriend(userId: ID!): String  # DONE
     confirmFriend(userId: ID!): String  # DONE
+    removeFriend(userId: ID!): Boolean!
     updateEventDetails(eventId: ID!, title: String, description: String): Event!
     updateEventStatus(eventId: ID!, currentEventStatus: EventStatus!, newEventStatus: EventStatus): Event!
     updateEventInviteList(eventId: ID!, userDiffList: [UserListDiff!]!): Event!
