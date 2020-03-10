@@ -2,10 +2,11 @@ type Query {
     ping: String!
     me: User!
     user (id: ID!): User!
+    event (eventId: ID!): Event!
     completedEvents(userId: ID): [Event!]!  # TODO
     completedEventsCount(userId: ID): Int!
-    friendsCount(userId: ID): Int!
     newsFeed: [Event!]!
+    friendsCount(userId: ID): Int!
     friendProfileEvents(friendUserId: ID!): [Event!]
     friendshipStatus(friendUserId: ID!): String!
     users(prefix: String!): [User!]!
