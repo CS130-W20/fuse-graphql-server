@@ -37,6 +37,7 @@ type User {
     bio: String
     score: Int!
     ownedEvents: [Event!]!
+    friends:[User!]!
     events(association: [Association!], status: [EventStatus!]): [Event!]!  # TODO association
 }
 
