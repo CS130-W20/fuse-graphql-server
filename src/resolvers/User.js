@@ -17,7 +17,7 @@ async function friends(parent, args, context) {
     where: {
       status: FRIEND_STATUS.CONFIRMED,
     },
-  });
+  }).friend();
 }
 
 async function events(parent, { association, status }, context) {

@@ -41,8 +41,12 @@ type User {
     bio: String
     score: Int!
     ownedEvents: [Event!]!
-    friends:[User!]!
+    friends:[Friend!]!
     events(association: [Association!], status: [EventStatus!]): [Event!]!  # TODO association
+}
+
+type Friend {
+    friend: User!
 }
 
 type Event {
@@ -56,6 +60,7 @@ type Event {
     createdAt: DateTime!
     updatedAt: DateTime!
 }
+
 
 input UserListDiff {
     userId: ID!
@@ -77,6 +82,12 @@ enum Association {
     INVITED
     JOINED
     OWNER
+}
+
+enum FriendStatus {
+  SENT_REQUEST
+  RECEIVED_REQUEST
+  CONFIRMED
 }
 
 scalar DateTime
