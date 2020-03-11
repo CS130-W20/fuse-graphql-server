@@ -15,7 +15,7 @@ type Query {
 type Mutation {
     signup(email: String!, password: String!, name: String!): AuthPayload
     login(email: String, password: String, fbToken: String): AuthPayload
-    createEvent(title: String!, description: String!): Event!
+    createEvent(title: String!, description: String!, invitees: [ID!]!): Event!
     requestFriend(userId: ID!): String  # DONE
     confirmFriend(userId: ID!): String  # DONE
     removeFriend(userId: ID!): Boolean!

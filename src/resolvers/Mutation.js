@@ -67,22 +67,32 @@ async function login(parent, { email, password, fbToken }, context) {
 }
 
 
-async function createEvent(parent, { title, description }, context) {
-  return getUserId({ context })
-    .then((ownerId) => {
-      const owner = {
-        connect: {
-          id: ownerId,
-        },
-      };
+async function createEvent(parent, { title, description, invitees }, context) {
+  const selfUserId = await getUserId({ context });
 
-      return context.prisma.createEvent({
-        title,
-        description,
-        owner,
-        status: 'SET',
-      });
-    });
+  const owner = {
+    connect: {
+      id: selfUserId,
+    },
+  };
+
+  const inviteeIdObjs = invitees.map((invitee) => (
+    {
+      id: invitee,
+    }
+  ));
+
+  const invited = {
+    connect: inviteeIdObjs,
+  };
+
+  return context.prisma.createEvent({
+    title,
+    description,
+    owner,
+    status: 'SET',
+    invited,
+  });
 }
 
 async function requestFriend(parent, { userId }, context) {
