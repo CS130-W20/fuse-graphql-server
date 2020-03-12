@@ -10,9 +10,8 @@ import {
 } from '../constants';
 
 async function friends(parent, args, context) {
-  const selfUserId = await getUserId({ context });
   return context.prisma.user({
-    id: selfUserId,
+    id: parent.id,
   }).friends({
     where: {
       status: FRIEND_STATUS.CONFIRMED,
