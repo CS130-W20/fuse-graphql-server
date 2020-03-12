@@ -20,6 +20,8 @@ type Event {
   joined: [User!]! @relation(name: "UserJoinedEvents")
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
+  deadline: DateTime
+  scheduledFor: DateTime
 }
 
 enum EventStatus {

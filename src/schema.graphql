@@ -21,6 +21,8 @@ type Mutation {
     removeFriend(userId: ID!): Boolean!
     updateEventDetails(eventId: ID!, title: String, description: String): Event!
     updateEventStatus(eventId: ID!, currentEventStatus: EventStatus!, newEventStatus: EventStatus): Event!
+    updateEventDeadline(eventId: ID!, deadline: DateTime): Event!
+    updateEventScheduledFor(eventId: ID!, scheduledFor: DateTime): Event!
     updateEventInviteList(eventId: ID!, userDiffList: [UserListDiff!]!): Event!
     updateProfileDetails(name: String, bio: String): User!
 
@@ -59,6 +61,8 @@ type Event {
     joined: [User!]!
     createdAt: DateTime!
     updatedAt: DateTime!
+    deadline: DateTime
+    scheduledFor: DateTime
 }
 
 

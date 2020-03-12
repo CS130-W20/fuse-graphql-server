@@ -393,17 +393,47 @@ async function leaveEvent(parent, { eventId }, context) {
   });
 }
 
+async function updateEventDeadline(parent, { eventId, deadline }, context) {
+  // TODO verify that user has permissions to edit
+  return context.prisma.updateEvent({
+    where: {
+      id: eventId,
+    },
+    data: {
+      deadline,
+    },
+  });
+}
+
+async function updateEventScheduledFor(parent, { eventId, scheduledFor }, context) {
+  // TODO verify that user has permissions to edit
+  return context.prisma.updateEvent({
+    where: {
+      id: eventId,
+    },
+    data: {
+      scheduledFor,
+    },
+  });
+}
+
 export default {
   signup,
   login,
-  createEvent,
+
   requestFriend,
   confirmFriend,
   removeFriend,
+
+  createEvent,
   updateEventStatus,
   updateEventDetails,
   updateEventInviteList,
-  updateProfileDetails,
+  updateEventDeadline,
+  updateEventScheduledFor,
   joinEvent,
   leaveEvent,
+
+  updateProfileDetails,
+
 };

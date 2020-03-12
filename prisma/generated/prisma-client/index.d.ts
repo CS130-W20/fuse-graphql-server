@@ -242,7 +242,11 @@ export type EventOrderByInput =
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
-  | "updatedAt_DESC";
+  | "updatedAt_DESC"
+  | "deadline_ASC"
+  | "deadline_DESC"
+  | "scheduledFor_ASC"
+  | "scheduledFor_DESC";
 
 export type FriendshipOrderByInput =
   | "id_ASC"
@@ -350,6 +354,22 @@ export interface EventWhereInput {
   updatedAt_lte?: Maybe<DateTimeInput>;
   updatedAt_gt?: Maybe<DateTimeInput>;
   updatedAt_gte?: Maybe<DateTimeInput>;
+  deadline?: Maybe<DateTimeInput>;
+  deadline_not?: Maybe<DateTimeInput>;
+  deadline_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  deadline_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  deadline_lt?: Maybe<DateTimeInput>;
+  deadline_lte?: Maybe<DateTimeInput>;
+  deadline_gt?: Maybe<DateTimeInput>;
+  deadline_gte?: Maybe<DateTimeInput>;
+  scheduledFor?: Maybe<DateTimeInput>;
+  scheduledFor_not?: Maybe<DateTimeInput>;
+  scheduledFor_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  scheduledFor_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  scheduledFor_lt?: Maybe<DateTimeInput>;
+  scheduledFor_lte?: Maybe<DateTimeInput>;
+  scheduledFor_gt?: Maybe<DateTimeInput>;
+  scheduledFor_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<EventWhereInput[] | EventWhereInput>;
   OR?: Maybe<EventWhereInput[] | EventWhereInput>;
   NOT?: Maybe<EventWhereInput[] | EventWhereInput>;
@@ -548,6 +568,8 @@ export interface EventCreateInput {
   status: EventStatus;
   invited?: Maybe<UserCreateManyInput>;
   joined?: Maybe<UserCreateManyInput>;
+  deadline?: Maybe<DateTimeInput>;
+  scheduledFor?: Maybe<DateTimeInput>;
 }
 
 export interface UserCreateOneWithoutOwnedEventsInput {
@@ -609,6 +631,8 @@ export interface EventCreateWithoutOwnerInput {
   status: EventStatus;
   invited?: Maybe<UserCreateManyInput>;
   joined?: Maybe<UserCreateManyInput>;
+  deadline?: Maybe<DateTimeInput>;
+  scheduledFor?: Maybe<DateTimeInput>;
 }
 
 export interface UserCreateManyInput {
@@ -636,6 +660,8 @@ export interface EventUpdateInput {
   status?: Maybe<EventStatus>;
   invited?: Maybe<UserUpdateManyInput>;
   joined?: Maybe<UserUpdateManyInput>;
+  deadline?: Maybe<DateTimeInput>;
+  scheduledFor?: Maybe<DateTimeInput>;
 }
 
 export interface UserUpdateOneRequiredWithoutOwnedEventsInput {
@@ -738,6 +764,8 @@ export interface EventUpdateWithoutOwnerDataInput {
   status?: Maybe<EventStatus>;
   invited?: Maybe<UserUpdateManyInput>;
   joined?: Maybe<UserUpdateManyInput>;
+  deadline?: Maybe<DateTimeInput>;
+  scheduledFor?: Maybe<DateTimeInput>;
 }
 
 export interface UserUpdateManyInput {
@@ -937,6 +965,22 @@ export interface EventScalarWhereInput {
   updatedAt_lte?: Maybe<DateTimeInput>;
   updatedAt_gt?: Maybe<DateTimeInput>;
   updatedAt_gte?: Maybe<DateTimeInput>;
+  deadline?: Maybe<DateTimeInput>;
+  deadline_not?: Maybe<DateTimeInput>;
+  deadline_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  deadline_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  deadline_lt?: Maybe<DateTimeInput>;
+  deadline_lte?: Maybe<DateTimeInput>;
+  deadline_gt?: Maybe<DateTimeInput>;
+  deadline_gte?: Maybe<DateTimeInput>;
+  scheduledFor?: Maybe<DateTimeInput>;
+  scheduledFor_not?: Maybe<DateTimeInput>;
+  scheduledFor_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  scheduledFor_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  scheduledFor_lt?: Maybe<DateTimeInput>;
+  scheduledFor_lte?: Maybe<DateTimeInput>;
+  scheduledFor_gt?: Maybe<DateTimeInput>;
+  scheduledFor_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<EventScalarWhereInput[] | EventScalarWhereInput>;
   OR?: Maybe<EventScalarWhereInput[] | EventScalarWhereInput>;
   NOT?: Maybe<EventScalarWhereInput[] | EventScalarWhereInput>;
@@ -951,6 +995,8 @@ export interface EventUpdateManyDataInput {
   title?: Maybe<String>;
   description?: Maybe<String>;
   status?: Maybe<EventStatus>;
+  deadline?: Maybe<DateTimeInput>;
+  scheduledFor?: Maybe<DateTimeInput>;
 }
 
 export interface NotificationUpdateManyInput {
@@ -1112,6 +1158,8 @@ export interface EventUpdateManyMutationInput {
   title?: Maybe<String>;
   description?: Maybe<String>;
   status?: Maybe<EventStatus>;
+  deadline?: Maybe<DateTimeInput>;
+  scheduledFor?: Maybe<DateTimeInput>;
 }
 
 export interface FriendshipCreateInput {
@@ -1268,6 +1316,8 @@ export interface Event {
   status: EventStatus;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
+  deadline?: DateTimeOutput;
+  scheduledFor?: DateTimeOutput;
 }
 
 export interface EventPromise extends Promise<Event>, Fragmentable {
@@ -1296,6 +1346,8 @@ export interface EventPromise extends Promise<Event>, Fragmentable {
   }) => T;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
+  deadline: () => Promise<DateTimeOutput>;
+  scheduledFor: () => Promise<DateTimeOutput>;
 }
 
 export interface EventSubscription
@@ -1326,6 +1378,8 @@ export interface EventSubscription
   }) => T;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  deadline: () => Promise<AsyncIterator<DateTimeOutput>>;
+  scheduledFor: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface EventNullablePromise
@@ -1356,6 +1410,8 @@ export interface EventNullablePromise
   }) => T;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
+  deadline: () => Promise<DateTimeOutput>;
+  scheduledFor: () => Promise<DateTimeOutput>;
 }
 
 export interface User {
@@ -1834,6 +1890,8 @@ export interface EventPreviousValues {
   status: EventStatus;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
+  deadline?: DateTimeOutput;
+  scheduledFor?: DateTimeOutput;
 }
 
 export interface EventPreviousValuesPromise
@@ -1845,6 +1903,8 @@ export interface EventPreviousValuesPromise
   status: () => Promise<EventStatus>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
+  deadline: () => Promise<DateTimeOutput>;
+  scheduledFor: () => Promise<DateTimeOutput>;
 }
 
 export interface EventPreviousValuesSubscription
@@ -1856,6 +1916,8 @@ export interface EventPreviousValuesSubscription
   status: () => Promise<AsyncIterator<EventStatus>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  deadline: () => Promise<AsyncIterator<DateTimeOutput>>;
+  scheduledFor: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface FriendshipSubscriptionPayload {
