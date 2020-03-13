@@ -3,10 +3,11 @@ import bcrypt from 'bcryptjs';
 import { AuthenticationError, ApolloError } from 'apollo-server';
 import fetch from 'node-fetch';
 import {
-  APP_SECRET, createPairKey, getUserId, incrementStatus,
+  APP_SECRET, createPairKey, getUserId, incrementStatus, daysDiff,
 } from '../utils';
 import query from './Query';
-import { LIST_DIFF_TYPE, FRIEND_STATUS } from '../constants';
+import { LIST_DIFF_TYPE, FRIEND_STATUS, EVENT_STATUS } from '../constants';
+import scoreEvent from '../scoring';
 
 async function signup(parent, { email, name, password }, context) {
   const hash = await bcrypt.hash(password, 10);
@@ -417,6 +418,123 @@ async function updateEventScheduledFor(parent, { eventId, scheduledFor }, contex
   });
 }
 
+async function completeEvent(parent, { eventId }, context) {
+  // get attendees and details
+  const eventDetails = await context.prisma.event({
+    id: eventId,
+  });
+  const eventAttendees = await context.prisma.event({
+    id: eventId,
+  }).joined();
+  const eventOwner = await context.prisma.event({
+    id: eventId,
+  }).owner();
+
+  const attendeeCount = eventAttendees.length + 1; // +1 for owner
+
+  // TODO create a light time field for event. For now using creation time
+  const createdAt = new Date(eventDetails.createdAt);
+  const completedAt = new Date();
+  const daysLit = daysDiff(createdAt, completedAt);
+
+  const score = scoreEvent(attendeeCount, daysLit);
+
+  // transition event status
+  await (updateEventStatus(parent, {
+    eventId,
+    currentEventStatus: EVENT_STATUS.lit,
+    newEventStatus: EVENT_STATUS.completed,
+  }, context));
+
+  // TODO apply score to all profile joined
+  eventAttendees.forEach(async (attendee) => {
+    await context.prisma.updateUser({
+      where: {
+        id: attendee.id,
+      },
+      data: {
+        score: attendee.score + score,
+      },
+    });
+  });
+
+  // Apply score to owner profile
+  await context.prisma.updateUser({
+    where: {
+      id: eventOwner.id,
+    },
+    data: {
+      score: eventOwner.score + score,
+    },
+  });
+
+  // update event with completion time and score
+  // assign score to event
+  return context.prisma.updateEvent({
+    where: {
+      id: eventId,
+    },
+    data: {
+      score,
+      completedAt: new Date(),
+    },
+  });
+}
+
+async function undoCompleteEvent(parent, { eventId }, context) {
+  // get attendees and details
+  const eventDetails = await context.prisma.event({
+    id: eventId,
+  });
+  const eventAttendees = await context.prisma.event({
+    id: eventId,
+  }).joined();
+  const eventOwner = await context.prisma.event({
+    id: eventId,
+  }).owner();
+
+  // transition event status
+  await (updateEventStatus(parent, {
+    eventId,
+    currentEventStatus: EVENT_STATUS.completed,
+    newEventStatus: EVENT_STATUS.lit,
+  }, context));
+
+  // TODO apply score to all profile joined
+  eventAttendees.forEach(async (attendee) => {
+    await context.prisma.updateUser({
+      where: {
+        id: attendee.id,
+      },
+      data: {
+        score: attendee.score - eventDetails.score,
+      },
+    });
+  });
+
+  // Apply score to owner profile
+  await context.prisma.updateUser({
+    where: {
+      id: eventOwner.id,
+    },
+    data: {
+      score: eventOwner.score - eventDetails.score,
+    },
+  });
+
+  // update event with completion time and score
+  // assign score to event
+  return context.prisma.updateEvent({
+    where: {
+      id: eventId,
+    },
+    data: {
+      score: null,
+      completedAt: null,
+    },
+  });
+}
+
 export default {
   signup,
   login,
@@ -436,4 +554,6 @@ export default {
 
   updateProfileDetails,
 
+  completeEvent,
+  undoCompleteEvent,
 };

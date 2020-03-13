@@ -239,10 +239,16 @@ export type EventOrderByInput =
   | "description_DESC"
   | "status_ASC"
   | "status_DESC"
+  | "score_ASC"
+  | "score_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
   | "updatedAt_DESC"
+  | "litAt_ASC"
+  | "litAt_DESC"
+  | "completedAt_ASC"
+  | "completedAt_DESC"
   | "deadline_ASC"
   | "deadline_DESC"
   | "scheduledFor_ASC"
@@ -338,6 +344,14 @@ export interface EventWhereInput {
   joined_every?: Maybe<UserWhereInput>;
   joined_some?: Maybe<UserWhereInput>;
   joined_none?: Maybe<UserWhereInput>;
+  score?: Maybe<Int>;
+  score_not?: Maybe<Int>;
+  score_in?: Maybe<Int[] | Int>;
+  score_not_in?: Maybe<Int[] | Int>;
+  score_lt?: Maybe<Int>;
+  score_lte?: Maybe<Int>;
+  score_gt?: Maybe<Int>;
+  score_gte?: Maybe<Int>;
   createdAt?: Maybe<DateTimeInput>;
   createdAt_not?: Maybe<DateTimeInput>;
   createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -354,6 +368,22 @@ export interface EventWhereInput {
   updatedAt_lte?: Maybe<DateTimeInput>;
   updatedAt_gt?: Maybe<DateTimeInput>;
   updatedAt_gte?: Maybe<DateTimeInput>;
+  litAt?: Maybe<DateTimeInput>;
+  litAt_not?: Maybe<DateTimeInput>;
+  litAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  litAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  litAt_lt?: Maybe<DateTimeInput>;
+  litAt_lte?: Maybe<DateTimeInput>;
+  litAt_gt?: Maybe<DateTimeInput>;
+  litAt_gte?: Maybe<DateTimeInput>;
+  completedAt?: Maybe<DateTimeInput>;
+  completedAt_not?: Maybe<DateTimeInput>;
+  completedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  completedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  completedAt_lt?: Maybe<DateTimeInput>;
+  completedAt_lte?: Maybe<DateTimeInput>;
+  completedAt_gt?: Maybe<DateTimeInput>;
+  completedAt_gte?: Maybe<DateTimeInput>;
   deadline?: Maybe<DateTimeInput>;
   deadline_not?: Maybe<DateTimeInput>;
   deadline_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -568,6 +598,9 @@ export interface EventCreateInput {
   status: EventStatus;
   invited?: Maybe<UserCreateManyInput>;
   joined?: Maybe<UserCreateManyInput>;
+  score?: Maybe<Int>;
+  litAt?: Maybe<DateTimeInput>;
+  completedAt?: Maybe<DateTimeInput>;
   deadline?: Maybe<DateTimeInput>;
   scheduledFor?: Maybe<DateTimeInput>;
 }
@@ -631,6 +664,9 @@ export interface EventCreateWithoutOwnerInput {
   status: EventStatus;
   invited?: Maybe<UserCreateManyInput>;
   joined?: Maybe<UserCreateManyInput>;
+  score?: Maybe<Int>;
+  litAt?: Maybe<DateTimeInput>;
+  completedAt?: Maybe<DateTimeInput>;
   deadline?: Maybe<DateTimeInput>;
   scheduledFor?: Maybe<DateTimeInput>;
 }
@@ -660,6 +696,9 @@ export interface EventUpdateInput {
   status?: Maybe<EventStatus>;
   invited?: Maybe<UserUpdateManyInput>;
   joined?: Maybe<UserUpdateManyInput>;
+  score?: Maybe<Int>;
+  litAt?: Maybe<DateTimeInput>;
+  completedAt?: Maybe<DateTimeInput>;
   deadline?: Maybe<DateTimeInput>;
   scheduledFor?: Maybe<DateTimeInput>;
 }
@@ -764,6 +803,9 @@ export interface EventUpdateWithoutOwnerDataInput {
   status?: Maybe<EventStatus>;
   invited?: Maybe<UserUpdateManyInput>;
   joined?: Maybe<UserUpdateManyInput>;
+  score?: Maybe<Int>;
+  litAt?: Maybe<DateTimeInput>;
+  completedAt?: Maybe<DateTimeInput>;
   deadline?: Maybe<DateTimeInput>;
   scheduledFor?: Maybe<DateTimeInput>;
 }
@@ -949,6 +991,14 @@ export interface EventScalarWhereInput {
   status_not?: Maybe<EventStatus>;
   status_in?: Maybe<EventStatus[] | EventStatus>;
   status_not_in?: Maybe<EventStatus[] | EventStatus>;
+  score?: Maybe<Int>;
+  score_not?: Maybe<Int>;
+  score_in?: Maybe<Int[] | Int>;
+  score_not_in?: Maybe<Int[] | Int>;
+  score_lt?: Maybe<Int>;
+  score_lte?: Maybe<Int>;
+  score_gt?: Maybe<Int>;
+  score_gte?: Maybe<Int>;
   createdAt?: Maybe<DateTimeInput>;
   createdAt_not?: Maybe<DateTimeInput>;
   createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -965,6 +1015,22 @@ export interface EventScalarWhereInput {
   updatedAt_lte?: Maybe<DateTimeInput>;
   updatedAt_gt?: Maybe<DateTimeInput>;
   updatedAt_gte?: Maybe<DateTimeInput>;
+  litAt?: Maybe<DateTimeInput>;
+  litAt_not?: Maybe<DateTimeInput>;
+  litAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  litAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  litAt_lt?: Maybe<DateTimeInput>;
+  litAt_lte?: Maybe<DateTimeInput>;
+  litAt_gt?: Maybe<DateTimeInput>;
+  litAt_gte?: Maybe<DateTimeInput>;
+  completedAt?: Maybe<DateTimeInput>;
+  completedAt_not?: Maybe<DateTimeInput>;
+  completedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  completedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  completedAt_lt?: Maybe<DateTimeInput>;
+  completedAt_lte?: Maybe<DateTimeInput>;
+  completedAt_gt?: Maybe<DateTimeInput>;
+  completedAt_gte?: Maybe<DateTimeInput>;
   deadline?: Maybe<DateTimeInput>;
   deadline_not?: Maybe<DateTimeInput>;
   deadline_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -995,6 +1061,9 @@ export interface EventUpdateManyDataInput {
   title?: Maybe<String>;
   description?: Maybe<String>;
   status?: Maybe<EventStatus>;
+  score?: Maybe<Int>;
+  litAt?: Maybe<DateTimeInput>;
+  completedAt?: Maybe<DateTimeInput>;
   deadline?: Maybe<DateTimeInput>;
   scheduledFor?: Maybe<DateTimeInput>;
 }
@@ -1158,6 +1227,9 @@ export interface EventUpdateManyMutationInput {
   title?: Maybe<String>;
   description?: Maybe<String>;
   status?: Maybe<EventStatus>;
+  score?: Maybe<Int>;
+  litAt?: Maybe<DateTimeInput>;
+  completedAt?: Maybe<DateTimeInput>;
   deadline?: Maybe<DateTimeInput>;
   scheduledFor?: Maybe<DateTimeInput>;
 }
@@ -1314,8 +1386,11 @@ export interface Event {
   title: String;
   description: String;
   status: EventStatus;
+  score?: Int;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
+  litAt?: DateTimeOutput;
+  completedAt?: DateTimeOutput;
   deadline?: DateTimeOutput;
   scheduledFor?: DateTimeOutput;
 }
@@ -1344,8 +1419,11 @@ export interface EventPromise extends Promise<Event>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
+  score: () => Promise<Int>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
+  litAt: () => Promise<DateTimeOutput>;
+  completedAt: () => Promise<DateTimeOutput>;
   deadline: () => Promise<DateTimeOutput>;
   scheduledFor: () => Promise<DateTimeOutput>;
 }
@@ -1376,8 +1454,11 @@ export interface EventSubscription
     first?: Int;
     last?: Int;
   }) => T;
+  score: () => Promise<AsyncIterator<Int>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  litAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  completedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   deadline: () => Promise<AsyncIterator<DateTimeOutput>>;
   scheduledFor: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
@@ -1408,8 +1489,11 @@ export interface EventNullablePromise
     first?: Int;
     last?: Int;
   }) => T;
+  score: () => Promise<Int>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
+  litAt: () => Promise<DateTimeOutput>;
+  completedAt: () => Promise<DateTimeOutput>;
   deadline: () => Promise<DateTimeOutput>;
   scheduledFor: () => Promise<DateTimeOutput>;
 }
@@ -1888,8 +1972,11 @@ export interface EventPreviousValues {
   title: String;
   description: String;
   status: EventStatus;
+  score?: Int;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
+  litAt?: DateTimeOutput;
+  completedAt?: DateTimeOutput;
   deadline?: DateTimeOutput;
   scheduledFor?: DateTimeOutput;
 }
@@ -1901,8 +1988,11 @@ export interface EventPreviousValuesPromise
   title: () => Promise<String>;
   description: () => Promise<String>;
   status: () => Promise<EventStatus>;
+  score: () => Promise<Int>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
+  litAt: () => Promise<DateTimeOutput>;
+  completedAt: () => Promise<DateTimeOutput>;
   deadline: () => Promise<DateTimeOutput>;
   scheduledFor: () => Promise<DateTimeOutput>;
 }
@@ -1914,8 +2004,11 @@ export interface EventPreviousValuesSubscription
   title: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
   status: () => Promise<AsyncIterator<EventStatus>>;
+  score: () => Promise<AsyncIterator<Int>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  litAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  completedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   deadline: () => Promise<AsyncIterator<DateTimeOutput>>;
   scheduledFor: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
