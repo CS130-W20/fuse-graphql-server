@@ -15,10 +15,14 @@ type Query {
 type Mutation {
     signup(email: String!, password: String!, name: String!): AuthPayload
     login(email: String, password: String, fbToken: String): AuthPayload
-    createEvent(title: String!, description: String!, invitees: [ID!]!): Event!
+
     requestFriend(userId: ID!): String  # DONE
     confirmFriend(userId: ID!): String  # DONE
     removeFriend(userId: ID!): Boolean!
+
+    createEvent(title: String!, description: String!, invitees: [ID!]!): Event!
+    joinEvent(eventId: ID!): Event!
+    leaveEvent(eventId: ID!): Event! 
     updateEventDetails(eventId: ID!, title: String, description: String): Event!
     updateEventStatus(eventId: ID!, currentEventStatus: EventStatus!, newEventStatus: EventStatus): Event!
     updateEventDeadline(eventId: ID!, deadline: DateTime): Event!
@@ -26,9 +30,8 @@ type Mutation {
     updateEventInviteList(eventId: ID!, userDiffList: [UserListDiff!]!): Event!
     updateProfileDetails(name: String, bio: String): User!
 
-    # TODO
-    joinEvent(eventId: ID!): Event!
-    leaveEvent(eventId: ID!): Event! 
+    completeEvent(eventId: ID!): Event!
+    undoCompleteEvent(eventId: ID!): Event!
 }
 
 type AuthPayload {
@@ -59,10 +62,13 @@ type Event {
     status: EventStatus!
     invited: [User!]!
     joined: [User!]!
+    score: Int
     createdAt: DateTime!
     updatedAt: DateTime!
     deadline: DateTime
     scheduledFor: DateTime
+    litAt: DateTime
+    completedAt: DateTime
 }
 
 

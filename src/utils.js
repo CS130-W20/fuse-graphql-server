@@ -70,10 +70,16 @@ function mergeListsByUpdateTime(eventListA, eventListB) {
   return merged;
 }
 
+const millisInDay = 24 * 60 * 60 * 1000; // hours * minutes * seconds * millis
+function daysDiff(start, end) {
+  return Math.round(end - start) / millisInDay;
+}
+
 export {
   APP_SECRET,
   getUserId,
   createPairKey,
   incrementStatus,
   mergeListsByUpdateTime,
+  daysDiff,
 };
