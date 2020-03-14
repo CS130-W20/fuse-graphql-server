@@ -2,10 +2,11 @@ type Query {
     ping: String!
     me: User!
     user (id: ID!): User!
+    event (eventId: ID!): Event!
     completedEvents(userId: ID): [Event!]!  # TODO
     completedEventsCount(userId: ID): Int!
-    friendsCount(userId: ID): Int!
     newsFeed: [Event!]!
+    friendsCount(userId: ID): Int!
     friendProfileEvents(friendUserId: ID!): [Event!]
     friendshipStatus(friendUserId: ID!): String!
     users(prefix: String!): [User!]!
@@ -14,13 +15,23 @@ type Query {
 type Mutation {
     signup(email: String!, password: String!, name: String!): AuthPayload
     login(email: String, password: String, fbToken: String): AuthPayload
-    createEvent(title: String!, description: String!): Event!
+
     requestFriend(userId: ID!): String  # DONE
     confirmFriend(userId: ID!): String  # DONE
+    removeFriend(userId: ID!): Boolean!
+
+    createEvent(title: String!, description: String!, invitees: [ID!]!): Event!
+    joinEvent(eventId: ID!): Event!
+    leaveEvent(eventId: ID!): Event! 
     updateEventDetails(eventId: ID!, title: String, description: String): Event!
     updateEventStatus(eventId: ID!, currentEventStatus: EventStatus!, newEventStatus: EventStatus): Event!
+    updateEventDeadline(eventId: ID!, deadline: DateTime): Event!
+    updateEventScheduledFor(eventId: ID!, scheduledFor: DateTime): Event!
     updateEventInviteList(eventId: ID!, userDiffList: [UserListDiff!]!): Event!
     updateProfileDetails(name: String, bio: String): User!
+
+    completeEvent(eventId: ID!): Event!
+    undoCompleteEvent(eventId: ID!): Event!
 }
 
 type AuthPayload {
@@ -35,7 +46,12 @@ type User {
     bio: String
     score: Int!
     ownedEvents: [Event!]!
+    friends:[Friend!]!
     events(association: [Association!], status: [EventStatus!]): [Event!]!  # TODO association
+}
+
+type Friend {
+    friend: User!
 }
 
 type Event {
@@ -46,9 +62,15 @@ type Event {
     status: EventStatus!
     invited: [User!]!
     joined: [User!]!
+    score: Int
     createdAt: DateTime!
     updatedAt: DateTime!
+    deadline: DateTime
+    scheduledFor: DateTime
+    litAt: DateTime
+    completedAt: DateTime
 }
+
 
 input UserListDiff {
     userId: ID!
@@ -70,6 +92,12 @@ enum Association {
     INVITED
     JOINED
     OWNER
+}
+
+enum FriendStatus {
+  SENT_REQUEST
+  RECEIVED_REQUEST
+  CONFIRMED
 }
 
 scalar DateTime

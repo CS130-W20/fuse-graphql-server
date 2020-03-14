@@ -33,8 +33,13 @@ type Event {
   status: EventStatus!
   invited(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
   joined(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  score: Int
   createdAt: DateTime!
   updatedAt: DateTime!
+  litAt: DateTime
+  completedAt: DateTime
+  deadline: DateTime
+  scheduledFor: DateTime
 }
 
 type EventConnection {
@@ -51,6 +56,11 @@ input EventCreateInput {
   status: EventStatus!
   invited: UserCreateManyInput
   joined: UserCreateManyInput
+  score: Int
+  litAt: DateTime
+  completedAt: DateTime
+  deadline: DateTime
+  scheduledFor: DateTime
 }
 
 input EventCreateManyWithoutOwnerInput {
@@ -65,6 +75,11 @@ input EventCreateWithoutOwnerInput {
   status: EventStatus!
   invited: UserCreateManyInput
   joined: UserCreateManyInput
+  score: Int
+  litAt: DateTime
+  completedAt: DateTime
+  deadline: DateTime
+  scheduledFor: DateTime
 }
 
 type EventEdge {
@@ -81,10 +96,20 @@ enum EventOrderByInput {
   description_DESC
   status_ASC
   status_DESC
+  score_ASC
+  score_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  litAt_ASC
+  litAt_DESC
+  completedAt_ASC
+  completedAt_DESC
+  deadline_ASC
+  deadline_DESC
+  scheduledFor_ASC
+  scheduledFor_DESC
 }
 
 type EventPreviousValues {
@@ -92,8 +117,13 @@ type EventPreviousValues {
   title: String!
   description: String!
   status: EventStatus!
+  score: Int
   createdAt: DateTime!
   updatedAt: DateTime!
+  litAt: DateTime
+  completedAt: DateTime
+  deadline: DateTime
+  scheduledFor: DateTime
 }
 
 input EventScalarWhereInput {
@@ -143,6 +173,14 @@ input EventScalarWhereInput {
   status_not: EventStatus
   status_in: [EventStatus!]
   status_not_in: [EventStatus!]
+  score: Int
+  score_not: Int
+  score_in: [Int!]
+  score_not_in: [Int!]
+  score_lt: Int
+  score_lte: Int
+  score_gt: Int
+  score_gte: Int
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -159,6 +197,38 @@ input EventScalarWhereInput {
   updatedAt_lte: DateTime
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
+  litAt: DateTime
+  litAt_not: DateTime
+  litAt_in: [DateTime!]
+  litAt_not_in: [DateTime!]
+  litAt_lt: DateTime
+  litAt_lte: DateTime
+  litAt_gt: DateTime
+  litAt_gte: DateTime
+  completedAt: DateTime
+  completedAt_not: DateTime
+  completedAt_in: [DateTime!]
+  completedAt_not_in: [DateTime!]
+  completedAt_lt: DateTime
+  completedAt_lte: DateTime
+  completedAt_gt: DateTime
+  completedAt_gte: DateTime
+  deadline: DateTime
+  deadline_not: DateTime
+  deadline_in: [DateTime!]
+  deadline_not_in: [DateTime!]
+  deadline_lt: DateTime
+  deadline_lte: DateTime
+  deadline_gt: DateTime
+  deadline_gte: DateTime
+  scheduledFor: DateTime
+  scheduledFor_not: DateTime
+  scheduledFor_in: [DateTime!]
+  scheduledFor_not_in: [DateTime!]
+  scheduledFor_lt: DateTime
+  scheduledFor_lte: DateTime
+  scheduledFor_gt: DateTime
+  scheduledFor_gte: DateTime
   AND: [EventScalarWhereInput!]
   OR: [EventScalarWhereInput!]
   NOT: [EventScalarWhereInput!]
@@ -195,18 +265,33 @@ input EventUpdateInput {
   status: EventStatus
   invited: UserUpdateManyInput
   joined: UserUpdateManyInput
+  score: Int
+  litAt: DateTime
+  completedAt: DateTime
+  deadline: DateTime
+  scheduledFor: DateTime
 }
 
 input EventUpdateManyDataInput {
   title: String
   description: String
   status: EventStatus
+  score: Int
+  litAt: DateTime
+  completedAt: DateTime
+  deadline: DateTime
+  scheduledFor: DateTime
 }
 
 input EventUpdateManyMutationInput {
   title: String
   description: String
   status: EventStatus
+  score: Int
+  litAt: DateTime
+  completedAt: DateTime
+  deadline: DateTime
+  scheduledFor: DateTime
 }
 
 input EventUpdateManyWithoutOwnerInput {
@@ -232,6 +317,11 @@ input EventUpdateWithoutOwnerDataInput {
   status: EventStatus
   invited: UserUpdateManyInput
   joined: UserUpdateManyInput
+  score: Int
+  litAt: DateTime
+  completedAt: DateTime
+  deadline: DateTime
+  scheduledFor: DateTime
 }
 
 input EventUpdateWithWhereUniqueWithoutOwnerInput {
@@ -299,6 +389,14 @@ input EventWhereInput {
   joined_every: UserWhereInput
   joined_some: UserWhereInput
   joined_none: UserWhereInput
+  score: Int
+  score_not: Int
+  score_in: [Int!]
+  score_not_in: [Int!]
+  score_lt: Int
+  score_lte: Int
+  score_gt: Int
+  score_gte: Int
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -315,6 +413,38 @@ input EventWhereInput {
   updatedAt_lte: DateTime
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
+  litAt: DateTime
+  litAt_not: DateTime
+  litAt_in: [DateTime!]
+  litAt_not_in: [DateTime!]
+  litAt_lt: DateTime
+  litAt_lte: DateTime
+  litAt_gt: DateTime
+  litAt_gte: DateTime
+  completedAt: DateTime
+  completedAt_not: DateTime
+  completedAt_in: [DateTime!]
+  completedAt_not_in: [DateTime!]
+  completedAt_lt: DateTime
+  completedAt_lte: DateTime
+  completedAt_gt: DateTime
+  completedAt_gte: DateTime
+  deadline: DateTime
+  deadline_not: DateTime
+  deadline_in: [DateTime!]
+  deadline_not_in: [DateTime!]
+  deadline_lt: DateTime
+  deadline_lte: DateTime
+  deadline_gt: DateTime
+  deadline_gte: DateTime
+  scheduledFor: DateTime
+  scheduledFor_not: DateTime
+  scheduledFor_in: [DateTime!]
+  scheduledFor_not_in: [DateTime!]
+  scheduledFor_lt: DateTime
+  scheduledFor_lte: DateTime
+  scheduledFor_gt: DateTime
+  scheduledFor_gte: DateTime
   AND: [EventWhereInput!]
   OR: [EventWhereInput!]
   NOT: [EventWhereInput!]

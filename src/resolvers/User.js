@@ -6,7 +6,18 @@ import {
 import {
   EVENT_STATUS,
   ASSOCIATION,
+  FRIEND_STATUS,
 } from '../constants';
+
+async function friends(parent, args, context) {
+  return context.prisma.user({
+    id: parent.id,
+  }).friends({
+    where: {
+      status: FRIEND_STATUS.CONFIRMED,
+    },
+  }).friend();
+}
 
 async function events(parent, { association, status }, context) {
   const currentUserId = await getUserId({ context });
@@ -102,6 +113,7 @@ async function ownedEvents(parent, args, context) {
 }
 
 export default {
+  friends,
   events,
   ownedEvents,
 };

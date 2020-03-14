@@ -3,9 +3,11 @@ import bcrypt from 'bcryptjs';
 import { AuthenticationError, ApolloError } from 'apollo-server';
 import fetch from 'node-fetch';
 import {
-  APP_SECRET, createPairKey, getUserId, incrementStatus,
+  APP_SECRET, createPairKey, getUserId, incrementStatus, daysDiff,
 } from '../utils';
-import { LIST_DIFF_TYPE } from '../constants';
+import query from './Query';
+import { LIST_DIFF_TYPE, FRIEND_STATUS, EVENT_STATUS } from '../constants';
+import scoreEvent from '../scoring';
 
 async function signup(parent, { email, name, password }, context) {
   const hash = await bcrypt.hash(password, 10);
@@ -66,22 +68,32 @@ async function login(parent, { email, password, fbToken }, context) {
 }
 
 
-async function createEvent(parent, { title, description }, context) {
-  return getUserId({ context })
-    .then((ownerId) => {
-      const owner = {
-        connect: {
-          id: ownerId,
-        },
-      };
+async function createEvent(parent, { title, description, invitees }, context) {
+  const selfUserId = await getUserId({ context });
 
-      return context.prisma.createEvent({
-        title,
-        description,
-        owner,
-        status: 'SET',
-      });
-    });
+  const owner = {
+    connect: {
+      id: selfUserId,
+    },
+  };
+
+  const inviteeIdObjs = invitees.map((invitee) => (
+    {
+      id: invitee,
+    }
+  ));
+
+  const invited = {
+    connect: inviteeIdObjs,
+  };
+
+  return context.prisma.createEvent({
+    title,
+    description,
+    owner,
+    status: 'SET',
+    invited,
+  });
 }
 
 async function requestFriend(parent, { userId }, context) {
@@ -181,6 +193,29 @@ async function confirmFriend(parent, { userId }, context) {
 
       return 'Friendship confirmed';
     });
+}
+
+async function removeFriend(parent, { userId }, context) {
+  // get user id
+  const selfUserId = await getUserId({ context });
+  const selfPairKey = createPairKey(selfUserId, userId);
+  const friendPairKey = createPairKey(userId, selfUserId);
+
+  // verify users are friends
+  const friendshipStatus = await query.friendshipStatus(parent, { friendUserId: userId }, context);
+  if (friendshipStatus !== FRIEND_STATUS.CONFIRMED) {
+    throw new ApolloError('Cannot remove someone who is not already your friend');
+  }
+
+  const removalMutation = await context.prisma.deleteManyFriendships({
+    pairKey_in: [selfPairKey, friendPairKey],
+  });
+
+  if (removalMutation && removalMutation.count === 2) {
+    return true;
+  }
+
+  return false;
 }
 
 /**
@@ -303,14 +338,222 @@ async function updateProfileDetails(parent, { name, bio }, context) {
   });
 }
 
+async function joinEvent(parent, { eventId }, context) {
+  const userId = await getUserId({ context });
+
+  const invited = await context.prisma.event({
+    id: eventId,
+  }).invited();
+
+  if (!invited.find((user) => user.id === userId)) throw new Error('Cannot join this event');
+
+  return context.prisma.updateEvent({
+    where: {
+      id: eventId,
+    },
+    data: {
+      joined: {
+        connect: {
+          id: userId,
+        },
+      },
+      invited: {
+        disconnect: {
+          id: userId,
+        },
+      },
+    },
+  });
+}
+
+async function leaveEvent(parent, { eventId }, context) {
+  const userId = await getUserId({ context });
+
+  const joined = await context.prisma.event({
+    id: eventId,
+  }).joined();
+
+  if (!joined.find((user) => user.id === userId)) throw new Error('Cannot leave this event');
+
+  return context.prisma.updateEvent({
+    where: {
+      id: eventId,
+    },
+    data: {
+      joined: {
+        disconnect: {
+          id: userId,
+        },
+      },
+      invited: {
+        connect: {
+          id: userId,
+        },
+      },
+    },
+  });
+}
+
+async function updateEventDeadline(parent, { eventId, deadline }, context) {
+  // TODO verify that user has permissions to edit
+  return context.prisma.updateEvent({
+    where: {
+      id: eventId,
+    },
+    data: {
+      deadline,
+    },
+  });
+}
+
+async function updateEventScheduledFor(parent, { eventId, scheduledFor }, context) {
+  // TODO verify that user has permissions to edit
+  return context.prisma.updateEvent({
+    where: {
+      id: eventId,
+    },
+    data: {
+      scheduledFor,
+    },
+  });
+}
+
+async function completeEvent(parent, { eventId }, context) {
+  // get attendees and details
+  const eventDetails = await context.prisma.event({
+    id: eventId,
+  });
+  const eventAttendees = await context.prisma.event({
+    id: eventId,
+  }).joined();
+  const eventOwner = await context.prisma.event({
+    id: eventId,
+  }).owner();
+
+  const attendeeCount = eventAttendees.length + 1; // +1 for owner
+
+  // TODO create a light time field for event. For now using creation time
+  const createdAt = new Date(eventDetails.createdAt);
+  const completedAt = new Date();
+  const daysLit = daysDiff(createdAt, completedAt);
+
+  const score = scoreEvent(attendeeCount, daysLit);
+
+  // transition event status
+  await (updateEventStatus(parent, {
+    eventId,
+    currentEventStatus: EVENT_STATUS.lit,
+    newEventStatus: EVENT_STATUS.completed,
+  }, context));
+
+  // TODO apply score to all profile joined
+  eventAttendees.forEach(async (attendee) => {
+    await context.prisma.updateUser({
+      where: {
+        id: attendee.id,
+      },
+      data: {
+        score: attendee.score + score,
+      },
+    });
+  });
+
+  // Apply score to owner profile
+  await context.prisma.updateUser({
+    where: {
+      id: eventOwner.id,
+    },
+    data: {
+      score: eventOwner.score + score,
+    },
+  });
+
+  // update event with completion time and score
+  // assign score to event
+  return context.prisma.updateEvent({
+    where: {
+      id: eventId,
+    },
+    data: {
+      score,
+      completedAt: new Date(),
+    },
+  });
+}
+
+async function undoCompleteEvent(parent, { eventId }, context) {
+  // get attendees and details
+  const eventDetails = await context.prisma.event({
+    id: eventId,
+  });
+  const eventAttendees = await context.prisma.event({
+    id: eventId,
+  }).joined();
+  const eventOwner = await context.prisma.event({
+    id: eventId,
+  }).owner();
+
+  // transition event status
+  await (updateEventStatus(parent, {
+    eventId,
+    currentEventStatus: EVENT_STATUS.completed,
+    newEventStatus: EVENT_STATUS.lit,
+  }, context));
+
+  // TODO apply score to all profile joined
+  eventAttendees.forEach(async (attendee) => {
+    await context.prisma.updateUser({
+      where: {
+        id: attendee.id,
+      },
+      data: {
+        score: attendee.score - eventDetails.score,
+      },
+    });
+  });
+
+  // Apply score to owner profile
+  await context.prisma.updateUser({
+    where: {
+      id: eventOwner.id,
+    },
+    data: {
+      score: eventOwner.score - eventDetails.score,
+    },
+  });
+
+  // update event with completion time and score
+  // assign score to event
+  return context.prisma.updateEvent({
+    where: {
+      id: eventId,
+    },
+    data: {
+      score: null,
+      completedAt: null,
+    },
+  });
+}
+
 export default {
   signup,
   login,
-  createEvent,
+
   requestFriend,
   confirmFriend,
+  removeFriend,
+
+  createEvent,
   updateEventStatus,
   updateEventDetails,
   updateEventInviteList,
+  updateEventDeadline,
+  updateEventScheduledFor,
+  joinEvent,
+  leaveEvent,
+
   updateProfileDetails,
+
+  completeEvent,
+  undoCompleteEvent,
 };

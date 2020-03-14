@@ -1,3 +1,4 @@
+import { ApolloError } from 'apollo-server';
 import { createPairKey, getUserId } from '../utils';
 import { EVENT_STATUS, EVENT_ORDER, FRIEND_STATUS } from '../constants';
 
@@ -16,6 +17,19 @@ async function me(parent, args, context) {
     .then((userId) => context.prisma.user({
       id: userId,
     }));
+}
+
+async function event(parent, { eventId }, context) {
+  // TODO verify that use has permissions to access event
+  const eventQuery = await context.prisma.event({
+    id: eventId,
+  });
+
+  if (!eventQuery) {
+    throw new ApolloError('An event with that ID does not exist');
+  }
+
+  return eventQuery;
 }
 
 async function completedEvents(parent, { userId }, context) {
@@ -173,7 +187,8 @@ async function friendsCount(parent, { userId }, context) {
 
   const friendsConnection = await context.prisma.friendshipsConnection({
     where: {
-      id: queryUserId,
+      pairKey_starts_with: queryUserId,
+      status: FRIEND_STATUS.CONFIRMED,
     },
   }).aggregate();
 
@@ -191,7 +206,7 @@ async function friendshipStatus(parent, { friendUserId }, context) {
     return FRIEND_STATUS.NONE;
   }
 
-  return friendship.status();
+  return friendship.status;
 }
 
 async function users(parent, { prefix }, context) {
@@ -207,6 +222,7 @@ export default {
   ping,
   user,
   me,
+  event,
   completedEvents,
   completedEventsCount,
   newsFeed,

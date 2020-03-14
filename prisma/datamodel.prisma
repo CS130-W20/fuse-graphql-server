@@ -18,8 +18,13 @@ type Event {
   status: EventStatus!
   invited: [User!]! @relation(name: "UserInvitedEvents")
   joined: [User!]! @relation(name: "UserJoinedEvents")
+  score: Int
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
+  litAt: DateTime
+  completedAt: DateTime
+  deadline: DateTime
+  scheduledFor: DateTime
 }
 
 enum EventStatus {
