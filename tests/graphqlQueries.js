@@ -52,3 +52,10 @@ export const CREATE_EVENT_MUTATION = gql`
         }
     }
 `;
+
+
+export const FRIENDSHIP_STATUS_QUERY = gql`
+    query friendshipStatus($friendUserId: ID!) {
+        friendshipStatus(friendUserId: $friendUserId)
+    }
+`;
