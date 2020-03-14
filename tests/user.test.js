@@ -2,7 +2,7 @@ import { authClient } from './client';
 import { USER_QUERY } from './graphqlQueries';
 import { TEST_USER } from './constants';
 
-test('ping the graphql server', async () => {
+test('test user query', async () => {
   const { data } = await authClient.query({
     query: USER_QUERY,
     variables: {
